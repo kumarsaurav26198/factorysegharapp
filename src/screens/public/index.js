@@ -1,0 +1,15 @@
+import Splashscreen from './splashscreen/SplashScreen'
+import Welcome from './welcome/Welcome'
+import SignMobile from './signMobile/SignMobile'
+import OtpScreen from './otpScreen/OtpScreen'
+import Register from './register/Register'
+import OperationalCities from './operationalCities/OperationalCities'
+import Choosevehicle from './choosevehicle/Choosevehicle'
+import UploadDocuments from './uploadDocuments/UploadDocuments'
+import DrivingLicense from './uploadDocuments/DrivingLicense'
+import DrivingLicenseNumber from './uploadDocuments/DrivingLicenseNumber'
+import Profilepicture from './uploadDocuments/Profilepicture'
+import RegistrationRC from './uploadDocuments/RegistrationRC'
+import WelcomeBack from './welcomeBack/WelcomeBack'
+
+export{Welcome,Splashscreen,SignMobile,OtpScreen,Register,OperationalCities,Choosevehicle,UploadDocuments,DrivingLicense,DrivingLicenseNumber,Profilepicture,RegistrationRC,WelcomeBack}
