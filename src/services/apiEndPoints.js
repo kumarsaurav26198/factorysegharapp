@@ -1,30 +1,24 @@
 import {API_URL} from '@env';
 
-const baseURL = API_URL
+const baseURL = API_URL;
 const apiUri = {
     auth: {
-        //MVP
-        emaillogin:"auth/login",
-        userProfile:"auth/userProfile",
-        
-        
-        register:"auth/sign-in",
+        emaillogin:'auth/login',
+        userProfile:'auth/userProfile',
+        register:'auth/sign-in',
         otplogin: 'auth/send-otp',
         verifyotp: 'auth/verify-otp',
-        sessioninfo: 'session_info', 
-        logout:"logout",
-        update_user_details:"update_user_details",
-    },
-    jantaDrive: {
-        pagename:"/pages?pagename=",
-        contact:"/contact"
+        sessioninfo: 'session_info',
+        logout:'logout',
+        update_user_details:'update_user_details',
     },
     factoyHome: {
-        getAllItems:"api/getAllItems",
-        placeOrder:"api/placeOrder",
-        orderHistory:"api/orderHistory",
-        getAddress:"api/getAddress",
+        getAllItems:'api/getItems',
+        placeOrder:'api/placeOrder',
+        orderHistory:'api/orderHistory',
+        getAddress:'api/getAddress',
+        pagename:'/pages?pagename=',
+        contact:'/contact',
     },
-  
 };
-export { apiUri, baseURL }
+export { apiUri, baseURL };

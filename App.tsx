@@ -11,14 +11,14 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { setNavigator } from './src/services/navigationService';
 import { BottomSheetProvider } from './src/components/Modal/BottomSheetWrapper';
-import {API_URL} from '@env';
+// import {API_URL} from '@env';
 
 const App = () => {
   const navigationRef = useRef();
 
   LogBox.ignoreLogs([ 'Warning: ...' ]);
   LogBox.ignoreAllLogs();
-  console.log("API_URL===>",API_URL)
+  // console.log("API_URL===>",API_URL)
   const queryClient = new QueryClient();
   const [ loading, setLoading ] = useState(true);
   useEffect(() => {

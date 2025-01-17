@@ -56,8 +56,9 @@ const Navigator = () => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const storedId = await AsyncStorage.getItem('_id');
-        setInitialRoute(storedId ? 'DrawerNavigation' : 'SignMobile');
+        const mobile = await AsyncStorage.getItem('mobile');
+        // console.log("mobile",mobile)
+        setInitialRoute(mobile ? 'DrawerNavigation' : 'SignMobile');
       } catch (error) {
         console.error('Error reading _id from AsyncStorage:', error);
         setInitialRoute('SignMobile'); // Navigate to SignMobile in case of error

@@ -5,7 +5,7 @@ import getLoginUserSaga from './getLoginUserSaga';
 import pagebyNameSaga from './pagebyNameSaga';
 import contactUsSaga from './contactUsSaga';
 import registerSaga from './registerSaga';
-import getAllProductSaga from './getAllProduct';
+import getProductByCategorySaga from './getProductByCategorySaga';
 import placeOrderSaga from './placeOrderSaga';
 import getOrderHistorySaga from './getOrderHistorySaga';
 import addressSaga from './addressSaga';
@@ -18,7 +18,7 @@ function* rootSaga() {
         getLoginUserSaga(),
         pagebyNameSaga(),
         contactUsSaga(),
-        getAllProductSaga(),
+        getProductByCategorySaga(),
         placeOrderSaga(),
         getOrderHistorySaga(),
         addressSaga()
