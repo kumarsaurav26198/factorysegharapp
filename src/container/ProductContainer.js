@@ -1,55 +1,51 @@
-import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import { C_Text } from '../components';
-import { ProductIcon } from '../assets/icons';
-import { navigate } from '../services/navigationService';
+import {FlatList, StyleSheet, View} from 'react-native';
+import React from 'react';
+import {C_Text, CommonProduct} from '../components';
+import {navigate} from '../services/navigationService';
+import {connect} from 'react-redux';
 
-const ProductContainer = () => {
-    const [ selectedId, setSelectedId ] = useState("");
+const ProductContainer = ({allProductRes}) => {
+  const allProduct = allProductRes?.data?.items || [];
 
-    const transportOptions = [
-        { id: '1', name: 'Book Any', waitTime: '1 min', price: '₹400 - 450', totalprice: '₹400 - 450', subText: 'Prime sedan, mini' },
-        { id: '2', name: 'Prime Sedan', waitTime: '1 min', price: '₹400', totalprice: '₹450', subText: 'Spacious sedan, top drivers' },
-        { id: '3', name: 'Auto', waitTime: '5 min', price: '₹210', totalprice: '₹250', subText: 'Quickest auto ride in town' },
-        { id: '4', name: 'Bike', waitTime: '2 min', price: '₹82', totalprice: '₹100', subText: 'Fully discounted fare' },
-        { id: '5', name: 'Book Any', waitTime: '1 min', price: '₹400 - 450', totalprice: '₹400 - 450', subText: 'Prime sedan, mini' },
-        { id: '6', name: 'Prime Sedan', waitTime: '1 min', price: '₹400', totalprice: '₹450', subText: 'Spacious sedan, top drivers' },
-        { id: '7', name: 'Auto', waitTime: '5 min', price: '₹210', totalprice: '₹250', subText: 'Quickest auto ride in town' },
-        { id: '8', name: 'Bike', waitTime: '2 min', price: '₹82', totalprice: '₹100', subText: 'Fully discounted fare' },
-    ];
+  const handlePress = id => {
+    navigate('ProductDetails');
+  };
 
-    const handlePress = (id) => {
-        // setSelectedId(id);
-        navigate("ProductDetails")
-    };
-
-    return (
-        <View style={styles.container}>
-            <FlatList
-                data={transportOptions }
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <TouchableOpacity onPress={handlePress}>
-                        <ProductIcon />
-                    </TouchableOpacity>
-                )}
-                keyExtractor={item => item.id}
-                showsVerticalScrollIndicator={false}
-            />
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={allProduct}
+        numColumns={2}
+        keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
+        // showsHorizontalScrollIndicator={false}
+        renderItem={({item}) => (
+          <View style={styles.productItem}>
+            <CommonProduct item={item} />
+          </View>
+        )}
+        // showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
 };
-
-export default ProductContainer;
+const mapStateToProps = state => ({
+  allProductRes: state?.getProductCategoryReducer,
+  cartRes: state?.cartReducers,
+});
+export default connect(mapStateToProps)(ProductContainer);
 
 const styles = StyleSheet.create({
-    container: {
-        paddingHorizontal: 20,
-    },
-    headerText: {
-        textAlign: 'left',
-        marginBottom: 15,
-        bottom: 5
-    },
+  container: {
+    // paddingHorizontal: 20,
+  },
+  headerText: {
+    textAlign: 'left',
+    // marginBottom: 15,
+    bottom: 5,
+  },
+  productItem: {
+    flex: 1,
+    alignItems: 'center',
+    // paddingHorizontal: 10,
+  },
 });

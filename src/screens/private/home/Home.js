@@ -64,12 +64,12 @@ const Home = () => {
               title2="See All"
             />
             <ProductContainer />
-            <HeaderWithOption
+            {/* <HeaderWithOption
               title="Explore by Categories"
               rightArrow
               title2="See All"
             />
-            <ProductContainer />
+            <ProductContainer /> */}
           </>
         )}
         keyExtractor={(item, index) => index.toString()}

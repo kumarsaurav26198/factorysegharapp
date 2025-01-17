@@ -1,46 +1,67 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import React from 'react';
-import Images from '../../utils/Images';
-import { connect } from 'react-redux';
-import { useActions } from '../../hooks/useActions';
+import LinearGradient from 'react-native-linear-gradient';
+import {connect} from 'react-redux';
+import {useActions} from '../../hooks/useActions';
+import Colors from '../../themes/Colors';
 
-const CommonProduct = ({ item, cartRes }) => {
-  const { addToCartRequest } = useActions();
+const CommonProduct = ({item, cartRes}) => {
+  const {addToCartRequest} = useActions();
 
-  // console.log("cartReducers====>>", JSON.stringify(cartRes, null, 2));
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#ffffff', '#f5f5f5']}
+      style={styles.container}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}>
       <View style={styles.badgeContainer}>
         <Text style={styles.badgeText}>Bestseller</Text>
-        <Text style={styles.variantsText}>{item?.category}</Text>
+        {item.productDetail[0]?.variants?.length > 0 && (
+  <Text style={styles.categoryText}>
+    {item.productDetail[0].variants.length === 1
+      ? ` ${item.productDetail[0].variants[0]}`
+      : `${item.productDetail[0].variants.length} Variants`}
+  </Text>
+)}
+
       </View>
-      <Text numberOfLines={1} style={styles.productTitle}>{item?.name}</Text>
       <Image
-        source={Images.banner}
+        source={{uri: item?.image}}
         style={styles.productImage}
         resizeMode="contain"
       />
-      <View style={styles.detailsContainer}>
-        <Text style={styles.caseText}>Price: {item?.price}</Text>
-        <Text style={[ styles.piecesText, { color: item?.stock_quantity > 0 ? '#333' : 'red' } ]}>
-          {item?.stock_quantity > 0 ? `${ item?.stock_quantity } Pieces` : 'Out of Stock'}
+      <Text numberOfLines={1} style={styles.productTitle}>
+        {item?.name}
+      </Text>
+      {/* <View style={styles.detailsContainer}>
+        <Text style={styles.priceText}>${item?.price}</Text>
+        <Text numberOfLines={2} style={styles.descriptionText}>
+          {item?.description}
         </Text>
-
-        <Text numberOfLines={1} style={styles.piecesText}>{item?.description}</Text>
-      </View>
-      <TouchableOpacity style={styles.buyButton} onPress={() => {
-        addToCartRequest({
-          "itemId": item?.id,
-          "quantity": 1,
-          "name":item?.name,
-          "description":item?.description ,
-          "price":item?.price,
-          "stock_quantity":item?.stock_quantity,
-        });
-      }}>
+      </View> */}
+      <TouchableOpacity
+        style={styles.buyButton}
+        onPress={() => {
+          addToCartRequest({
+            itemId: item?.id,
+            quantity: 1,
+            name: item?.name,
+            description: item?.description,
+            price: item?.price,
+            stock_quantity: item?.stock_quantity,
+          });
+        }}>
         <Text style={styles.buyButtonText}>Add To Cart</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 const mapStateToProps = state => ({
@@ -48,84 +69,89 @@ const mapStateToProps = state => ({
 });
 export default connect(mapStateToProps)(CommonProduct);
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const cardWidth = width * 0.5 - 20;
 const styles = StyleSheet.create({
   container: {
     width: cardWidth,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 5,
+    borderRadius: 16,
+    padding: 10,
     margin: 16,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 6,
+    overflow: 'hidden',
   },
   badgeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 8,
-    left: -10
+    marginBottom: 10,
   },
   badgeText: {
+    backgroundColor: '#FF4500',
     color: 'white',
-    backgroundColor: '#8B0000',
-    padding: 4,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-    fontSize: 14,
-    fontWeight: 'bold',
+    padding: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    fontSize: 12,
+    fontWeight: '600',
+    right: 15,
   },
-  variantsText: {
-    fontSize: 14,
-    color: '#333',
+  categoryText: {
+    fontSize: 12,
+    color: Colors.black,
+    fontWeight: '500',
   },
   productTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
+    color: '#333',
     marginVertical: 8,
-    color: '#000',
+    textAlign: 'center',
   },
   productImage: {
-    width: cardWidth * 0.8,
-    height: cardWidth * 0.5,
-    // marginVertical: 16,
+    width: cardWidth,
+    height: cardWidth,
+    borderWidth: 1,
+    borderColor: Colors.bgColor,
+    borderRadius: 8,
   },
   detailsContainer: {
     width: '100%',
     // marginVertical: 8,
+    paddingHorizontal: 8,
   },
-  caseText: {
-    fontSize: 16,
-    color: '#333',
+  priceText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#27ae60',
     textAlign: 'center',
-    marginBottom: 4,
   },
-  piecesText: {
-    fontSize: 16,
-    color: '#333',
+  descriptionText: {
+    fontSize: 14,
+    color: '#555',
     textAlign: 'center',
   },
   buyButton: {
-    backgroundColor: '#8B0000',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 26,
-    marginTop: 16,
-    width: '80%',
-    margin: 20
+    backgroundColor: '#FF4500',
+    paddingVertical: 8,
+    borderRadius: 24,
+    width: '90%',
+    alignItems: 'center',
+    shadowColor: '#FF4500',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+    marginBottom: 4,
   },
   buyButtonText: {
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
 });

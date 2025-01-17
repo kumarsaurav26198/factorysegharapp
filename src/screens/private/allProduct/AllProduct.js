@@ -6,7 +6,7 @@ import { connect, useDispatch } from 'react-redux';
 import { getAllProductRequest } from '../../../store/action/authActions';
 
 const AllProduct = ({ allProductRes,cartRes }) => {
-  // console.log("GET_PRODUCT_CATOG_SUCCESS Reducers action===>", JSON.stringify(allProductRes?.error, null, 2));
+  console.log("GET_PRODUCT_CATOG_SUCCESS Reducers action===>", JSON.stringify(allProductRes?.error, null, 2));
 
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
@@ -71,7 +71,7 @@ const AllProduct = ({ allProductRes,cartRes }) => {
 };
 
 const mapStateToProps = state => ({
-  allProductRes: state?.getAllProductReducer,
+  allProductRes: state?.getProductCategoryReducer,
   cartRes: state?.cartReducers,
 
 });
