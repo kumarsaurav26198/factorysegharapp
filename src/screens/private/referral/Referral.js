@@ -6,10 +6,10 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Colors from '../../../themes/Colors';
 import {connect} from 'react-redux';
 
-const Referral = ({loginRes}) => {
-  console.log('loginRes', JSON.stringify(loginRes[0]?.cashback, null, 2));
-  const [refcode, setRefcode] = useState(loginRes[0]?.referralCode);
-  const referrals = loginRes[0]?.successfulReferrals || [];
+const Referral = ({usersRes}) => {
+  // console.log('usersRes', JSON.stringify(usersRes[0]?.cashbackInfomation, null, 2));
+  const refcode = useState(usersRes[0]?.referralCode);
+  const referrals = usersRes[0]?.cashbackInfomation || [];
 
   const writeToClipboard = async () => {
     Clipboard.setString(refcode);
@@ -34,18 +34,18 @@ const Referral = ({loginRes}) => {
   const renderReferralItem = ({item}) => (
     <View style={styles.referralItem}>
       <View>
-        <Text style={styles.userName}>{item.referredUserName}</Text>
+        <Text style={styles.userName}>{item.title}</Text>
         <Text style={styles.userEmail}>{item.referredUserEmail}</Text>
       </View>
       <View>
-        <Text style={styles.cashbackText}>Cashback: ₹{item.cashback}</Text>
+        <Text style={styles.cashbackText}>₹{item.amount}</Text>
       </View>
     </View>
   );
 
   return (
     <View style={CommonStyles.container}>
-      <BackButton left={true} text="Referral"  cashback ={loginRes[0]?.cashback}/>
+      <BackButton left={true} text="Referral"  cashback ={usersRes[0]?.cashback}/>
       <View style={styles.referralCodeContainer}>
         <Text style={styles.referralCodeText}>Your Referral Code:</Text>
         <View style={styles.codeRow}>
@@ -75,7 +75,7 @@ const Referral = ({loginRes}) => {
 };
 
 const mapStateToProps = state => ({
-  loginRes: state?.userReducers?.data,
+  usersRes: state?.userReducers?.data,
 });
 
 export default connect(mapStateToProps)(Referral);

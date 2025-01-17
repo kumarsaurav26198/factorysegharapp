@@ -4,7 +4,7 @@ const baseURL = API_URL;
 const apiUri = {
     auth: {
         emaillogin:'auth/login',
-        userProfile:'auth/userProfile',
+        userProfile:'api/getProfile',
         register:'auth/sign-in',
         otplogin: 'auth/send-otp',
         verifyotp: 'auth/verify-otp',

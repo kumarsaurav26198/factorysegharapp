@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
+
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, useCallback} from 'react';
 import {FlatList, View, RefreshControl} from 'react-native';
@@ -11,8 +11,9 @@ import {ProductContainer} from '../../../container';
 import {useActions} from '../../../hooks/useActions';
 
 const Home = () => {
-  const {getProductByCategory} = useActions();
-  const loginRes = useSelector(state => state?.loginReducers?.data);
+  const {getProductByCategory,fetchLoginUser} = useActions();
+  const verifyRes = useSelector(state => state?.verifyReducers);
+  // console.log('verifyRes=====>>', JSON.stringify(verifyRes, null, 2));
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
 
@@ -28,20 +29,21 @@ const Home = () => {
 
   const handlePress = category => {
     setSelectedCategory(category);
-    // getProductByCategory(category)
-    // console.log('Selected Category:', category);
   };
 
   useEffect(() => {
-    console.log('selectedCategory====>>', selectedCategory);
     getProductByCategory(selectedCategory);
   }, [selectedCategory]);
+
+  useEffect(() => {
+    fetchLoginUser()
+    // getProductByCategory(selectedCategory);
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     getProductByCategory(selectedCategory);
-
-    console.log('onRefresh selectedCategory====>>', selectedCategory);
+    fetchLoginUser()
     setRefreshing(false);
   }, [selectedCategory]);
 
@@ -62,14 +64,9 @@ const Home = () => {
               title="Your Go-to Items"
               rightArrow
               title2="See All"
+              category={selectedCategory}
             />
             <ProductContainer />
-            {/* <HeaderWithOption
-              title="Explore by Categories"
-              rightArrow
-              title2="See All"
-            />
-            <ProductContainer /> */}
           </>
         )}
         keyExtractor={(item, index) => index.toString()}

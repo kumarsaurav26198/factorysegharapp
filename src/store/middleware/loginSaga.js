@@ -23,7 +23,7 @@ function* loginUser(action) {
     // console.log("currentUser====>>", JSON.stringify(currentUser,null,2));
 
     // // Alert.alert(extractedOtp);
-    //  reset([{ name: 'DrawerNavigation' }]);
+
     navigate("OtpScreen", { mobile :payload?.mobile});
     
     // Dispatch success actions

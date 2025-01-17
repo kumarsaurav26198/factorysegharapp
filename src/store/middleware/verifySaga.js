@@ -36,7 +36,7 @@ function* verifyUser(action) {
       console.log("Register",mobile)
 
     }else{
-         reset([ { name: 'DrawerNavigation' } ]);
+         reset([ { name: 'BottomNavigator' } ]);
     }
 
   } catch (error)

@@ -34,11 +34,6 @@ export const verifyReducers = (state = initialState, action) => {
         data: mobileNumber, // Update the Redux state with the mobile number
         loading: false,
       };
-      return {
-        ...state,
-        data: action,
-        loading: false,
-      };
     case ActionTypes.VERIFY_REQUEST_FAILURE:
       // console.warn("VERIFY_REQUEST_FAILURE Reducers", ActionTypes.VERIFY_REQUEST_FAILURE);
       // console.log("VERIFY_REQUEST_FAILURE Reducers action===>", action.error);

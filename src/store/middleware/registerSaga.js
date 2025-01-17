@@ -20,7 +20,7 @@ function* registerUser(action) {
 
 
     const currentUser = response?.data;
-    reset([ { name: 'DrawerNavigation' } ]);
+    reset([ { name: 'BottomNavigator' } ]);
     // console.log("registerUser===>", JSON.stringify(currentUser, null, 2));
 
     // const extractedOtp = currentUser?.data?.otp;

@@ -6,7 +6,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { BackVerctor, RightArrow } from '../../assets/icons';
 import { navigate } from '../../services/navigationService';
 
-const HeaderWithOption = ({ title, title2,drop, data, selectedValue, onChangeValue, upArrow,rightArrow }) => {
+const HeaderWithOption = ({ title, title2,drop, data,category, selectedValue, onChangeValue, upArrow,rightArrow }) => {
   const [ isFocus, setIsFocus ] = useState(false);
 
   return (
@@ -17,7 +17,7 @@ const HeaderWithOption = ({ title, title2,drop, data, selectedValue, onChangeVal
       <View style={styles.rightContainer}>
         {rightArrow && (
           <TouchableOpacity style={styles.dropdownRow} onPress={()=>{
-            navigate("AllProduct")
+            navigate('AllProduct',{category});
           }}>
         <Text style={[styles.vehicleNumber,{color:Colors.primary}]}>{title2}</Text>
             <RightArrow style={{}} size={16} color={Colors.black} />
@@ -64,10 +64,10 @@ const styles = StyleSheet.create({
   outerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
     backgroundColor: Colors.white,
     padding: 10,
-    paddingHorizontal:15
+    paddingHorizontal:15,
   },
   leftContainer: {
     flex: 1,
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.FS16,
     fontWeight: FontsWeights.FW600,
     color: Colors.primary,
-    left: 10
+    left: 10,
   },
   dropdown: {
     height: 40,
@@ -102,13 +102,13 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     tintColor: Colors.primary,
-    width: 30
+    width: 30,
   },
   rotatedIcon: {
     transform: [ { rotate: '90deg' } ],
   },
   rotatedIcon2: {
     transform: [ { rotate: '180deg' } ],
-    marginHorizontal:10
+    marginHorizontal:10,
   },
 });

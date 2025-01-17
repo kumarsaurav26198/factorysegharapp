@@ -102,7 +102,7 @@ function* updateLoginUserApiCall(action) {
         });
 
         const data = response?.data?.data[0];
-        console.log('Response received:', JSON.stringify(data, null, 2));
+        // console.log('Response received:', JSON.stringify(data, null, 2));
         yield put({ type: ActionTypes.UPDATE_LOGIN_USER_SUCCESS, data });
     } catch (error) {
         const errorPayload = {

@@ -21,7 +21,7 @@ function* rootSaga() {
         getProductByCategorySaga(),
         placeOrderSaga(),
         getOrderHistorySaga(),
-        addressSaga()
+        addressSaga(),
     ]);
 }
 export default rootSaga;

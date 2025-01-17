@@ -30,7 +30,7 @@ const UploadDocuments = ({ loginRes, navigation }) => {
     ];
 
     const handlePressContinue = () => {
-        reset([ { name: 'DrawerNavigation' } ]);
+        reset([ { name: 'BottomNavigator' } ]);
         // navigation.navigate("Home");
     };
     const renderVehicleItem = ({ item }) => {
