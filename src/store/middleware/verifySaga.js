@@ -26,7 +26,7 @@ function* verifyUser(action) {
     
     // Uncomment and use these lines if needed
     const data = response?.data;
-    console.log("data====>>", JSON.stringify(data,null,2));
+    // console.log("data====>>", JSON.stringify(data,null,2));
 
  
 

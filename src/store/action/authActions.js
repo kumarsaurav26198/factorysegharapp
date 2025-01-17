@@ -60,11 +60,8 @@ export const ContactUsRequest = (payload) => ({
     payload,
   });
 
-
-
-
-export const getAllProductRequest = (payload) => ({
-    type: ActionTypes.GET_ALL_PRODUCT_REQUEST,
+export const getProductByCategory = (payload) => ({
+    type: ActionTypes.GET_PRODUCT_CATOG_REQUEST,
     payload,
   });
 

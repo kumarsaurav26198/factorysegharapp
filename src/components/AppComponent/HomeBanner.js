@@ -16,7 +16,8 @@ export default function HomeBanner() {
 
 const styles = StyleSheet.create({
   container: {
-    padding:15, 
+    paddingHorizontal:15, 
+    paddingTop:10,
     borderRadius:40,
     overflow:"hidden"
   },
