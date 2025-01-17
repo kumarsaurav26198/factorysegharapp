@@ -11,7 +11,7 @@ export const userReducers = (state = initialState, action) => {
     {
         case ActionTypes.FETCH_LOGIN_USER_REQUEST:
             // console.warn("FETCH_LOGIN_USER_REQUEST Reducers", ActionTypes.FETCH_LOGIN_USER_REQUEST);
-            console.log('FETCH_LOGIN_USER_REQUEST Reducers action===>',);
+            // console.log('FETCH_LOGIN_USER_REQUEST Reducers action===>',);
             return {
                 ...state,
                 loading: true,
@@ -19,7 +19,7 @@ export const userReducers = (state = initialState, action) => {
             };
         case ActionTypes.FETCH_LOGIN_USER_SUCCESS:
             // console.warn("FETCH_LOGIN_USER_SUCCESS Reducers", ActionTypes.FETCH_LOGIN_USER_SUCCESS);
-            console.warn('FETCH_LOGIN_USER_SUCCESS Reducers action===>', action?.data);
+            // console.warn('FETCH_LOGIN_USER_SUCCESS Reducers action===>', action?.data);
             return {
                 ...state,
                 data: action?.data,

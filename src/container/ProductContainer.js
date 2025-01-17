@@ -12,6 +12,7 @@ import Colors from '../themes/Colors';
 
 const ProductContainer = ({allProductRes}) => {
   const allProduct = allProductRes?.data?.items || [];
+  const limitedProducts = allProduct.slice(0, 4);
 
   return (
     <View style={styles.container}>
@@ -21,7 +22,7 @@ const ProductContainer = ({allProductRes}) => {
         </View>
       ) : (
         <FlatList
-          data={allProduct}
+          data={limitedProducts}
           numColumns={2}
           keyExtractor={(item, index) =>
             item?.id?.toString() || index.toString()

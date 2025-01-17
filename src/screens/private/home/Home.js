@@ -13,7 +13,6 @@ import {useActions} from '../../../hooks/useActions';
 const Home = () => {
   const {getProductByCategory,fetchLoginUser} = useActions();
   const verifyRes = useSelector(state => state?.verifyReducers);
-  // console.log('verifyRes=====>>', JSON.stringify(verifyRes, null, 2));
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
 

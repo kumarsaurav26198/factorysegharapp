@@ -16,7 +16,7 @@ import { AddAddress, AddSuccess, ModalWrapper } from '../../../components/Modal'
 
 const Address = ({ userRes, addressRes }) => {
   const email = "magenet2@example.com";
-  console.log("addressRes", addressRes);
+  // console.log("addressRes", addressRes);
 
   const { fetchUserAddress } = useActions();
   const [refreshing, setRefreshing] = useState(false);

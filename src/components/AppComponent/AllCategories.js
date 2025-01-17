@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: Colors.black,
-    fontSize: FontSize.FS16,
-    fontWeight: '600',
+    fontSize: FontSize.FS14,
+    fontWeight: FontsWeights.FW500,
     textAlign: 'center',
   },
   selectedText: {
