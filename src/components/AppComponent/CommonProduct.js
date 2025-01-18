@@ -12,12 +12,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import {connect} from 'react-redux';
 import {useActions} from '../../hooks/useActions';
 import Colors from '../../themes/Colors';
+import { useNavigation } from '@react-navigation/native';
 
 const CommonProduct = ({item, cartRes}) => {
+    const navigation = useNavigation();
+  
   const {addToCartRequest} = useActions();
 
   return (
     <LinearGradient
+    
       colors={['#ffffff', '#f5f5f5']}
       style={styles.container}
       start={{x: 0, y: 0}}
@@ -25,19 +29,21 @@ const CommonProduct = ({item, cartRes}) => {
       <View style={styles.badgeContainer}>
         <Text style={styles.badgeText}>Bestseller</Text>
         {item.productDetail[0]?.variants?.length > 0 && (
-  <Text style={styles.categoryText}>
-    {item.productDetail[0].variants.length === 1
-      ? ` ${item.productDetail[0].variants[0]}`
-      : `${item.productDetail[0].variants.length} Variants`}
-  </Text>
-)}
-
+          <Text style={styles.categoryText}>
+            {item.productDetail[0].variants.length === 1
+              ? ` ${item.productDetail[0].variants[0]}`
+              : `${item.productDetail[0].variants.length} Variants`}
+          </Text>
+        )}
       </View>
+      <TouchableOpacity onPress={()=>{navigation.navigate("ProductDetails")}}>
+
       <Image
         source={{uri: item?.image}}
         style={styles.productImage}
         resizeMode="contain"
-      />
+        />
+        </TouchableOpacity>
       <Text numberOfLines={1} style={styles.productTitle}>
         {item?.name}
       </Text>
@@ -92,7 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   badgeText: {
-    backgroundColor: '#FF4500',
+    backgroundColor: Colors.red,
     color: 'white',
     padding: 6,
     paddingHorizontal: 12,
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buyButton: {
-    backgroundColor: '#FF4500',
+    backgroundColor: Colors.red,
     paddingVertical: 8,
     borderRadius: 24,
     width: '90%',

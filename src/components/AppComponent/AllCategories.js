@@ -41,35 +41,34 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   itemContainer: {
-    backgroundColor: Colors.white,
-    marginHorizontal: 10,
-    minWidth: 80,
-    borderRadius: 40,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 5,
-    elevation: 5,
-    borderWidth: 2,
-    borderColor: Colors.green,
-  },
-  selectedItem: {
-    backgroundColor: Colors.inputFieldBg,
-    borderWidth: 2,
-    borderColor: Colors.red,
-  },
-  itemText: {
-    color: Colors.black,
-    fontSize: FontSize.FS14,
-    fontWeight: FontsWeights.FW500,
-    textAlign: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#8B0000',
+    backgroundColor: 'white',
+    marginHorizontal:5
   },
   selectedText: {
-    color: Colors.red,
+    color: Colors.white,
     fontWeight: FontsWeights.FW900,
   },
+  item: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#8B0000',
+    backgroundColor: 'white',
+  },
+  selectedItem: {
+    backgroundColor: '#8B0000',
+  },
+  itemText: {
+    color: '#8B0000',
+    fontSize: 14,
+  },
+  selectedItemText: {
+    color: 'white',
+  }
 });

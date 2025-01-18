@@ -42,8 +42,6 @@ const AllProduct = ({allProductRes, cartRes}) => {
 
   };
 
-  // useEffect(() => {
-  // }, [selectedCategory]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -68,6 +66,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
         left
         cart
         cartLenght={cartRes?.data?.length}
+        passParameter={selectedCategory}
       />
       <AllCategories
         categories={categories}

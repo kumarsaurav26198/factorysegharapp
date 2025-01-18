@@ -6,8 +6,13 @@ import { connect } from 'react-redux';
 import ImageSlider from '../../../components/AppComponent/ImageSlider';
 import Colors from '../../../themes/Colors';
 import { BackButton, FragranceList } from '../../../components';
+import { useRoute } from '@react-navigation/native';
 
 const ProductDetails = ({ }) => {
+        const route = useRoute();
+      // const { id } = route?.params; 
+
+
   const { fetchLoginUser } = useActions();
   const [ refreshing, setRefreshing ] = useState(false);
 
@@ -61,7 +66,7 @@ const ProductDetails = ({ }) => {
 
   return (
     <View style={[ CommonStyles.container, ]}>
-      <BackButton left  cart />
+      <BackButton left  cart passParameter oneMoreFunction={() => console.log('Custom Function Called')}/>
       <FlatList
         data={[ 1 ]}
         showsVerticalScrollIndicator={false}

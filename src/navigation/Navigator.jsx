@@ -24,6 +24,7 @@ import {
   BookRide,
   CancelRide,
   cardDetail,
+  CartScreen,
   Complain,
   ContactUs,
   DriverDetail,
@@ -38,6 +39,7 @@ import {
   PickDestination,
   PickUp,
   PrivacyPolicy,
+  ProductDetails,
   Profile,
   Referral,
   RequiredAuthentication,
@@ -112,8 +114,8 @@ const Navigator = () => {
       <Stack.Screen name="OtpScreen" component={OtpScreen} />
       <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
       <Stack.Screen name="AllProduct" component={AllProduct} />
-
-
+      <Stack.Screen name="CartScreen" component={CartScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetails} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Address" component={Address} />
       <Stack.Screen name="History" component={History} />

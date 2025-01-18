@@ -18,7 +18,6 @@ export const cartReducers = (state = initialState, action) => {
 
         case ActionTypes.ADD_TO_CART_SUCCESS:
             // console.log("ADD_TO_CART_SUCCESS Reducers action===>", action.payload);
-            
             const data = Array.isArray(state.data) ? state.data : []; // Ensure `data` is an array
             const existingCartItemIndex = data.findIndex(
                 item => item.itemId === action.payload.itemId
@@ -52,7 +51,7 @@ export const cartReducers = (state = initialState, action) => {
             };
 
         case ActionTypes.INCREMENT_QUANTITY:
-            console.log("INCREMENT_QUANTITY Reducers action===>", action.payload);
+            // console.log("INCREMENT_QUANTITY Reducers action===>", action.payload);
             return {
                 ...state,
                 data: state.data.map(item =>
@@ -63,7 +62,7 @@ export const cartReducers = (state = initialState, action) => {
             };
 
         case ActionTypes.DECREMENT_QUANTITY:
-            console.log("DECREMENT_QUANTITY Reducers action===>", action.payload);
+            // console.log("DECREMENT_QUANTITY Reducers action===>", action.payload);
             return {
                 ...state,
                 data: state.data
@@ -74,8 +73,6 @@ export const cartReducers = (state = initialState, action) => {
                     )
                     .filter(item => item.quantity > 0), // Remove items with quantity <= 0
             };
-        
-
         case ActionTypes.RESTART_LOGIN_REQUEST:
             return {
                 ...state,
@@ -99,7 +96,7 @@ export const cartReducers = (state = initialState, action) => {
                 error: action.payload,
             };
         case ActionTypes.CLEAR_CART_REQUEST:
-            console.warn("CLEAR_CART_REQUEST Reducers", ActionTypes.CLEAR_CART_REQUEST);
+            // console.warn("CLEAR_CART_REQUEST Reducers", ActionTypes.CLEAR_CART_REQUEST);
             return {
                 ...state,
                 data: null,
