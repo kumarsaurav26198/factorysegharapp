@@ -9,6 +9,7 @@ import getProductByCategorySaga from './getProductByCategorySaga';
 import placeOrderSaga from './placeOrderSaga';
 import getOrderHistorySaga from './getOrderHistorySaga';
 import addressSaga from './addressSaga';
+import cartSaga from './cartSaga';
 
 function* rootSaga() {
     yield all([
@@ -22,6 +23,7 @@ function* rootSaga() {
         placeOrderSaga(),
         getOrderHistorySaga(),
         addressSaga(),
+        cartSaga()
     ]);
 }
 export default rootSaga;

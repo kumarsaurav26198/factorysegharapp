@@ -36,7 +36,7 @@ const CommonProduct = ({item, cartRes}) => {
           </Text>
         )}
       </View>
-      <TouchableOpacity onPress={()=>{navigation.navigate("ProductDetails")}}>
+      <TouchableOpacity onPress={()=>{navigation.navigate("ProductDetails",{item})}}>
 
       <Image
         source={{uri: item?.image}}
@@ -56,15 +56,24 @@ const CommonProduct = ({item, cartRes}) => {
       <TouchableOpacity
         style={styles.buyButton}
         onPress={() => {
-          addToCartRequest({
-            itemId: item?.id,
-            quantity: 1,
-            name: item?.name,
-            description: item?.description,
-            price: item?.price,
-            stock_quantity: item?.stock_quantity,
-          });
-        }}>
+ const payload={
+  "customerName": "rahul sharma",
+  "mobile": "9891234513",
+  item
+
+ }
+// console.log("payload",JSON.stringify(payload,null,2))
+          addToCartRequest(payload);
+          // addToCartRequest({
+          //   itemId: item?.id,
+          //   quantity: 1,
+          //   name: item?.name,
+          //   description: item?.description,
+          //   price: item?.price,
+          //   stock_quantity: item?.stock_quantity,
+          // });
+        }}
+        >
         <Text style={styles.buyButtonText}>Add To Cart</Text>
       </TouchableOpacity>
     </LinearGradient>

@@ -1,37 +1,67 @@
-import { FlatList, View, RefreshControl, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
-import { CommonStyles } from '../../../themes/CommonStyles';
-import { useActions } from '../../../hooks/useActions';
-import { connect } from 'react-redux';
+
+import {
+  FlatList,
+  View,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {CommonStyles} from '../../../themes/CommonStyles';
+import {useActions} from '../../../hooks/useActions';
+import {connect} from 'react-redux';
 import ImageSlider from '../../../components/AppComponent/ImageSlider';
 import Colors from '../../../themes/Colors';
-import { BackButton, FragranceList } from '../../../components';
-import { useRoute } from '@react-navigation/native';
+import {BackButton, FragranceList} from '../../../components';
+import {useRoute} from '@react-navigation/native';
 
-const ProductDetails = ({ }) => {
-        const route = useRoute();
-      // const { id } = route?.params; 
+const ProductDetails = ({}) => {
+  const route = useRoute();
+  const {item} = route?.params;
 
+  const {fetchLoginUser} = useActions();
+  const [refreshing, setRefreshing] = useState(false);
 
-  const { fetchLoginUser } = useActions();
-  const [ refreshing, setRefreshing ] = useState(false);
-
-  const renderItem = useCallback(() => {
+  const transformedFragrances = item.productDetail[0]?.variants?.map(
+    (item, index) => ({
+      id: index,
+      name: item,
+    }),
+  );
+  const [selectedname, setSelectedName] = useState(
+    transformedFragrances[0]?.name || '',
+  );
+  const handleSelectFragrance = (name) => {
+    setSelectedName(name);
+  };
+  const renderItem = (() => {
     return (
       <>
         <ImageSlider />
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.title}>Black Dhoop</Text>
-            <Text style={styles.variants}>4 Variants</Text>
+            <Text style={styles.title}>{item?.name}</Text>
+            {item.productDetail[0]?.variants?.length > 0 && (
+              <Text style={styles.categoryText}>
+                {item.productDetail[0].variants.length === 1
+                  ? ` ${item.productDetail[0].variants[0]}`
+                  : `${item.productDetail[0].variants.length} Variants`}
+              </Text>
+            )}
+            <FragranceList
+              fragrances={transformedFragrances}
+              selectedname={selectedname}
+              onPress={handleSelectFragrance}
+              key={selectedname}
+            />
           </View>
           <TouchableOpacity style={styles.priceBox}>
             <Text style={styles.variants}>380 gms</Text>
-            <Text style={[ styles.title, { color: Colors.primary } ]}>$20.00</Text>
+            <Text style={[styles.title, {color: Colors.primary}]}>$20.00</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Fragrance</Text>
         </View>
-        <FragranceList />
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>Brand</Text>
@@ -52,26 +82,31 @@ const ProductDetails = ({ }) => {
         </View>
       </>
     );
-  }, []);
+  });
 
   useEffect(() => {
     fetchLoginUser();
-  }, [ fetchLoginUser ]);
+  }, [fetchLoginUser]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchLoginUser();
     setRefreshing(false);
-  }, [ fetchLoginUser ]);
+  }, [fetchLoginUser]);
 
   return (
-    <View style={[ CommonStyles.container, ]}>
-      <BackButton left  cart passParameter oneMoreFunction={() => console.log('Custom Function Called')}/>
+    <View style={[CommonStyles.container]}>
+      <BackButton
+        left
+        cart
+        passParameter
+        oneMoreFunction={() => console.log('Custom Function Called')}
+      />
       <FlatList
-        data={[ 1 ]}
+        data={[1]}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-        ListFooterComponent={<View style={{ height: 20 }} />}
+        ListFooterComponent={<View style={{height: 20}} />}
         keyExtractor={(item, index) => index.toString()}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

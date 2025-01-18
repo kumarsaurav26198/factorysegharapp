@@ -17,8 +17,10 @@ const apiUri = {
         placeOrder:'api/placeOrder',
         orderHistory:'api/orderHistory',
         getAddress:'api/getAddress',
+        addCart:'api/addCart',
         pagename:'/pages?pagename=',
         contact:'/contact',
+
     },
 };
 export { apiUri, baseURL };

@@ -1,59 +1,52 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import React from 'react';
 
-const FragranceList = () => {
-  const [selectedId, setSelectedId] = useState(0);
+const FragranceList = ({ fragrances, selectedname, onPress }) => {
+  console.log("selectedname==>",selectedname);
 
-  const fragrances = [
-    { id: 0, name: 'Rose' },
-    { id: 1, name: 'Lavender' },
-    { id: 2, name: 'Sandal' },
-    { id: 3, name: 'Jasmine' },
-    { id: 4, name: 'Rose' },
-    { id: 5, name: 'Lavender' },
-    { id: 6, name: 'Sandal' },
-    { id: 7, name: 'Jasmine' },
-  ];
-
-  const renderItem = ({ item }) => (
-    <TouchableOpacity 
-      onPress={() => setSelectedId(item.id)}
-      style={[
-        styles.item,
-        selectedId === item.id && styles.selectedItem
-      ]}
-    >
-      <Text style={[
-        styles.itemText,
-        selectedId === item.id && styles.selectedItemText
-      ]}>
-        {item.name}
-      </Text>
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => onPress(item.name)}  // Passing the name instead of id
+        style={[
+          styles.item,
+          selectedname === item.name && styles.selectedItem,  // Check if selectedname matches the item's name
+        ]}
+      >
+        <Text
+          style={[
+            styles.itemText,
+            selectedname === item.name && styles.selectedItemText,  // Change text style based on selectedname
+          ]}
+        >
+          {item.name}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+  
 
   return (
     <View style={styles.container}>
       <FlatList
         data={fragrances}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item, index) => item?.id?.toString() || item?.name || index.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
       />
     </View>
-  )
-}
+  );
+};
 
-export default FragranceList
+export default FragranceList;
 
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
   },
   listContainer: {
-    paddingHorizontal: 16,
     gap: 8,
   },
   item: {
@@ -65,13 +58,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   selectedItem: {
-    backgroundColor: '#8B0000',
+    backgroundColor: '#8B0000',  // Highlight background color
   },
   itemText: {
     color: '#8B0000',
     fontSize: 14,
   },
   selectedItemText: {
-    color: 'white',
+    color: 'white',  // Change text color when selected
   }
-})
+});
