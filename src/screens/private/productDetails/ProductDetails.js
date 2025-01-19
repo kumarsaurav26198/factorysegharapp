@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   FlatList,
   View,
@@ -5,42 +6,92 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
-import React, {useState, useEffect, useCallback} from 'react';
-import {CommonStyles} from '../../../themes/CommonStyles';
-import {useActions} from '../../../hooks/useActions';
-import {connect} from 'react-redux';
+import { CommonStyles } from '../../../themes/CommonStyles';
+import { useActions } from '../../../hooks/useActions';
 import ImageSlider from '../../../components/AppComponent/ImageSlider';
 import Colors from '../../../themes/Colors';
-import {BackButton, FragranceList} from '../../../components';
-import {useRoute} from '@react-navigation/native';
+import { BackButton, C_Button, FragranceList } from '../../../components';
+import { useRoute } from '@react-navigation/native';
 
-const ProductDetails = ({}) => {
+const ProductDetails = () => {
   const route = useRoute();
-  const {item} = route?.params;
-  console.log("item=====>>",JSON.stringify(item,null,2))
-  const {fetchLoginUser} = useActions();
+  const { item } = route?.params;
+  const { fetchLoginUser } = useActions();
   const [refreshing, setRefreshing] = useState(false);
+  const [cart, setCart] = useState({});
+  const scale = new Animated.Value(1);
 
-  const transformedFragrances = item.productDetail[0]?.variants?.map(
-    // eslint-disable-next-line no-shadow
-    (item, index) => {
-      return {
-        id: index,
-        name: item,
-      };
-    },
-  );
-  const [selectedname, setSelectedName] = useState(
-    transformedFragrances[0]?.name || '',
-  );
-  const handleSelectFragrance = name => {
+  // Updated fragrance variants
+  const transformedFragrances = item.productDetail[0]?.variants?.map((variant, index) => ({
+    id: index,
+    name: variant,
+  }));
+
+  // State to store selected fragrance, SKU and caseSize
+  const [selectedName, setSelectedName] = useState(transformedFragrances[0]?.name || '');
+  const [selectedCaseSize, setSelectedCaseSize] = useState();
+  const [selectedSKU, setSelectedSKU] = useState();
+
+  // Handling fragrance selection, which also updates SKU and caseSize
+  const handleSelectFragrance = (name, caseSize, sku) => {
     setSelectedName(name);
+    setSelectedCaseSize(caseSize);
+    setSelectedSKU(sku);
   };
+
+  const handleIncreaseQuantity = (sku) => {
+    setCart((prevCart) => {
+      const updatedCart = { ...prevCart };
+
+      if (updatedCart[sku]) {
+        updatedCart[sku].quantity += 1;
+      } else {
+        // If item doesn't exist, create a new entry with the selected SKU and details
+        const productDetail = item.productDetail.find(detail => detail.sku === sku);
+        updatedCart[sku] = {
+          ...productDetail,
+          quantity: 1,
+        };
+      }
+
+      return updatedCart;
+    });
+  };
+
+  const handleDecreaseQuantity = (sku) => {
+    setCart((prevCart) => {
+      const updatedCart = { ...prevCart };
+
+      if (updatedCart[sku]?.quantity > 1) {
+        updatedCart[sku].quantity -= 1;
+      } else if (updatedCart[sku]?.quantity === 1) {
+        delete updatedCart[sku]; // Remove the item if quantity reaches 0
+      }
+
+      return updatedCart;
+    });
+  };
+
+  const onPressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onPressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const renderItem = () => {
     return (
       <>
-        <ImageSlider image={item.image}/>
+        <ImageSlider image={item.image} />
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>{item?.name}</Text>
@@ -53,38 +104,68 @@ const ProductDetails = ({}) => {
             )}
             <FragranceList
               fragrances={transformedFragrances}
-              selectedname={selectedname}
+              selectedname={selectedName}
               onPress={handleSelectFragrance}
             />
           </View>
         </View>
 
-
         <View style={styles.container}>
-        <Text style={styles.title}>Product Detail</Text>
-        
-          <TouchableOpacity style={styles.priceBox}>
-            <Text style={styles.variants}>SKU</Text>
-            <Text style={[styles.title, {color: Colors.primary}]}>{item?.productDetail[0].sku}</Text>
-          </TouchableOpacity>
+          <Text style={styles.title}>Product Details</Text>
+          {item?.productDetail?.map((detail, index) => (
+            <View key={index} style={styles.detailBox}>
+              <View style={styles.row}>
+                <View style={styles.productDetailsRow}>
+                  <View style={styles.productTextContainer}>
+                    <Text style={styles.productName}>SKU: {detail?.sku}</Text>
+                    <Text style={styles.productName}>Case Size: {detail?.caseSize}</Text>
+                    <Text style={styles.productName}>Price: {detail?.price||100}</Text>
+                    <Text style={styles.productDesc}>{item?.description}</Text>
+                  </View>
 
-          
-          <View style={styles.header}>
-            <Text style={styles.title}>Brand</Text>
-            <Text style={styles.variants}>Good & Moore</Text>
-          </View>
-          <View style={styles.header}>
-            <Text style={styles.title}>Item Form</Text>
-            <Text style={styles.variants}>Dhoop Cone</Text>
-          </View>
-          <View style={styles.header}>
-            <Text style={styles.title}>Product Benefits</Text>
-            <Text style={styles.variants}>Aromatherapy, Relaxation</Text>
-          </View>
-          <View style={styles.header}>
-            <Text style={styles.title}>Item Length</Text>
-            <Text style={styles.variants}>9 CM</Text>
-          </View>
+                  <View style={styles.quantityContainer}>
+                    <Animated.View
+                      style={[
+                        styles.quantityButton,
+                        styles.minusButton,
+                        { transform: [{ scale }] },
+                      ]}
+                    >
+                      <TouchableOpacity
+                        onPressIn={onPressIn}
+                        onPressOut={onPressOut}
+                        onPress={() => handleDecreaseQuantity(detail.sku)}
+                      >
+                        <Text style={styles.quantityButtonText}>−</Text>
+                      </TouchableOpacity>
+                    </Animated.View>
+
+                    <View style={styles.quantityTextContainer}>
+                      <Text style={styles.quantityText}>
+                        {cart[detail.sku]?.quantity || 0}
+                      </Text>
+                    </View>
+
+                    <Animated.View
+                      style={[
+                        styles.quantityButton,
+                        styles.plusButton,
+                        { transform: [{ scale }] },
+                      ]}
+                    >
+                      <TouchableOpacity
+                        onPressIn={onPressIn}
+                        onPressOut={onPressOut}
+                        onPress={() => handleIncreaseQuantity(detail.sku)}
+                      >
+                        <Text style={styles.quantityButtonText}>+</Text>
+                      </TouchableOpacity>
+                    </Animated.View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          ))}
         </View>
       </>
     );
@@ -112,20 +193,51 @@ const ProductDetails = ({}) => {
         data={[1]}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-        ListFooterComponent={<View style={{height: 20}} />}
+        ListFooterComponent={<View style={{ height: 150 }} />}
         keyExtractor={(item, index) => index.toString()}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
+      <View style={CommonStyles.bottomView}>
+      <C_Button
+  title="Add To cart"
+  onPress={() => {
+    const cartItems = Object.values(cart).map((detail) => {
+      const productDetail = {};
+
+      if (selectedName) {
+        productDetail.varients = selectedName;
+      }
+      if (detail?.sku) {
+        productDetail.sku = detail.sku;
+      }
+      if (detail?.caseSize) {
+        productDetail.caseSize = detail.caseSize;
+      }
+      return {
+        productName: item?.name,
+        productDetail: productDetail,
+        quantity: detail?.quantity || 1,
+        price: detail?.price || 100,
+      };
+    });
+
+    const payload = {
+      customerName: "rahul sharma",
+      mobile: "9891234513",
+      cartItems: cartItems,
+    };
+
+    console.log("payload=====>>", JSON.stringify(payload, null, 2));
+  }}
+/>
+
+      </View>
     </View>
   );
 };
 
-const mapStateToProps = state => ({
-  verifyRes: state?.verifyReducers?.data,
-});
-export default connect(mapStateToProps)(ProductDetails);
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
@@ -139,18 +251,86 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000',
   },
-  variants: {
+  categoryText: {
     fontSize: 14,
     color: '#666',
     marginTop: 4,
   },
-  priceBox: {
-    borderWidth: 1,
-    borderColor: Colors.primary,
-    borderRadius: 4,
-    padding: 8,
+  detailBox: {
     marginBottom: 16,
-    width: 110,
-    marginTop:10
+    borderRadius: 15,
+    padding: 12,
+    backgroundColor: '#FFFFFF',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  productName: {
+    fontSize: 16,
+    color: Colors.text_color,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  productDesc: {
+    fontSize: 14,
+    color: Colors.text_color,
+    fontWeight: '400',
+  },
+
+  quantityButton: {
+    width: 45,
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.buttonColor,
+    borderRadius: 25,
+    elevation: 3,
+  },
+  minusButton: {
+    marginRight: 10,
+  },
+  plusButton: {
+    marginLeft: 10,
+  },
+  quantityButtonText: {
+    fontSize: 26,
+    color: Colors.black,
+    fontWeight: '600',
+  },
+  quantityTextContainer: {
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  quantityText: {
+    fontSize: 18,
+    color: Colors.primaryText,
+    fontWeight: '500',
+  },
+  productDetailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center', // Align items vertically in the center
+  },
+  productTextContainer: {
+    flex: 1, // Take more space for the product details
+  },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 12,
+    backgroundColor: Colors.white,
+    elevation: 3,
+    flex: 1, // Allow quantity controls to take less space
+    justifyContent: 'center', // Align buttons to the end
   },
 });
+
+export default ProductDetails;
