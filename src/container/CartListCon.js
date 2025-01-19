@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
-import React, { useState } from 'react';
+import React, {  } from 'react';
 import { SmallProductIcon } from '../assets/icons';
 import Colors from '../themes/Colors';
-import { useActions } from '../hooks/useActions';
 
-const CartListCon = ({ item }) => {
-    const { incrementQuantity, decrementQuantity } = useActions();
+const CartListCon = ({ item ,decrementQuantity,incrementQuantity,index}) => {
+    // console.log("item===>",JSON.stringify(item,null,2))
 
     const scale = new Animated.Value(1);
     const onPressIn = () => {
@@ -33,7 +32,7 @@ const CartListCon = ({ item }) => {
                         <TouchableOpacity
                             onPressIn={onPressIn}
                             onPressOut={onPressOut}
-                            onPress={() => decrementQuantity({ itemId: item?.itemId })}
+                            onPress={() => decrementQuantity(index)}
                         >
                             <Text style={styles.quantityButtonText}>−</Text>
                         </TouchableOpacity>
@@ -50,7 +49,7 @@ const CartListCon = ({ item }) => {
                             disabled={item.quantity>=item?.stock_quantity}
                             onPressIn={onPressIn}
                             onPressOut={onPressOut}
-                            onPress={() => incrementQuantity({ itemId: item?.itemId })}
+                            onPress={() => incrementQuantity(index)}
                         >
                             <Text style={styles.quantityButtonText}>+</Text>
                         </TouchableOpacity>
@@ -58,10 +57,11 @@ const CartListCon = ({ item }) => {
                 </View>
             </View>
             <View style={styles.productTextContainer}>
-                <Text style={styles.productName}>{item?.name}</Text>
+                <Text style={styles.productName}>{item?.productName}</Text>
+                <Text style={styles.productName}>Varients :{item?.productDetail?.varients}</Text>
                 <Text style={styles.productName}>Price :{item?.price}</Text>
-                <Text style={styles.productName}>Stock :{item?.stock_quantity}</Text>
-                <Text style={styles.productDesc}>{item?.description}</Text>
+                <Text style={styles.productName}>SKU :{item?.productDetail?.sku}</Text>
+                <Text style={styles.productName}>Case Size :{item?.productDetail?.caseSize}</Text>
             </View>
         </View>
     );

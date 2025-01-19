@@ -1,10 +1,11 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { BackButton, DriverInfo2 } from '../../../components';
 import Colors from '../../../themes/Colors';
 import {
-  AboutIcon, AddressIcon, BackVerctor, ComplainIcon, DriverIcon, EditProfileIcon, Help,
+  AboutIcon, AddressIcon, BackVerctor, CartIcon, ComplainIcon, DriverIcon, EditProfileIcon, Help,
   HistoryIcon, LogoutIcon, ReferralIcon, SettingsIcon
 } from '../../../assets/icons';
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
@@ -16,7 +17,8 @@ const Profile = ({ navigation,userRes }) => {
   const { logOut } = useActions();
 
   const menuItems = [
-    { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
+    // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
+    { title: "Cart", navigate: 'CartScreen', icon: CartIcon },
     { title: 'Address', navigate: 'Address', icon: AddressIcon },
     { title: 'History', navigate: 'History', icon: HistoryIcon },
     // { title: 'Complain', navigate: 'Complain', icon: ComplainIcon },
@@ -68,7 +70,7 @@ const Profile = ({ navigation,userRes }) => {
             style={[styles.menuItem, index !== 0 && styles.menuItemBorder]}
             activeOpacity={0.7}
           >
-            <item.icon width={24} height={24} />
+            <item.icon width={24} height={24} color={"black"}/>
             <Text style={styles.menuText}>{item.title}</Text>
             <BackVerctor style={styles.rotatedIcon} size={16} color={Colors.black} />
           </TouchableOpacity>

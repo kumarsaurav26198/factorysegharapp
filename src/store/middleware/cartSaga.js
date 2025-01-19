@@ -2,21 +2,25 @@ import { takeEvery, put } from 'redux-saga/effects';
 import { ActionTypes } from '../constants/actiontypes';
 import axios from 'axios';
 import { apiUri, baseURL } from '../../services/apiEndPoints';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function* fetchAddressApiCall(action) {
     try {
-        const { payload } = action; // Extract payload from action
-        // console.log("Payload received:", payload);
+      const mobile = yield AsyncStorage.getItem('mobile');
 
-        const fullUrl = `${baseURL}${apiUri.factoyHome.getAddress}`;
-        // console.log("Full URL for getAddress request: ", fullUrl);
+        console.log("mobile received:", mobile);
 
-        // Send payload as a JSON object in the POST request
-        const response = yield axios.post(fullUrl, payload, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        const fullUrl = `${baseURL}${apiUri.factoyHome.getCart}`;
+        console.log("Full URL for getAddress request: ", fullUrl);
+
+        const response = yield axios({
+          method: 'post',
+          url: fullUrl,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: {mobile},
         });
 
         // Extract and log the response
@@ -24,7 +28,7 @@ function* fetchAddressApiCall(action) {
         // console.log("Response received:", JSON.stringify(data, null, 2));
 
         // Dispatch success action
-        yield put({ type: ActionTypes.FETCH_USER_ADDRESS_SUCCESS, data });
+        yield put({ type: ActionTypes.GET_CART_SUCCESS, data });
     } catch (error) {
         const errorPayload = {
             message: error?.response?.data?.message || error.message || 'Something went wrong!',
@@ -42,7 +46,7 @@ function* fetchAddressApiCall(action) {
         };
 
         console.error("Error Payload:", JSON.stringify(errorPayload, null, 2));
-        yield put({ type: ActionTypes.FETCH_USER_ADDRESS_FAILURE, error: errorPayload });
+        yield put({ type: ActionTypes.GET_CART_FAILURE, error: errorPayload });
     }
 }
 
@@ -173,7 +177,7 @@ function* addToCartApiCall(action) {
   }
 function* cartSaga() {
     yield takeEvery(ActionTypes.ADD_TO_CART_REQUEST, addToCartApiCall);
-    // yield takeEvery(ActionTypes.FETCH_USER_ADDRESS_REQUEST, fetchAddressApiCall);
+    yield takeEvery(ActionTypes.GET_CART_REQUEST, fetchAddressApiCall);
     // yield takeEvery(ActionTypes.UPDATE_LOGIN_USER_REQUEST, updateLoginUserApiCall);
 }
 

@@ -18,6 +18,7 @@ const apiUri = {
         orderHistory:'api/orderHistory',
         getAddress:'api/getAddress',
         addCart:'api/addCart',
+        getCart:'api/getCart',
         pagename:'/pages?pagename=',
         contact:'/contact',
 

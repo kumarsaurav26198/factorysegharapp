@@ -69,6 +69,10 @@ export const getProductByCategory = (payload) => ({
     type: ActionTypes.ADD_TO_CART_REQUEST,
     payload,
   });
+  export const getCartRequest = (payload) => ({
+    type: ActionTypes.GET_CART_REQUEST,
+    payload,
+  });
 
   export const incrementQuantity = (payload) => ({
     type: ActionTypes.INCREMENT_QUANTITY,
