@@ -4,29 +4,27 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { useActions } from '../../../hooks/useActions';
+import React, {useCallback, useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {useActions} from '../../../hooks/useActions';
 import Colors from '../../../themes/Colors';
-import { BackButton } from '../../../components';
-import { CommonStyles } from '../../../themes/CommonStyles';
-import { CartListCon } from '../../../container';
-import { ModalWrapper, OrderConfirmation } from '../../../components/Modal';
+import {BackButton, C_Button} from '../../../components';
+import {CommonStyles} from '../../../themes/CommonStyles';
+import {CartListCon} from '../../../container';
+import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
 
-const CartScreen = ({ cartRes }) => {
-  const { getCartRequest } = useActions();
+const CartScreen = ({cartRes, userRes}) => {
+  const {getCartRequest} = useActions();
   const cartData = cartRes?.data?.cartItems || [];
+  const cashback = userRes[0]?.cashback || 0;
+
   const [refreshing, setRefreshing] = useState(false);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
   const [cartItems, setCartItems] = useState(cartData);
+
+  const toggleModal = () => setIsModalVisible(!isModalVisible);
 
   useEffect(() => {
     if (cartData.length) {
@@ -44,46 +42,44 @@ const CartScreen = ({ cartRes }) => {
     setRefreshing(false);
   }, [getCartRequest]);
 
-  const incrementQuantity = useCallback((index) => {
-    setCartItems((prevItems) =>
+  const incrementQuantity = useCallback(index => {
+    setCartItems(prevItems =>
       prevItems.map((item, i) =>
-        i === index
-          ? { ...item, quantity: item.quantity + 1 } // Increase quantity
-          : item
-      )
+        i === index ? {...item, quantity: item.quantity + 1} : item,
+      ),
     );
   }, []);
-  
-  const decrementQuantity = useCallback((index) => {
-    setCartItems((prevItems) =>
+
+  const decrementQuantity = useCallback(index => {
+    setCartItems(prevItems =>
       prevItems.reduce((acc, item, i) => {
         if (i === index) {
           if (item.quantity > 1) {
-            // Decrease quantity if it's greater than 1
-            acc.push({ ...item, quantity: item.quantity - 1 });
+            acc.push({...item, quantity: item.quantity - 1});
           }
         } else {
-          // Add other items unchanged
           acc.push(item);
         }
         return acc;
-      }, [])
+      }, []),
     );
   }, []);
-  
-  
-  
 
   const itemTotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
-    0
+    0,
   );
+
+  const specialDiscount = itemTotal >= 2500 ? 1250 : 0;
   const deliveryFee = 0;
   const deliveryFeeDiscount = deliveryFee;
-  const totalPayable = itemTotal - deliveryFeeDiscount;
+  const totalPayable = Math.max(
+    itemTotal - deliveryFeeDiscount - cashback - specialDiscount,
+    0,
+  );
 
   const renderItem = useCallback(
-    ({ item, index }) => (
+    ({item, index}) => (
       <CartListCon
         item={item}
         index={index} // Pass the index
@@ -91,42 +87,8 @@ const CartScreen = ({ cartRes }) => {
         decrementQuantity={decrementQuantity}
       />
     ),
-    [incrementQuantity, decrementQuantity]
+    [incrementQuantity, decrementQuantity],
   );
-
-  const renderFooter = () => {
-    return (
-      <View style={styles.footerContainer}>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Item Total</Text>
-          <Text style={styles.summaryValue}>₹{itemTotal.toFixed(2)}</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, styles.discountText]}>
-            Delivery Fee (₹{deliveryFeeDiscount} Saved)
-          </Text>
-          <Text style={[styles.summaryValue, styles.discountText]}>₹0</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, styles.totalText]}>
-            Total Payable
-          </Text>
-          <Text style={[styles.summaryValue, styles.totalText]}>
-            ₹{totalPayable.toFixed(2)}
-          </Text>
-        </View>
-
-        <TouchableOpacity style={styles.payButton} onPress={()=>{
-          console.log("cartItems===>>>",JSON.stringify(cartItems,null,2))
-          toggleModal()
-        }}>
-          <Text style={styles.payButtonText}>
-            Continue to pay ₹{totalPayable.toFixed(2)}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
   return (
     <View style={[CommonStyles.container]}>
@@ -135,17 +97,66 @@ const CartScreen = ({ cartRes }) => {
         data={cartItems}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-        ListFooterComponent={renderFooter}
         keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={<View style={{ height: 290 }} />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
+      <View style={[CommonStyles.bottomView]}>
+        <View style={styles.footerContainer}>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Item Total</Text>
+            <Text style={styles.summaryValue}>₹{itemTotal.toFixed(2)}</Text>
+          </View>
+          <View style={styles.summaryRow}>
+            <Text style={[styles.summaryLabel, styles.discountText]}>
+              Delivery Fee (₹{deliveryFeeDiscount} Saved)
+            </Text>
+            <Text style={[styles.summaryValue, styles.discountText]}>₹0</Text>
+          </View>
+          {cashback > 0 && (
+            <View style={styles.summaryRow}>
+              <Text style={[styles.summaryLabel, styles.cashbackText]}>
+                Cashback Applied
+              </Text>
+              <Text style={[styles.summaryValue, styles.cashbackText]}>
+                -₹{cashback.toFixed(2)}
+              </Text>
+            </View>
+          )}
+        {specialDiscount > 0 && (
+            <View style={styles.summaryRow}>
+              <Text style={[styles.summaryLabel, styles.discountText]}>
+                Special Discount (on ₹2500+)
+              </Text>
+              <Text style={[styles.summaryValue, styles.discountText]}>
+                -₹{specialDiscount.toFixed(2)}
+              </Text>
+            </View>
+          )}
+          <View style={[styles.summaryRow, styles.totalRow]}>
+            <Text style={[styles.summaryLabel, styles.totalText]}>
+              Total Payable
+            </Text>
+            <Text style={[styles.summaryValue, styles.totalText]}>
+              ₹{totalPayable.toFixed(2)}
+            </Text>
+          </View>
+        </View>
+        <C_Button
+          title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
+          onPress={() => {
+            console.log('cartItems===>>>', JSON.stringify(cartItems, null, 2));
+            toggleModal();
+          }}
+        />
+      </View>
+
       <ModalWrapper
         visible={isModalVisible}
         onRequestClose={toggleModal}
-        center={false}
-      >
+        center={false}>
         <OrderConfirmation
           itemTotal={itemTotal}
           deliveryFee={deliveryFee}
@@ -160,51 +171,52 @@ const CartScreen = ({ cartRes }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   cartRes: state?.cartReducers,
+  userRes: state?.userReducers?.data,
 });
 
 export default connect(mapStateToProps)(CartScreen);
 
 const styles = StyleSheet.create({
   footerContainer: {
-    backgroundColor: Colors.white,
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    backgroundColor: Colors.bgColor,
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    elevation: 5,
+    width:"100%"
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   summaryLabel: {
     fontSize: 16,
-    color: '#000',
+    color: Colors.darkGray,
   },
   summaryValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000',
+    color: Colors.black,
   },
   discountText: {
     color: Colors.primary,
   },
+  cashbackText: {
+    color: Colors.green,
+    fontWeight: 'bold',
+  },
+  totalRow: {
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: Colors.borderGray,
+    paddingTop: 10,
+  },
   totalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
-  },
-  payButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 14,
-    borderRadius: 8,
-    marginTop: 16,
-    alignItems: 'center',
-  },
-  payButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.white,
+    color: Colors.black,
   },
 });
