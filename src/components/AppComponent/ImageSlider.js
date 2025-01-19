@@ -19,7 +19,7 @@ const ImageSlider = ({ image }) => {
           <View style={styles.child}>
             <Image 
               source={{ uri: image }} 
-              style={[styles.card, { height: cardWidth  }]} // Adjust height dynamically
+              style={[styles.card]} // Adjust height dynamically
               // resizeMode="contain" 
             />
           </View>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 
     backgroundColor: '#fff',
     alignSelf: 'center',
-    height:cardWidth,
+    // height:cardWidth,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -54,19 +54,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginHorizontal:20,
+    paddingBottom:10,
+    borderRadius: 10,
   },
   child: {
-    width: cardWidth,
+    // width: cardWidth,
     borderRadius: 10,
     borderColor:Colors.bgGreen,
   },
   card: {
-    width: cardWidth, // Full width of the container
+    width: cardWidth-100, 
+    height: cardWidth-100,
+    alignItems:"center",
+    alignSelf:"center"
   },
   placeholderContainer: {
     width: cardWidth,
-    height: 250,
+    // height: 250,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#d3d3d3',

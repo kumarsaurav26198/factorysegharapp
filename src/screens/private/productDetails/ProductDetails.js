@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   FlatList,
   View,
@@ -8,68 +8,66 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
-import { CommonStyles } from '../../../themes/CommonStyles';
-import { useActions } from '../../../hooks/useActions';
+import {CommonStyles} from '../../../themes/CommonStyles';
+import {useActions} from '../../../hooks/useActions';
 import ImageSlider from '../../../components/AppComponent/ImageSlider';
 import Colors from '../../../themes/Colors';
-import { BackButton, C_Button, FragranceList } from '../../../components';
-import { useRoute } from '@react-navigation/native';
+import {BackButton, C_Button, FragranceList} from '../../../components';
+import {useRoute} from '@react-navigation/native';
+import { connect } from 'react-redux';
 
-const ProductDetails = () => {
+const ProductDetails = ({userRes}) => {
+  
   const route = useRoute();
-  const { item } = route?.params;
-  const { fetchLoginUser } = useActions();
+  const {item} = route?.params;
+  const {fetchLoginUser,addToCartRequest} = useActions();
   const [refreshing, setRefreshing] = useState(false);
   const [cart, setCart] = useState({});
   const scale = new Animated.Value(1);
 
-  // Updated fragrance variants
-  const transformedFragrances = item.productDetail[0]?.variants?.map((variant, index) => ({
-    id: index,
-    name: variant,
-  }));
+  const transformedFragrances = item.productDetail[0]?.variants?.map(
+    (variant, index) => ({
+      id: index,
+      name: variant,
+    }),
+  );
 
-  // State to store selected fragrance, SKU and caseSize
-  const [selectedName, setSelectedName] = useState(transformedFragrances[0]?.name || '');
-  const [selectedCaseSize, setSelectedCaseSize] = useState();
-  const [selectedSKU, setSelectedSKU] = useState();
+  const [selectedName, setSelectedName] = useState(
+    transformedFragrances[0]?.name || '',
+  );
 
-  // Handling fragrance selection, which also updates SKU and caseSize
-  const handleSelectFragrance = (name, caseSize, sku) => {
+  const handleSelectFragrance = (name) => {
     setSelectedName(name);
-    setSelectedCaseSize(caseSize);
-    setSelectedSKU(sku);
   };
 
-  const handleIncreaseQuantity = (sku) => {
-    setCart((prevCart) => {
-      const updatedCart = { ...prevCart };
+  const handleIncreaseQuantity = sku => {
+    setCart(prevCart => {
+      const updatedCart = {...prevCart};
 
       if (updatedCart[sku]) {
         updatedCart[sku].quantity += 1;
       } else {
-        // If item doesn't exist, create a new entry with the selected SKU and details
-        const productDetail = item.productDetail.find(detail => detail.sku === sku);
+        const productDetail = item.productDetail.find(
+          detail => detail.sku === sku,
+        );
         updatedCart[sku] = {
           ...productDetail,
           quantity: 1,
         };
       }
-
       return updatedCart;
     });
   };
 
-  const handleDecreaseQuantity = (sku) => {
-    setCart((prevCart) => {
-      const updatedCart = { ...prevCart };
+  const handleDecreaseQuantity = sku => {
+    setCart(prevCart => {
+      const updatedCart = {...prevCart};
 
       if (updatedCart[sku]?.quantity > 1) {
         updatedCart[sku].quantity -= 1;
       } else if (updatedCart[sku]?.quantity === 1) {
-        delete updatedCart[sku]; // Remove the item if quantity reaches 0
+        delete updatedCart[sku];
       }
-
       return updatedCart;
     });
   };
@@ -118,8 +116,12 @@ const ProductDetails = () => {
                 <View style={styles.productDetailsRow}>
                   <View style={styles.productTextContainer}>
                     <Text style={styles.productName}>SKU: {detail?.sku}</Text>
-                    <Text style={styles.productName}>Case Size: {detail?.caseSize}</Text>
-                    <Text style={styles.productName}>Price: {detail?.price||100}</Text>
+                    <Text style={styles.productName}>
+                      Case Size: {detail?.caseSize}
+                    </Text>
+                    <Text style={styles.productName}>
+                      Price: {detail?.price || 100}
+                    </Text>
                     <Text style={styles.productDesc}>{item?.description}</Text>
                   </View>
 
@@ -128,14 +130,12 @@ const ProductDetails = () => {
                       style={[
                         styles.quantityButton,
                         styles.minusButton,
-                        { transform: [{ scale }] },
-                      ]}
-                    >
+                        {transform: [{scale}]},
+                      ]}>
                       <TouchableOpacity
                         onPressIn={onPressIn}
                         onPressOut={onPressOut}
-                        onPress={() => handleDecreaseQuantity(detail.sku)}
-                      >
+                        onPress={() => handleDecreaseQuantity(detail.sku)}>
                         <Text style={styles.quantityButtonText}>−</Text>
                       </TouchableOpacity>
                     </Animated.View>
@@ -150,14 +150,12 @@ const ProductDetails = () => {
                       style={[
                         styles.quantityButton,
                         styles.plusButton,
-                        { transform: [{ scale }] },
-                      ]}
-                    >
+                        {transform: [{scale}]},
+                      ]}>
                       <TouchableOpacity
                         onPressIn={onPressIn}
                         onPressOut={onPressOut}
-                        onPress={() => handleIncreaseQuantity(detail.sku)}
-                      >
+                        onPress={() => handleIncreaseQuantity(detail.sku)}>
                         <Text style={styles.quantityButtonText}>+</Text>
                       </TouchableOpacity>
                     </Animated.View>
@@ -171,9 +169,9 @@ const ProductDetails = () => {
     );
   };
 
-  useEffect(() => {
-    fetchLoginUser();
-  }, [fetchLoginUser]);
+  // useEffect(() => {
+  //   // fetchLoginUser();
+  // }, [fetchLoginUser]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -193,51 +191,93 @@ const ProductDetails = () => {
         data={[1]}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-        ListFooterComponent={<View style={{ height: 150 }} />}
+        ListFooterComponent={<View style={{height: 150}} />}
         keyExtractor={(item, index) => index.toString()}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      <View style={CommonStyles.bottomView}>
-      <C_Button
-  title="Add To cart"
-  onPress={() => {
-    const cartItems = Object.values(cart).map((detail) => {
-      const productDetail = {};
+      <View style={[CommonStyles.bottomView, {paddingHorizontal: 20}]}>
+      {/* <C_Button
+          title="Buy"
+          disabled={Object.keys(cart).length === 0}
+          // loading
+          onPress={() => {
+            const cartItems = Object.values(cart).map(detail => {
+              const productDetail = {};
 
-      if (selectedName) {
-        productDetail.varients = selectedName;
-      }
-      if (detail?.sku) {
-        productDetail.sku = detail.sku;
-      }
-      if (detail?.caseSize) {
-        productDetail.caseSize = detail.caseSize;
-      }
-      return {
-        productName: item?.name,
-        productDetail: productDetail,
-        quantity: detail?.quantity || 1,
-        price: detail?.price || 100,
-      };
-    });
+              if (selectedName) {
+                productDetail.varients = selectedName;
+              }
+              if (detail?.sku) {
+                productDetail.sku = detail.sku;
+              }
+              if (detail?.caseSize) {
+                productDetail.caseSize = detail.caseSize;
+              }
+              return {
+                productName: item?.name,
+                productDetail: productDetail,
+                quantity: detail?.quantity || 1,
+                price: detail?.price || 100,
+              };
+            });
 
-    const payload = {
-      customerName: "rahul sharma",
-      mobile: "9891234513",
-      cartItems: cartItems,
-    };
+            const payload = {
+              customerName: userRes[0]?.fullName,
+              mobile: userRes[0]?.mobile,
+              cartItems: cartItems,
+            };
 
-    console.log("payload=====>>", JSON.stringify(payload, null, 2));
-  }}
-/>
+            console.log('payload=====>>', JSON.stringify(payload, null, 2));
+          }}
+        /> */}
+        <C_Button
+          title="Add To cart"
+          disabled={Object.keys(cart).length === 0}
+          // loading
+          onPress={() => {
+            const cartItems = Object.values(cart).map(detail => {
+              const productDetail = {};
 
+              if (selectedName) {
+                productDetail.varients = selectedName;
+              }
+              if (detail?.sku) {
+                productDetail.sku = detail.sku;
+              }
+              if (detail?.caseSize) {
+                productDetail.caseSize = detail.caseSize;
+              }
+              return {
+                productName: item?.name,
+                productDetail: productDetail,
+                quantity: detail?.quantity || 1,
+                price: detail?.price || 100,
+              };
+            });
+
+            const payload = {
+              customerName: userRes[0]?.fullName,
+              mobile: userRes[0]?.mobile,
+              cartItems: cartItems,
+            };
+            addToCartRequest(payload);
+            // console.log('payload=====>>', JSON.stringify(payload, null, 2));
+          }}
+        />
+    
       </View>
     </View>
   );
 };
+const mapStateToProps = (state) => ({
+  userRes: state?.userReducers?.data,
+  addressRes: state?.addressReducers?.data,
+});
+export default connect(mapStateToProps)(ProductDetails);
 
+// userReducers
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
@@ -257,13 +297,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   detailBox: {
-    marginBottom: 16,
+    marginTop: 10,
     borderRadius: 15,
     padding: 12,
     backgroundColor: '#FFFFFF',
     elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: {width: 0, height: 6},
     shadowOpacity: 0.15,
     shadowRadius: 8,
   },
@@ -333,4 +373,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductDetails;
+

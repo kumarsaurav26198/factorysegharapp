@@ -55,26 +55,27 @@ const CommonProduct = ({item, cartRes}) => {
       </View> */}
       <TouchableOpacity
         style={styles.buyButton}
-        onPress={() => {
- const payload={
-  "customerName": "rahul sharma",
-  "mobile": "9891234513",
-  item
+        onPress={()=>{navigation.navigate("ProductDetails",{item})}}
+//         onPress={() => {
+//  const payload={
+//   "customerName": "rahul sharma",
+//   "mobile": "9891234513",
+//   item
 
- }
-// console.log("payload",JSON.stringify(payload,null,2))
-          addToCartRequest(payload);
-          // addToCartRequest({
-          //   itemId: item?.id,
-          //   quantity: 1,
-          //   name: item?.name,
-          //   description: item?.description,
-          //   price: item?.price,
-          //   stock_quantity: item?.stock_quantity,
-          // });
-        }}
+//  }
+// // console.log("payload",JSON.stringify(payload,null,2))
+//           addToCartRequest(payload);
+//           // addToCartRequest({
+//           //   itemId: item?.id,
+//           //   quantity: 1,
+//           //   name: item?.name,
+//           //   description: item?.description,
+//           //   price: item?.price,
+//           //   stock_quantity: item?.stock_quantity,
+//           // });
+//         }}
         >
-        <Text style={styles.buyButtonText}>Add To Cart</Text>
+        <Text style={styles.buyButtonText}>Buy</Text>
       </TouchableOpacity>
     </LinearGradient>
   );

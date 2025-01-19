@@ -12,7 +12,7 @@ import Colors from '../themes/Colors';
 
 const ProductContainer = ({allProductRes}) => {
   const allProduct = allProductRes?.data?.items || [];
-  const limitedProducts = allProduct.slice(0, 4);
+  const limitedProducts = allProduct.slice(0, 10);
 
   return (
     <View style={styles.container}>
