@@ -1,4 +1,3 @@
-
 import {
   FlatList,
   View,
@@ -19,26 +18,29 @@ import {useRoute} from '@react-navigation/native';
 const ProductDetails = ({}) => {
   const route = useRoute();
   const {item} = route?.params;
-
+  console.log("item=====>>",JSON.stringify(item,null,2))
   const {fetchLoginUser} = useActions();
   const [refreshing, setRefreshing] = useState(false);
 
   const transformedFragrances = item.productDetail[0]?.variants?.map(
-    (item, index) => ({
-      id: index,
-      name: item,
-    }),
+    // eslint-disable-next-line no-shadow
+    (item, index) => {
+      return {
+        id: index,
+        name: item,
+      };
+    },
   );
   const [selectedname, setSelectedName] = useState(
     transformedFragrances[0]?.name || '',
   );
-  const handleSelectFragrance = (name) => {
+  const handleSelectFragrance = name => {
     setSelectedName(name);
   };
-  const renderItem = (() => {
+  const renderItem = () => {
     return (
       <>
-        <ImageSlider />
+        <ImageSlider image={item.image}/>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>{item?.name}</Text>
@@ -53,16 +55,20 @@ const ProductDetails = ({}) => {
               fragrances={transformedFragrances}
               selectedname={selectedname}
               onPress={handleSelectFragrance}
-              key={selectedname}
             />
           </View>
-          <TouchableOpacity style={styles.priceBox}>
-            <Text style={styles.variants}>380 gms</Text>
-            <Text style={[styles.title, {color: Colors.primary}]}>$20.00</Text>
-          </TouchableOpacity>
-          <Text style={styles.title}>Fragrance</Text>
         </View>
+
+
         <View style={styles.container}>
+        <Text style={styles.title}>Product Detail</Text>
+        
+          <TouchableOpacity style={styles.priceBox}>
+            <Text style={styles.variants}>SKU</Text>
+            <Text style={[styles.title, {color: Colors.primary}]}>{item?.productDetail[0].sku}</Text>
+          </TouchableOpacity>
+
+          
           <View style={styles.header}>
             <Text style={styles.title}>Brand</Text>
             <Text style={styles.variants}>Good & Moore</Text>
@@ -82,7 +88,7 @@ const ProductDetails = ({}) => {
         </View>
       </>
     );
-  });
+  };
 
   useEffect(() => {
     fetchLoginUser();
@@ -145,5 +151,6 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 16,
     width: 110,
+    marginTop:10
   },
 });

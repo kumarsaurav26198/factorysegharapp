@@ -11,7 +11,7 @@ export const addressReducers = (state = initialState, action) => {
     {
         case ActionTypes.FETCH_USER_ADDRESS_REQUEST:
             // console.warn("FETCH_USER_ADDRESS_REQUEST Reducers", ActionTypes.FETCH_USER_ADDRESS_REQUEST);
-            // console.log("FETCH_USER_ADDRESS_REQUEST Reducers action===>", action);
+            console.log("FETCH_USER_ADDRESS_REQUEST Reducers action===>", action);
             return {
                 ...state,
                 loading: true,

@@ -1,111 +1,166 @@
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    FlatList,
-  } from 'react-native';
-  import React, { useState } from 'react';
-  import { FontSize, FontsWeights } from '../../themes/Fonts';
-  import Colors from '../../themes/Colors';
-  import { Close } from '../../assets/icons';
-  import C_TextInput from '../Common/C_TextInput';
-  import C_Button from '../Common/C_Button';
-  
-  const AddAddress = ({ handlePressDone, handlePressClose }) => {
-    const [formData, setFormData] = useState({
-      addressLine1: '',
-      addressLine2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      country: '',
-    });
-  
-    const handleChange = (key, value) => {
-      setFormData({
-        ...formData,
-        [key]: value,
-      });
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from 'react-native';
+import React, { useState } from 'react';
+import { FontSize, FontsWeights } from '../../themes/Fonts';
+import Colors from '../../themes/Colors';
+import { Close } from '../../assets/icons';
+import C_TextInput from '../Common/C_TextInput';
+import C_Button from '../Common/C_Button';
+import C_Text from '../Common/C_Text';
+import MobileWithCountryCode from '../Common/MobileWithCountryCode';
+import { addressValidiadtion } from '../../utils/validators';
+import { CommonStyles } from '../../themes/CommonStyles';
+
+const AddAddress = ({ handlePressDone, handlePressClose,email }) => {
+    const [ numbers, setNumber ] = useState('');
+    const [ selectedCountryCode, setSelectedCountryCode ] = useState('91');
+  const [ errorMessage, setErrorMessage ] = useState('');
+
+    
+    const handleCountryChange = code => {
+      setSelectedCountryCode(code);
     };
   
-    const handleSubmit = () => {
-      console.log('Address Data:', formData);
-      handlePressDone && handlePressDone(formData);
-    };
-  
-    const fields = [
-      { key: 'addressLine1', label: 'Address Line 1', placeholder: 'Enter address line 1' },
-    //   { key: 'addressLine2', label: 'Address Line 2', placeholder: 'Enter address line 2' },
-      { key: 'city', label: 'City', placeholder: 'Enter city' },
-      { key: 'state', label: 'State', placeholder: 'Enter state' },
-      { key: 'zipCode', label: 'Zip Code', placeholder: 'Enter zip code' },
-      { key: 'country', label: 'Country', placeholder: 'Enter country' },
-    ];
-  
-    const renderItem = ({ item }) => (
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>{item.label}</Text>
-        <C_TextInput
-          placeholder={item.placeholder}
-          value={formData[item.key]}
-          onChangeText={(text) => handleChange(item.key, text)}
-        />
-      </View>
-    );
-  
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handlePressClose} style={styles.closeButton}>
-          <Close />
-        </TouchableOpacity>
-        <FlatList
-          data={fields}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.key}
-          contentContainerStyle={styles.formContainer}
-          showsVerticalScrollIndicator={false}
-        />
-        <View style={styles.buttonContainer}>
-          <C_Button title="Add Address" onPress={handleSubmit} />
-        </View>
-      </View>
-    );
-  };
-  
-  export default AddAddress;
-  
-  const styles = StyleSheet.create({
-    container: {
-width:"100%",
-      backgroundColor: Colors.white,
-      paddingHorizontal: 10,
-    },
-    closeButton: {
-      alignSelf: 'flex-end',
-      padding: 10,
-    },
-    formContainer: {
-    //   paddingBottom: 20,
-    },
-    headerText: {
-      fontSize: FontSize.FS20,
-      fontWeight: FontsWeights.FW600,
-      color: Colors.black,
-      textAlign: 'center',
-      marginBottom: 20,
-    },
-    inputGroup: {
-    },
-    label: {
-      fontSize: FontSize.FS14,
-      fontWeight: FontsWeights.FW500,
-      color: Colors.darkgrey,
-      marginBottom: 8,
-    },
-    buttonContainer: {
-      marginTop: 20,
-      paddingHorizontal: 10,
-    },
+  const [formData, setFormData] = useState({
+    name: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
+    email,
+    phone: selectedCountryCode + numbers,
   });
-  
+
+  const handleChange = (key, value) => {
+    setFormData({
+      ...formData,
+      [key]: value,
+    });
+  };
+
+  const handleSubmit = () => {
+    // eslint-disable-next-line no-shadow
+    const { isValid, errorMessage }  = addressValidiadtion({ ...formData, selectedCountryCode, numbers });
+    if (isValid) {
+      console.log('Valid Data:', { ...formData, phone: selectedCountryCode + numbers });
+      handlePressDone && handlePressDone({ ...formData, phone: selectedCountryCode + numbers });
+    } else {
+      setErrorMessage(errorMessage); // Show error message
+    }
+    // handlePressDone && handlePressDone(formData);
+  };
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handlePressClose} style={styles.closeButton}>
+        <Close />
+      </TouchableOpacity>
+      <C_Text content="Add New Address" medium={true} style={{margin:10}}/>
+                   {errorMessage ? <Text style={CommonStyles.errorText}>{errorMessage}</Text> : null}
+
+      <ScrollView>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Name</Text>
+          <C_TextInput
+            placeholder="Enter Name"
+            value={formData.name}
+            onChangeText={(text) => handleChange('name', text)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Number</Text>
+          <MobileWithCountryCode
+                  value={numbers}
+                  onChangeText={setNumber}
+                  placeholder="981xxxxxxx"
+                  onCountryChange={handleCountryChange}
+                />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Address</Text>
+          <C_TextInput
+            placeholder="Enter address"
+            value={formData.addressLine1}
+            onChangeText={(text) => handleChange('addressLine1', text)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Landmark </Text>
+          <C_TextInput
+            placeholder="Near by place"
+            value={formData.addressLine2}
+            onChangeText={(text) => handleChange('addressLine2', text)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>City</Text>
+          <C_TextInput
+            placeholder="Enter city"
+            value={formData.city}
+            onChangeText={(text) => handleChange('city', text)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>State</Text>
+          <C_TextInput
+            placeholder="Enter state"
+            value={formData.state}
+            onChangeText={(text) => handleChange('state', text)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Zip Code</Text>
+          <C_TextInput
+            placeholder="Enter zip code"
+            value={formData.zipCode}
+            onChangeText={(text) => handleChange('zipCode', text)}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Country</Text>
+          <C_TextInput
+            placeholder="Enter country"
+            value={formData.country}
+            onChangeText={(text) => handleChange('country', text)}
+          />
+        </View>
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <C_Button title="Add Address" onPress={handleSubmit} />
+      </View>
+    </View>
+  );
+};
+
+export default AddAddress;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.white,
+    paddingHorizontal: 10,
+    height:380
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    // padding: 10,
+  },
+  inputGroup: {
+  },
+  label: {
+    fontSize: FontSize.FS14,
+    fontWeight: FontsWeights.FW500,
+    color: Colors.darkgrey,
+    marginBottom: 8,
+  },
+  buttonContainer: {
+    // marginTop: 20,
+    // paddingHorizontal: 10,
+  },
+});

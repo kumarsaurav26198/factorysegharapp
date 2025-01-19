@@ -13,6 +13,48 @@ export const validatePhoneNumber = (selectedCountryCode, numbers) => {
   return { isValid, errorMessage };
 };
 
+export const addressValidiadtion=(formData)=>{
+  let isValid = true;
+  let errorMessage = '';
+
+  if (!formData.name || formData.name.trim().length < 3) {
+    isValid = false;
+    errorMessage = 'Name is required.';
+  } else if (!formData.addressLine1 || formData.addressLine1.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'Address  is required.';
+  } else if (!formData.addressLine2 || formData.addressLine1.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'Land mark  is required.';
+  } else if (!formData.city || formData.city.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'City is required.';
+  } else if (!formData.state || formData.state.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'State is required.';
+  } else if (!formData.zipCode || !/^\d{5,6}$/.test(formData.zipCode)) {
+    isValid = false;
+    errorMessage = 'Enter a valid 5-6 digit ZIP code.';
+  } else if (!formData.country || formData.country.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'Country is required.';
+  }
+
+  // Phone number validation
+  const phoneValidation = validatePhoneNumber(
+    formData.selectedCountryCode,
+    formData.numbers
+  );
+  if (!phoneValidation.isValid) {
+    isValid = false;
+    errorMessage = phoneValidation.errorMessage;
+  }
+
+  return { isValid, errorMessage };
+
+
+}
+
 export const validateLogin = (email, password) => {
   let isValid = true;
   let errorMessage = '';

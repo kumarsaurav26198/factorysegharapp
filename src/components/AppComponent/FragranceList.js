@@ -2,8 +2,6 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native
 import React from 'react';
 
 const FragranceList = ({ fragrances, selectedname, onPress }) => {
-  console.log("selectedname==>",selectedname);
-
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity

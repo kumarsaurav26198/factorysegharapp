@@ -4,7 +4,6 @@ import {
   View,
   FlatList,
   RefreshControl,
-  TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { BackButton, C_Button } from '../../../components';
@@ -16,7 +15,7 @@ import { AddAddress, AddSuccess, ModalWrapper } from '../../../components/Modal'
 
 const Address = ({ userRes, addressRes }) => {
   const email = "magenet2@example.com";
-  // console.log("addressRes", addressRes);
+  console.log("addressRes", addressRes);
 
   const { fetchUserAddress } = useActions();
   const [refreshing, setRefreshing] = useState(false);
@@ -27,13 +26,13 @@ const Address = ({ userRes, addressRes }) => {
 
   useEffect(() => {
     if (email) fetchUserAddress({ email });
-  }, [fetchUserAddress, email]);
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    if (email) fetchUserAddress({ email });
+     fetchUserAddress({ email });
     setRefreshing(false);
-  }, [fetchUserAddress, email]);
+  }, [fetchUserAddress]);
 
   const handleEdit = (item) => {
     console.log("Edit Address:", item);
@@ -97,14 +96,14 @@ const Address = ({ userRes, addressRes }) => {
         visible={isModalVisible}
         onRequestClose={toggleModal}
         >
-        <AddAddress handlePressClose ={toggleModal} handlePressDone={toggleModal}/>
+        <AddAddress handlePressClose ={toggleModal} handlePressDone={toggleModal} email={email}/>
       </ModalWrapper>
     </View>
   );
 };
 
 const mapStateToProps = (state) => ({
-  userRes: state?.userReducers?.data,
+  userRes: state?.userReducers,
   addressRes: state?.addressReducers?.data,
 });
 
