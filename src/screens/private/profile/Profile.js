@@ -70,7 +70,7 @@ const Profile = ({ navigation,userRes }) => {
             style={[styles.menuItem, index !== 0 && styles.menuItemBorder]}
             activeOpacity={0.7}
           >
-            <item.icon width={24} height={24} color={"black"}/>
+            <item.icon width={24} height={24}/>
             <Text style={styles.menuText}>{item.title}</Text>
             <BackVerctor style={styles.rotatedIcon} size={16} color={Colors.black} />
           </TouchableOpacity>

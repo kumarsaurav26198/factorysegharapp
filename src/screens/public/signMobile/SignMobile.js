@@ -16,6 +16,8 @@ const SignMobile = ({ loginRes }) => {
   const [ selectedCountryCode, setSelectedCountryCode ] = useState('91');
   const [ errorMessage, setErrorMessage ] = useState('');
 
+  // console.log(loginRes.error)
+
   useEffect(() => {
     logingReset();
   }, []);
@@ -70,6 +72,7 @@ const SignMobile = ({ loginRes }) => {
 
               </View>
               {errorMessage ? <Text style={CommonStyles.errorText}>{errorMessage}</Text> : null}
+              {loginRes?.error ? <Text style={CommonStyles.errorText}>{loginRes?.error?.message}</Text> : null}
               <View style={styles.phoneInputWrapper}>
 
                 <MobileWithCountryCode

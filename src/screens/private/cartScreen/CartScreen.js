@@ -1,19 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {useActions} from '../../../hooks/useActions';
 import Colors from '../../../themes/Colors';
-import {BackButton, C_Button} from '../../../components';
+import {BackButton, C_Button, C_SmallButton} from '../../../components';
 import {CommonStyles} from '../../../themes/CommonStyles';
 import {CartListCon} from '../../../container';
 import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
+import { navigate } from '../../../services/navigationService';
 
 const CartScreen = ({cartRes, userRes}) => {
   const {getCartRequest} = useActions();
@@ -98,12 +93,22 @@ const CartScreen = ({cartRes, userRes}) => {
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        ListFooterComponent={<View style={{ height: 290 }} />}
+        ListEmptyComponent={
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>---- No Data Found In Cart ---</Text>
+            <C_SmallButton title="Shop Now" onPress={()=>{
+              navigate("BottomNavigator")
+            }}/>
+          </View>
+        }
+        ListFooterComponent={<View style={{height: 290}} />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      <View style={[CommonStyles.bottomView]}>
+      {
+        cartItems?.length>0?
+        <View style={[CommonStyles.bottomView]}>
         <View style={styles.footerContainer}>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Item Total</Text>
@@ -125,7 +130,7 @@ const CartScreen = ({cartRes, userRes}) => {
               </Text>
             </View>
           )}
-        {specialDiscount > 0 && (
+          {specialDiscount > 0 && (
             <View style={styles.summaryRow}>
               <Text style={[styles.summaryLabel, styles.discountText]}>
                 Special Discount (on ₹2500+)
@@ -151,7 +156,9 @@ const CartScreen = ({cartRes, userRes}) => {
             toggleModal();
           }}
         />
-      </View>
+      </View>:""
+      }
+
 
       <ModalWrapper
         visible={isModalVisible}
@@ -185,7 +192,20 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 5,
-    width:"100%"
+    width: '100%',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 50,
+  },
+  errorText: {
+    color: Colors.black,
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 10,
   },
   summaryRow: {
     flexDirection: 'row',

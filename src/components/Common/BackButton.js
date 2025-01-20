@@ -99,7 +99,7 @@ function BackButton({
         <TouchableOpacity
           onPress={handlePressCart}
           style={styles.iconContainer}>
-          <CartIcon />
+          <CartIcon  fill={"#fff"}/>
           {cartLenght > 0 && (
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>{cartLenght}</Text>
