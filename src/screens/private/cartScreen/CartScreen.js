@@ -8,9 +8,9 @@ import {BackButton, C_Button, C_SmallButton} from '../../../components';
 import {CommonStyles} from '../../../themes/CommonStyles';
 import {CartListCon} from '../../../container';
 import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
-import { navigate } from '../../../services/navigationService';
+import {navigate} from '../../../services/navigationService';
 
-const CartScreen = ({cartRes, userRes}) => {
+const CartScreen = ({cartRes, userRes,addressRes}) => {
   const {getCartRequest} = useActions();
   const cartData = cartRes?.data?.cartItems || [];
   const cashback = userRes[0]?.cashback || 0;
@@ -96,72 +96,105 @@ const CartScreen = ({cartRes, userRes}) => {
         ListEmptyComponent={
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>---- No Data Found In Cart ---</Text>
-            <C_SmallButton title="Shop Now" onPress={()=>{
-              navigate("BottomNavigator")
-            }}/>
+            <C_SmallButton
+              title="Shop Now"
+              onPress={() => {
+                navigate('BottomNavigator');
+              }}
+            />
           </View>
         }
-        ListFooterComponent={<View style={{height: 290}} />}
+        ListFooterComponent={<View style={{height: 340}} />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      {
-        cartItems?.length>0?
+      {cartItems?.length > 0 ? (
         <View style={[CommonStyles.bottomView]}>
-
-          
-        <View style={styles.footerContainer}>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Item Total</Text>
-            <Text style={styles.summaryValue}>₹{itemTotal.toFixed(2)}</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={[styles.summaryLabel, styles.discountText]}>
-              Delivery Fee (₹{deliveryFeeDiscount} Saved)
-            </Text>
-            <Text style={[styles.summaryValue, styles.discountText]}>₹0</Text>
-          </View>
-          {cashback > 0 && (
+          <View style={styles.footerContainer}>
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, styles.cashbackText]}>
-                Cashback Applied
-              </Text>
-              <Text style={[styles.summaryValue, styles.cashbackText]}>
-                -₹{cashback.toFixed(2)}
-              </Text>
+              <Text style={styles.summaryLabel}>Item Total</Text>
+              <Text style={styles.summaryValue}>₹{itemTotal.toFixed(2)}</Text>
             </View>
-          )}
-          {specialDiscount > 0 && (
             <View style={styles.summaryRow}>
               <Text style={[styles.summaryLabel, styles.discountText]}>
-                Special Discount (on ₹2500+)
+                Delivery Fee (₹{deliveryFeeDiscount} Saved)
               </Text>
-              <Text style={[styles.summaryValue, styles.discountText]}>
-                -₹{specialDiscount.toFixed(2)}
+              <Text style={[styles.summaryValue, styles.discountText]}>₹0</Text>
+            </View>
+            {cashback > 0 && (
+              <View style={styles.summaryRow}>
+                <Text style={[styles.summaryLabel, styles.cashbackText]}>
+                  Cashback Applied
+                </Text>
+                <Text style={[styles.summaryValue, styles.cashbackText]}>
+                  -₹{cashback.toFixed(2)}
+                </Text>
+              </View>
+            )}
+            {specialDiscount > 0 && (
+              <View style={styles.summaryRow}>
+                <Text style={[styles.summaryLabel, styles.discountText]}>
+                  Special Discount (on ₹2500+)
+                </Text>
+                <Text style={[styles.summaryValue, styles.discountText]}>
+                  -₹{specialDiscount.toFixed(2)}
+                </Text>
+              </View>
+            )}
+            <View style={styles.summaryRow}>
+              <Text style={[styles.summaryLabel, styles.discountText]}>
+                Select Address
+              </Text>
+              <Text
+              onPress={()=>{
+                navigate("Address")
+              }}
+                style={[
+                  styles.summaryValue,
+                  styles.discountText,
+                  {color: 'blue', textDecorationLine: 'underline'},
+                ]}>
+                Change Address
               </Text>
             </View>
-          )}
-          <View style={[styles.summaryRow, styles.totalRow]}>
-            <Text style={[styles.summaryLabel, styles.totalText]}>
-              Total Payable
-            </Text>
-            <Text style={[styles.summaryValue, styles.totalText]}>
-              ₹{totalPayable.toFixed(2)}
-            </Text>
+            <Text style={[styles.summaryLabel, styles.discountText]} numberOfLines={1}>
+                Selected Address:- 
+                `{`  "address": {
+          "name": "John Doe",
+          "phone": "9876543210",
+          "addressLine1": "123 Main Street",
+          "addressLine2": "Apt 4B",
+          "landMark": "Near Central Park",
+          "city": "New York",
+          "state": "NY",
+          "pinCode": "10001",
+          "country": "USA"
+        }`}`
+              </Text>
+            <View style={[styles.summaryRow, styles.totalRow]}>
+              <Text style={[styles.summaryLabel, styles.totalText]}>
+                Total Payable
+              </Text>
+              <Text style={[styles.summaryValue, styles.totalText]}>
+                ₹{totalPayable.toFixed(2)}
+              </Text>
+            </View>
           </View>
+          <C_Button
+            title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
+            onPress={() => {
+              console.log(
+                'cartItems===>>>',
+                JSON.stringify(cartItems, null, 2),
+              );
+              toggleModal();
+            }}
+          />
         </View>
-        <C_Button
-          title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
-          onPress={() => {
-            console.log('cartItems===>>>', JSON.stringify(cartItems, null, 2));
-            toggleModal();
-          }}
-        />
-      </View>:""
-      }
-
-
+      ) : (
+        ''
+      )}
       <ModalWrapper
         visible={isModalVisible}
         onRequestClose={toggleModal}
@@ -183,6 +216,8 @@ const CartScreen = ({cartRes, userRes}) => {
 const mapStateToProps = state => ({
   cartRes: state?.cartReducers,
   userRes: state?.userReducers?.data,
+  addressRes: state?.addressReducers?.data,
+  
 });
 
 export default connect(mapStateToProps)(CartScreen);

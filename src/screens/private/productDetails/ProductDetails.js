@@ -74,53 +74,46 @@ const ProductDetails = ({userRes, cartRes}) => {
     });
   };
 
-  const handleRemoveFromCart = sku => {
-    setCart(prevCart => {
+  const handleRemoveFromCart = (sku) => {
+    setCart((prevCart) => {
       const existingItem = prevCart[sku]; // Check if the item exists in the cart
-
+  
       if (!existingItem) {
         return prevCart; // If the item doesn't exist, return the cart as is
       }
-
-      let updatedCart;
-
-      if (existingItem.quantity > 1) {
-        // Decrease quantity if it's greater than 1
-        updatedCart = {
-          ...prevCart,
-          [sku]: {
-            ...existingItem,
-            quantity: existingItem.quantity - 1, // Decrement the quantity
-          },
-        };
-      } else {
-        // Remove the item from the cart if quantity is 1
-        const {[sku]: _, ...rest} = prevCart; // Use destructuring to exclude the item
-        updatedCart = rest;
-      }
-
-      // Create the payload for updated cart
+  
+      // Always keep the item in the cart, even if quantity is 0
+      const updatedCart = {
+        ...prevCart,
+        [sku]: {
+          ...existingItem,
+          quantity: Math.max(existingItem.quantity - 1, 0), // Decrement quantity but don't go below 0
+        },
+      };
+  
+      // Create the payload for the updated cart
       const payload = {
         customerName: userRes[0]?.fullName,
-          mobile: userRes[0]?.mobile,
-          cartItems:{
-            productName: item?.name,
+        mobile: userRes[0]?.mobile,
+        cartItems: {
+          productName: item?.name,
           productDetail: {
             variants: selectedName,
-            sku: updatedCart[sku]?.sku,
-            caseSize: updatedCart[sku]?.caseSize,
+            sku: updatedCart[sku]?.sku, // Ensure `sku` is included
+            caseSize: updatedCart[sku]?.caseSize, // Ensure `caseSize` is included
           },
-          quantity: updatedCart[sku]?.quantity||0,
-          price: updatedCart[sku]?.price,
-          }
+          quantity: updatedCart[sku]?.quantity || 0, // Quantity can be 0 but keep the item
+          price: updatedCart[sku]?.price || 0, // Price can be 0 if the item is not in the cart
+        },
+      };
   
-        };
-      console.log("handleRemoveFromCart payload===>>",JSON.stringify(payload,null,2));
+      console.log("handleRemoveFromCart payload===>>", JSON.stringify(payload, null, 2));
       addToCartRequest(payload);
-
-      return updatedCart;
+  
+      return updatedCart; // Update the cart state
     });
   };
+  
 
   const onPressIn = () => {
     Animated.spring(scale, {
