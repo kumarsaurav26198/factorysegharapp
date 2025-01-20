@@ -109,6 +109,8 @@ const CartScreen = ({cartRes, userRes}) => {
       {
         cartItems?.length>0?
         <View style={[CommonStyles.bottomView]}>
+
+          
         <View style={styles.footerContainer}>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Item Total</Text>

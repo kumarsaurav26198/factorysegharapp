@@ -14,14 +14,15 @@ import ImageSlider from '../../../components/AppComponent/ImageSlider';
 import Colors from '../../../themes/Colors';
 import {BackButton, C_Button, FragranceList} from '../../../components';
 import {useRoute} from '@react-navigation/native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-const ProductDetails = ({userRes}) => {
-  
+const ProductDetails = ({userRes, cartRes}) => {
   const route = useRoute();
   const {item} = route?.params;
-  const {fetchLoginUser,addToCartRequest} = useActions();
+  const {fetchLoginUser, addToCartRequest} = useActions();
   const [refreshing, setRefreshing] = useState(false);
+  const cartData = cartRes?.data?.cartItems || [];
+
   const [cart, setCart] = useState({});
   const scale = new Animated.Value(1);
 
@@ -36,38 +37,87 @@ const ProductDetails = ({userRes}) => {
     transformedFragrances[0]?.name || '',
   );
 
-  const handleSelectFragrance = (name) => {
+  const handleSelectFragrance = name => {
     setSelectedName(name);
   };
 
-  const handleIncreaseQuantity = sku => {
+  const handleAddToCart = (sku, caseSize, price) => {
     setCart(prevCart => {
-      const updatedCart = {...prevCart};
+      const existingItem = prevCart[sku];
+      const updatedCart = {
+        ...prevCart,
+        [sku]: {
+          sku,
+          caseSize,
+          price,
+          quantity: existingItem ? existingItem.quantity + 1 : 1,
+        },
+      };
+      const payload = {
+      customerName: userRes[0]?.fullName,
+        mobile: userRes[0]?.mobile,
+        cartItems:{
+          productName: item?.name,
+        productDetail: {
+          variants: selectedName,
+          sku: updatedCart[sku]?.sku,
+          caseSize: updatedCart[sku]?.caseSize,
+        },
+        quantity: updatedCart[sku]?.quantity,
+        price: updatedCart[sku]?.price,
+        }
 
-      if (updatedCart[sku]) {
-        updatedCart[sku].quantity += 1;
-      } else {
-        const productDetail = item.productDetail.find(
-          detail => detail.sku === sku,
-        );
-        updatedCart[sku] = {
-          ...productDetail,
-          quantity: 1,
-        };
-      }
+      };
+      console.log("handleAddToCart payload===>>",JSON.stringify(payload,null,2));
+      addToCartRequest(payload);
       return updatedCart;
     });
   };
 
-  const handleDecreaseQuantity = sku => {
+  const handleRemoveFromCart = sku => {
     setCart(prevCart => {
-      const updatedCart = {...prevCart};
+      const existingItem = prevCart[sku]; // Check if the item exists in the cart
 
-      if (updatedCart[sku]?.quantity > 1) {
-        updatedCart[sku].quantity -= 1;
-      } else if (updatedCart[sku]?.quantity === 1) {
-        delete updatedCart[sku];
+      if (!existingItem) {
+        return prevCart; // If the item doesn't exist, return the cart as is
       }
+
+      let updatedCart;
+
+      if (existingItem.quantity > 1) {
+        // Decrease quantity if it's greater than 1
+        updatedCart = {
+          ...prevCart,
+          [sku]: {
+            ...existingItem,
+            quantity: existingItem.quantity - 1, // Decrement the quantity
+          },
+        };
+      } else {
+        // Remove the item from the cart if quantity is 1
+        const {[sku]: _, ...rest} = prevCart; // Use destructuring to exclude the item
+        updatedCart = rest;
+      }
+
+      // Create the payload for updated cart
+      const payload = {
+        customerName: userRes[0]?.fullName,
+          mobile: userRes[0]?.mobile,
+          cartItems:{
+            productName: item?.name,
+          productDetail: {
+            variants: selectedName,
+            sku: updatedCart[sku]?.sku,
+            caseSize: updatedCart[sku]?.caseSize,
+          },
+          quantity: updatedCart[sku]?.quantity||0,
+          price: updatedCart[sku]?.price,
+          }
+  
+        };
+      console.log("handleRemoveFromCart payload===>>",JSON.stringify(payload,null,2));
+      addToCartRequest(payload);
+
       return updatedCart;
     });
   };
@@ -110,17 +160,17 @@ const ProductDetails = ({userRes}) => {
 
         <View style={styles.container}>
           <Text style={styles.title}>Product Details</Text>
-          {item?.productDetail?.map((detail, index) => (
+          {item?.productDetail?.map((cartItem, index) => (
             <View key={index} style={styles.detailBox}>
               <View style={styles.row}>
                 <View style={styles.productDetailsRow}>
                   <View style={styles.productTextContainer}>
-                    <Text style={styles.productName}>SKU: {detail?.sku}</Text>
+                    <Text style={styles.productName}>SKU: {cartItem?.sku}</Text>
                     <Text style={styles.productName}>
-                      Case Size: {detail?.caseSize}
+                      Case Size: {cartItem?.caseSize}
                     </Text>
                     <Text style={styles.productName}>
-                      Price: {detail?.price || 100}
+                      Price: {cartItem?.price || 100}
                     </Text>
                     <Text style={styles.productDesc}>{item?.description}</Text>
                   </View>
@@ -135,14 +185,20 @@ const ProductDetails = ({userRes}) => {
                       <TouchableOpacity
                         onPressIn={onPressIn}
                         onPressOut={onPressOut}
-                        onPress={() => handleDecreaseQuantity(detail.sku)}>
+                        onPress={() => {
+                          handleRemoveFromCart(
+                            cartItem.sku,
+                            cartItem.caseSize,
+                            cartItem.price,
+                          );
+                        }}>
                         <Text style={styles.quantityButtonText}>−</Text>
                       </TouchableOpacity>
                     </Animated.View>
 
                     <View style={styles.quantityTextContainer}>
                       <Text style={styles.quantityText}>
-                        {cart[detail.sku]?.quantity || 0}
+                        {cart[cartItem.sku]?.quantity || 0}
                       </Text>
                     </View>
 
@@ -155,7 +211,13 @@ const ProductDetails = ({userRes}) => {
                       <TouchableOpacity
                         onPressIn={onPressIn}
                         onPressOut={onPressOut}
-                        onPress={() => handleIncreaseQuantity(detail.sku)}>
+                        onPress={() => {
+                          handleAddToCart(
+                            cartItem.sku,
+                            cartItem.caseSize,
+                            cartItem.price,
+                          );
+                        }}>
                         <Text style={styles.quantityButtonText}>+</Text>
                       </TouchableOpacity>
                     </Animated.View>
@@ -181,12 +243,7 @@ const ProductDetails = ({userRes}) => {
 
   return (
     <View style={[CommonStyles.container]}>
-      <BackButton
-        left
-        cart
-        passParameter
-        oneMoreFunction={() => console.log('Custom Function Called')}
-      />
+      <BackButton left cart cartLenght={cartData?.length} />
       <FlatList
         data={[1]}
         showsVerticalScrollIndicator={false}
@@ -198,86 +255,51 @@ const ProductDetails = ({userRes}) => {
         }
       />
       <View style={[CommonStyles.bottomView, {paddingHorizontal: 20}]}>
-      {/* <C_Button
-          title="Buy"
-          disabled={Object.keys(cart).length === 0}
-          // loading
-          onPress={() => {
-            const cartItems = Object.values(cart).map(detail => {
-              const productDetail = {};
-
-              if (selectedName) {
-                productDetail.varients = selectedName;
-              }
-              if (detail?.sku) {
-                productDetail.sku = detail.sku;
-              }
-              if (detail?.caseSize) {
-                productDetail.caseSize = detail.caseSize;
-              }
-              return {
-                productName: item?.name,
-                productDetail: productDetail,
-                quantity: detail?.quantity || 1,
-                price: detail?.price || 100,
-              };
-            });
-
-            const payload = {
-              customerName: userRes[0]?.fullName,
-              mobile: userRes[0]?.mobile,
-              cartItems: cartItems,
-            };
-
-            console.log('payload=====>>', JSON.stringify(payload, null, 2));
-          }}
-        /> */}
         <C_Button
           title="Add To cart"
           disabled={Object.keys(cart).length === 0}
           // loading
-          onPress={() => {
-            const cartItems = Object.values(cart).map(detail => {
-              const productDetail = {};
+          // onPress={() => {
+          //   const cartItems = Object.values(cart).map(detail => {
+          //     const productDetail = {};
 
-              if (selectedName) {
-                productDetail.varients = selectedName;
-              }
-              if (detail?.sku) {
-                productDetail.sku = detail.sku;
-              }
-              if (detail?.caseSize) {
-                productDetail.caseSize = detail.caseSize;
-              }
-              return {
-                productName: item?.name,
-                productDetail: productDetail,
-                quantity: detail?.quantity || 1,
-                price: detail?.price || 100,
-              };
-            });
+          //     if (selectedName) {
+          //       productDetail.varients = selectedName;
+          //     }
+          //     if (detail?.sku) {
+          //       productDetail.sku = detail.sku;
+          //     }
+          //     if (detail?.caseSize) {
+          //       productDetail.caseSize = detail.caseSize;
+          //     }
+          //     return {
+          //       productName: item?.name,
+          //       productDetail: productDetail,
+          //       quantity: detail?.quantity || 1,
+          //       price: detail?.price || 100,
+          //     };
+          //   });
 
-            const payload = {
-              customerName: userRes[0]?.fullName,
-              mobile: userRes[0]?.mobile,
-              cartItems: cartItems,
-            };
-            addToCartRequest(payload);
-            // console.log('payload=====>>', JSON.stringify(payload, null, 2));
-          }}
+          //   const payload = {
+          //     customerName: userRes[0]?.fullName,
+          //     mobile: userRes[0]?.mobile,
+          //     cartItems: cartItems,
+          //   };
+          //   addToCartRequest(payload);
+          //   console.log('payload=====>>', JSON.stringify(payload, null, 2));
+          // }}
         />
-    
       </View>
     </View>
   );
 };
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   userRes: state?.userReducers?.data,
   addressRes: state?.addressReducers?.data,
+  cartRes: state?.cartReducers,
 });
 export default connect(mapStateToProps)(ProductDetails);
 
-// userReducers
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
@@ -372,5 +394,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Align buttons to the end
   },
 });
-
-

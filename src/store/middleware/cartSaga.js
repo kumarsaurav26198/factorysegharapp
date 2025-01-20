@@ -143,18 +143,13 @@ function* addToCartApiCall(action) {
         },
       });
       
-      const currentUser = response?.data;
-      // const extractedOtp = currentUser?.data?.otp;
-      console.log("currentUser====>>", JSON.stringify(currentUser,null,2));
-  
+      const data = response?.data?.data;
+      // console.log("data====>>", JSON.stringify(data,null,2));
       // // Alert.alert(extractedOtp);
-  
     //   navigate("OtpScreen", { mobile :payload?.mobile});
-      
       // Dispatch success actions
       // yield put({ type: ActionTypes.RESTART_LOGIN_REQUEST });
-      yield put({ type: ActionTypes.LOGIN_REQUEST_SUCCESS, currentUser });
-  
+      yield put({ type: ActionTypes.ADD_TO_CART_SUCCESS, data });
     } catch (error) {
       const errorPayload = {
         message: error?.response?.data?.message || error.message || 'Something went wrong!',

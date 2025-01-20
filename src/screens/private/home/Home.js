@@ -11,7 +11,7 @@ import {ProductContainer} from '../../../container';
 import {useActions} from '../../../hooks/useActions';
 
 const Home = () => {
-  const {getProductByCategory,fetchLoginUser} = useActions();
+  const {getProductByCategory,fetchLoginUser,getCartRequest} = useActions();
   const verifyRes = useSelector(state => state?.verifyReducers);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -38,6 +38,11 @@ const Home = () => {
     fetchLoginUser()
     // getProductByCategory(selectedCategory);
   }, []);
+
+    useEffect(() => {
+      getCartRequest();
+    }, []);
+  
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
