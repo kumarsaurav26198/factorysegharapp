@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Booking,  Home,  Offer, Profile, Search} from '../screens/private';
-import {BookingIcon, CategoriesIcon, Homeicon, OfferIcon, ProfileTabIcon, SearchIcon} from '../assets/icons';
+import { Categories,  Home,  Offer, Profile, Search} from '../screens/private';
+import { CategoriesIcon, Homeicon, OfferIcon, ProfileTabIcon, SearchIcon} from '../assets/icons';
 import Colors from '../themes/Colors';
 
 const Tab = createBottomTabNavigator();
@@ -36,7 +36,7 @@ const BottomNavigator = () => (
     />
     <Tab.Screen
       name="Categories"
-      component={Booking}
+      component={Categories}
       options={{
         tabBarIcon: ({color, size}) => (
           <CategoriesIcon fill={color} width={size} height={size} />

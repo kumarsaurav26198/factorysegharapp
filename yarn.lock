@@ -4208,6 +4208,7 @@ __metadata:
     react-native-linear-gradient: ^2.8.3
     react-native-otp-textinput: ^1.1.6
     react-native-permissions: ^5.2.2
+    react-native-razorpay: ^2.3.0
     react-native-reanimated: ^3.16.6
     react-native-safe-area-context: ^5.1.0
     react-native-screens: ^4.4.0
@@ -10637,6 +10638,16 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: 9f8a853b894c97b3384713e60d68440c559a61a29c4cefcada9886220a4c81a9730f37820fbeff1dc5e6a73921a5fbf8a5185e468426385f27fce41e67c782a5
+  languageName: node
+  linkType: hard
+
+"react-native-razorpay@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "react-native-razorpay@npm:2.3.0"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.66.0"
+  checksum: 35a549938e001d2ad30f8bcacc04df05070ea8cafc201e8938c750f5abc9b4c9ad29240924398030a1cc3633ac3e71d1871f29ff7bdf9096aa0d9cbd304d2ad4
   languageName: node
   linkType: hard
 

@@ -1,5 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {useActions} from '../../../hooks/useActions';
@@ -9,8 +17,11 @@ import {CommonStyles} from '../../../themes/CommonStyles';
 import {CartListCon} from '../../../container';
 import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
 import {navigate} from '../../../services/navigationService';
+import RazorpayCheckout from 'react-native-razorpay';
+import Images from '../../../utils/Images';
+import { EditIcon } from '../../../assets/icons';
 
-const CartScreen = ({cartRes, userRes,addressRes}) => {
+const CartScreen = ({cartRes, userRes, addressRes}) => {
   const {getCartRequest} = useActions();
   const cartData = cartRes?.data?.cartItems || [];
   const cashback = userRes[0]?.cashback || 0;
@@ -65,7 +76,7 @@ const CartScreen = ({cartRes, userRes,addressRes}) => {
     0,
   );
 
-  const specialDiscount = itemTotal >= 2500 ? 1250 : 0;
+  const specialDiscount = itemTotal >= 2500 ? itemTotal * 0.5 : 0.2;
   const deliveryFee = 0;
   const deliveryFeeDiscount = deliveryFee;
   const totalPayable = Math.max(
@@ -142,11 +153,24 @@ const CartScreen = ({cartRes, userRes,addressRes}) => {
                 </Text>
               </View>
             )}
-            <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, styles.discountText]}>
-                Select Address
-              </Text>
-              <Text
+
+            <View style={styles.section}>
+              <View style={styles.deliveryAddress}>
+                <View style={styles.addressLeft}>
+                  <View style={styles.avatarCircle}>
+                    <Text style={styles.avatarText}>👤</Text>
+                  </View>
+                  <View style={styles.addressDetails}>
+                    <Text style={styles.deliveryTitle}>Delivery Address</Text>
+                    <Text style={styles.addressText} numberOfLines={1}>
+                      Shreekar road rajendra nagar 98...
+                    </Text>
+                  </View>
+                  <TouchableOpacity onPress={() =>navigate("Address")}>
+
+                  <EditIcon/>
+                  </TouchableOpacity>
+                  {/* <Text
               onPress={()=>{
                 navigate("Address")
               }}
@@ -155,23 +179,11 @@ const CartScreen = ({cartRes, userRes,addressRes}) => {
                   styles.discountText,
                   {color: 'blue', textDecorationLine: 'underline'},
                 ]}>
-                Change Address
-              </Text>
+                Change
+              </Text> */}
+                </View>
+              </View>
             </View>
-            <Text style={[styles.summaryLabel, styles.discountText]} numberOfLines={1}>
-                Selected Address:- 
-                `{`  "address": {
-          "name": "John Doe",
-          "phone": "9876543210",
-          "addressLine1": "123 Main Street",
-          "addressLine2": "Apt 4B",
-          "landMark": "Near Central Park",
-          "city": "New York",
-          "state": "NY",
-          "pinCode": "10001",
-          "country": "USA"
-        }`}`
-              </Text>
             <View style={[styles.summaryRow, styles.totalRow]}>
               <Text style={[styles.summaryLabel, styles.totalText]}>
                 Total Payable
@@ -184,10 +196,10 @@ const CartScreen = ({cartRes, userRes,addressRes}) => {
           <C_Button
             title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
             onPress={() => {
-              console.log(
-                'cartItems===>>>',
-                JSON.stringify(cartItems, null, 2),
-              );
+              // console.log(
+              //   'cartItems===>>>',
+              //   JSON.stringify(cartItems, null, 2),
+              // );
               toggleModal();
             }}
           />
@@ -205,6 +217,32 @@ const CartScreen = ({cartRes, userRes,addressRes}) => {
           totalPayable={totalPayable}
           handlePressClose={toggleModal}
           handlePressOrderConfirmation={() => {
+            var options = {
+              description: 'Credits towards consultation',
+              image: Images.banner,
+              currency: 'INR',
+              key: 'rzp_test_xC0HuBfFYisteo',
+              amount: '5000',
+              name: 'Factory Se Ghar',
+              order_id: '', // Replace this with an order_id created using Orders API.
+              prefill: {
+                email: 'gaurav.kumar@example.com',
+                contact: '916202142166',
+                name: 'Saurav Kumar',
+              },
+              theme: {color: Colors.red},
+            };
+
+            RazorpayCheckout.open(options)
+              .then(data => {
+                navigate('BottomNavigator');
+                // handle success
+                // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+              })
+              .catch(error => {
+                // handle failure
+                Alert.alert(`Error: ${error.code} | ${error.description}`);
+              });
             toggleModal();
           }}
         />
@@ -217,12 +255,47 @@ const mapStateToProps = state => ({
   cartRes: state?.cartReducers,
   userRes: state?.userReducers?.data,
   addressRes: state?.addressReducers?.data,
-  
 });
 
 export default connect(mapStateToProps)(CartScreen);
 
 const styles = StyleSheet.create({
+  section: {
+    // marginBottom: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    // paddingBottom: 20,
+  },
+  addressLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  deliveryAddress: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  avatarCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarText: {
+    fontSize: 20,
+  },
+  addressDetails: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  addressText: {
+    fontSize: 16,
+    color: '#333',
+    marginTop: 2,
+},
   footerContainer: {
     backgroundColor: Colors.bgColor,
     padding: 20,
@@ -268,7 +341,7 @@ const styles = StyleSheet.create({
   totalRow: {
     marginTop: 10,
     borderTopWidth: 1,
-    borderTopColor: Colors.borderGray,
+    borderTopColor: '#eee',
     paddingTop: 10,
   },
   totalText: {

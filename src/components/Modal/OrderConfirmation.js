@@ -11,7 +11,7 @@ export default function OrderConfirmation({ handlePressOrderConfirmation, handle
                 <Close />
             </TouchableOpacity>
             <View style={styles.section}>
-                <View style={styles.cardOption}>
+                {/* <View style={styles.cardOption}>
                     <Image
                         source={{ uri: "https://raw.githubusercontent.com/kristiyanP/creditcard-generator/master/src/main/resources/mc.png" }}
                         style={styles.cardIcon}
@@ -23,9 +23,9 @@ export default function OrderConfirmation({ handlePressOrderConfirmation, handle
                     <View style={styles.radioOuter}>
                         <View style={styles.radioInner} />
                     </View>
-                </View>
+                </View> */}
 
-                <View style={styles.cardOption}>
+                {/* <View style={styles.cardOption}>
                     <Image
                         source={{ uri: "https://raw.githubusercontent.com/kristiyanP/creditcard-generator/master/src/main/resources/visa.png" }}
                         style={styles.cardIcon}
@@ -35,7 +35,7 @@ export default function OrderConfirmation({ handlePressOrderConfirmation, handle
                         <Text style={styles.cardNumber}>2441 **** **** 4567</Text>
                     </View>
                     <View style={[ styles.radioOuter, styles.radioOuterEmpty ]} />
-                </View>
+                </View> */}
             </View>
 
             <View style={styles.section}>
@@ -51,7 +51,6 @@ export default function OrderConfirmation({ handlePressOrderConfirmation, handle
                             </Text>
                         </View>
                     </View>
-                    {/* <ChevronRight color="#666" size={20} /> */}
                 </View>
             </View>
 

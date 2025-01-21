@@ -12,7 +12,8 @@
 var BaseUrl = '../assets/images/';
 const Images = {
   blankuser: require(BaseUrl + 'blankuser.png'),
-  banner: require(BaseUrl + 'Banner.png'),
+  banner: require(BaseUrl + 'Banner.jpeg'),
+  // banner: require(BaseUrl + 'Banner.png'),
   FaceTshirt: require(BaseUrl + 'FaceTshirt.png'),
 };
 export default Images;

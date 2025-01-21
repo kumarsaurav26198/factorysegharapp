@@ -159,9 +159,9 @@ const ProductDetails = ({userRes, cartRes}) => {
                 <View style={styles.productDetailsRow}>
                   <View style={styles.productTextContainer}>
                     <Text style={styles.productName}>SKU: {cartItem?.sku}</Text>
-                    <Text style={styles.productName}>
+                    {/* <Text style={styles.productName}>
                       Case Size: {cartItem?.caseSize}
-                    </Text>
+                    </Text> */}
                     <Text style={styles.productName}>
                       Price: {cartItem?.price || 100}
                     </Text>
