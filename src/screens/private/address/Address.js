@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { BackButton, C_Button } from '../../../components';
@@ -12,10 +13,13 @@ import { connect } from 'react-redux';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { useActions } from '../../../hooks/useActions';
 import { AddAddress, AddSuccess, ModalWrapper } from '../../../components/Modal';
+import { Close, EditIcon } from '../../../assets/icons';
+import { capitalizeFirstLetter } from '../../../utils/validators';
 
 const Address = ({ userRes, addressRes }) => {
-  const email = "magenet2@example.com";
-  console.log("addressRes", addressRes);
+  const email = userRes?.data[0]?.email
+  // console.log("addressRes==>", JSON.stringify(addressRes?.data,null,2));
+  const addressesData=addressRes?.data
 
   const { fetchUserAddress } = useActions();
   const [refreshing, setRefreshing] = useState(false);
@@ -24,9 +28,12 @@ const Address = ({ userRes, addressRes }) => {
       setIsModalVisible(!isModalVisible);
     };
 
+
+
   useEffect(() => {
     if (email) fetchUserAddress({ email });
   }, []);
+
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -41,26 +48,27 @@ const Address = ({ userRes, addressRes }) => {
   const handleDelete = (item) => {
     console.log("Delete Address:", item);
   };
+  // capitalizeFirstLetter
 
   const renderItem = ({ item }) => (
     <View style={styles.addressItem}>
       <View style={styles.addressIcon}>
-        <Text style={styles.addressIconText}>{item.type[0]}</Text>
+        <Text style={styles.addressIconText}>{capitalizeFirstLetter(item?.name[0])}</Text>
       </View>
       <View style={styles.addressDetails}>
-        <Text style={styles.addressType}>{item.type}</Text>
+        <Text style={styles.addressType}>{capitalizeFirstLetter(item?.name)},{item?.addressLine1}</Text>
         <Text style={styles.addressText} numberOfLines={2}>
-          {item.address}
+          {item?.addressLine2}, {item?.city}, {item.state}, {item?.country}, {item.zipCode},{item?.phone}
         </Text>
       </View>
-      <View style={styles.actionIcons}>
-        {/* <TouchableOpacity onPress={() => handleEdit(item)} style={styles.iconButton}>
+      {/* <View style={styles.actionIcons}>
+        <TouchableOpacity onPress={() => handleEdit(item)} style={styles.iconButton}>
           <EditIcon/>
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity onPress={() => handleDelete(item)} style={styles.iconButton}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleDelete(item)} style={styles.iconButton}>
         <Close/>
-        </TouchableOpacity> */}
-      </View>
+        </TouchableOpacity>
+      </View> */}
     </View>
   );
 
@@ -79,14 +87,15 @@ const Address = ({ userRes, addressRes }) => {
     <View style={CommonStyles.container}>
       <BackButton left text="Address" />
       <FlatList
-        data={addresses}
+        data={addressesData}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
+
         keyExtractor={(item, index) => `address-${index}`}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        ListFooterComponent={<View style={{ height: 20 }} />}
+        ListFooterComponent={<View style={{ height: 120 }} />}
         ListEmptyComponent={renderEmptyList}
       />
       <View style={[CommonStyles.bottomView, { padding: 15 }]}>
@@ -104,7 +113,7 @@ const Address = ({ userRes, addressRes }) => {
 
 const mapStateToProps = (state) => ({
   userRes: state?.userReducers,
-  addressRes: state?.addressReducers?.data,
+  addressRes: state?.addressReducers,
 });
 
 export default connect(mapStateToProps)(Address);
@@ -132,7 +141,6 @@ const styles = StyleSheet.create({
   },
   addressIconText: {
     color: Colors.white,
-    fontWeight: 'bold',
     fontSize: 16,
   },
   addressDetails: {
@@ -142,7 +150,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: Colors.black,
-    marginBottom: 4,
   },
   addressText: {
     fontSize: 14,

@@ -1,62 +1,88 @@
-
 import { ActionTypes } from '../constants/actiontypes';
+
 const initialState = {
     data: [],
-    loading: false,
-    error: null,
+    fetchLoading: false,
+    addLoading: false,
+    updateLoading: false,
+    fetchError: null,
+    addError: null,
+    updateError: null,
+    done: null,
 };
 
 export const addressReducers = (state = initialState, action) => {
-    switch (action.type)
-    {
+    switch (action.type) {
         case ActionTypes.FETCH_USER_ADDRESS_REQUEST:
-            // console.warn("FETCH_USER_ADDRESS_REQUEST Reducers", ActionTypes.FETCH_USER_ADDRESS_REQUEST);
-            console.log("FETCH_USER_ADDRESS_REQUEST Reducers action===>", action);
             return {
                 ...state,
-                loading: true,
-                error: null,
+                fetchLoading: true,
+                fetchError: null,
             };
+
         case ActionTypes.FETCH_USER_ADDRESS_SUCCESS:
-            // console.warn("FETCH_USER_ADDRESS_SUCCESS Reducers", ActionTypes.FETCH_USER_ADDRESS_SUCCESS);
-            // console.warn("FETCH_USER_ADDRESS_SUCCESS Reducers action===>", action?.data);
             return {
                 ...state,
                 data: action?.data,
-                loading: false,
+                fetchLoading: false,
+                fetchError: null,
             };
+
         case ActionTypes.FETCH_USER_ADDRESS_FAILURE:
-            // console.warn("FETCH_USER_ADDRESS_FAILURE Reducers", ActionTypes.FETCH_USER_ADDRESS_FAILURE);
-            // console.log("FETCH_USER_ADDRESS_FAILURE Reducers action===>", action.error);
             return {
                 ...state,
-                loading: false,
-                error: action.error,
+                fetchLoading: false,
+                fetchError: action.error,
             };
+
+        case ActionTypes.ADD_ADDRESS_REQUEST:
+            return {
+                ...state,
+                addLoading: true,
+                addError: null,
+            };
+
+        case ActionTypes.ADD_ADDRESS_SUCCESS:
+            return {
+                ...state,
+                addLoading: false,
+                // data: [...state.data, action.payload], // Assuming you want to add the new address to the list
+                data: action.payload, // Assuming you want to add the new address to the list
+                addError: null,
+                done: true,
+            };
+
+        case ActionTypes.ADD_ADDRESS_FAILURE:
+            return {
+                ...state,
+                addLoading: false,
+                addError: action.error,
+            };
+
         case ActionTypes.UPDATE_USER_ADDRESS_REQUEST:
-            // console.warn("UPDATE_USER_ADDRESS_REQUEST Reducers", ActionTypes.UPDATE_USER_ADDRESS_REQUEST);
-            // console.log("UPDATE_USER_ADDRESS_REQUEST Reducers action===>", action.payload);
             return {
                 ...state,
-                loading: true,
-                error: null,
+                updateLoading: true,
+                updateError: null,
             };
+
         case ActionTypes.UPDATE_USER_ADDRESS_SUCCESS:
-            // console.warn("UPDATE_USER_ADDRESS_SUCCESS Reducers", ActionTypes.UPDATE_USER_ADDRESS_SUCCESS);
-            // console.warn("UPDATE_USER_ADDRESS_SUCCESS Reducers action===>", JSON.stringify(action));
             return {
                 ...state,
-                data: action,
-                loading: false,
+                updateLoading: false,
+                data: state.data.map(address => 
+                    address._id === action.payload._id ? action.payload : address
+                ), // Update the existing address
+                updateError: null,
             };
+
         case ActionTypes.UPDATE_USER_ADDRESS_FAILURE:
-            // console.warn("UPDATE_USER_ADDRESS_FAILURE Reducers", ActionTypes.UPDATE_USER_ADDRESS_FAILURE);
-            // console.log("UPDATE_USER_ADDRESS_FAILURE Reducers action===>", action.error);
             return {
                 ...state,
-                loading: false,
-                error: action.error,
+                updateLoading: false,
+                updateError: action.error,
             };
+
         default:
             return state;
     }

@@ -37,6 +37,10 @@ export const fetchUserAddress = (payload) => ({
     type: ActionTypes.FETCH_USER_ADDRESS_REQUEST,
     payload
 });
+export const addAddressRequest = (payload) => ({
+    type: ActionTypes.ADD_ADDRESS_REQUEST,
+    payload
+});
 export const fetchUserHistoryOrder = (payload) => ({
     type: ActionTypes.FETCH_ORDERHISTORY_REQUEST,
     payload

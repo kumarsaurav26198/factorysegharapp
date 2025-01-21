@@ -181,3 +181,8 @@ export const validateEmail = (email) => {
 
   return { isValid, errorMessage };
 };
+
+export const capitalizeFirstLetter = (name) => {
+  if (!name) return ''; // Return empty string if name is not provided
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+};
