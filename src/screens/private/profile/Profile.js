@@ -6,7 +6,8 @@ import { BackButton, DriverInfo2 } from '../../../components';
 import Colors from '../../../themes/Colors';
 import {
   AboutIcon, AddressIcon, BackVerctor, CartIcon, ComplainIcon, DriverIcon, EditProfileIcon, Help,
-  HistoryIcon, LogoutIcon, ReferralIcon, SettingsIcon
+  HistoryIcon, LogoutIcon, Privacy, ReferralIcon, SettingsIcon,
+  TermCondition
 } from '../../../assets/icons';
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
 import { reset } from '../../../services/navigationService';
@@ -18,13 +19,15 @@ const Profile = ({ navigation,userRes }) => {
 
   const menuItems = [
     // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
-    { title: "Cart", navigate: 'CartScreen', icon: CartIcon },
     { title: 'Address', navigate: 'Address', icon: AddressIcon },
+    { title: "Cart", navigate: 'CartScreen', icon: CartIcon },
     { title: 'History', navigate: 'History', icon: HistoryIcon },
-    // { title: 'Complain', navigate: 'Complain', icon: ComplainIcon },
     { title: 'Referral', navigate: 'Referral', icon: ReferralIcon },
-    { title: 'About Us', navigate: 'AboutUs', icon: AboutIcon },
-    { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
+    // { title: 'Complain', navigate: 'Complain', icon: ComplainIcon },
+    { title: 'About Us', navigate: 'AboutUs', icon: AboutIcon ,pagename:"about"},
+    { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition ,pagename:"term&condition"},
+    { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy ,pagename:"policy"},
+    // { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
     { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
     { title: 'Log Out', navigate: null, icon: LogoutIcon }, 
   ];
@@ -39,12 +42,18 @@ const Profile = ({ navigation,userRes }) => {
   };
 
   const handleMenuPress = (item) => {
+    // console.log("Menu item:", item); 
     if (item.title === 'Log Out') {
       handleLogout();
+    } else if (item?.pagename) {
+      // console.log("Navigating with pagename:", item.pagename);
+      navigation.navigate(item.navigate, { pagename: item.pagename,title:item.title });
     } else {
+      // console.log("Navigating without pagename");
       handleNavigation(item.navigate);
     }
   };
+  
 
   return (
     <View style={CommonStyles.container}>

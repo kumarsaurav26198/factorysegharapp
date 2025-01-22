@@ -6,8 +6,13 @@ import Colors from '../../../themes/Colors';
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
 import { useActions } from '../../../hooks/useActions';
 import { connect } from 'react-redux';
+import { useRoute } from '@react-navigation/native';
 
 const AboutUs = ({ navigation, pageRes }) => {
+        const route = useRoute();
+        const { pagename,title } = route.params || {}; // Access pagename from route.params
+        console.log("pagename=====>>", pagename);
+        console.log("title=====>>", title);
   const pagedatares = pageRes?.data.data;
   console.log(pagedatares);
   const { fetchPagebyNameDetails } = useActions();
@@ -32,7 +37,7 @@ const AboutUs = ({ navigation, pageRes }) => {
 
   return (
     <View style={CommonStyles.container}>
-      <BackButton left text="Back"  centerText="About Us"/>
+      <BackButton left   text={title}/>
       <View style={{ paddingHorizontal: 20, }}>
      
         <FlatList
