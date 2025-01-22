@@ -13,12 +13,13 @@ import { connect } from 'react-redux';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { useActions } from '../../../hooks/useActions';
 import { AddAddress, AddSuccess, ModalWrapper } from '../../../components/Modal';
-import { Close, EditIcon } from '../../../assets/icons';
+// import { Close, EditIcon } from '../../../assets/icons';
 import { capitalizeFirstLetter } from '../../../utils/validators';
 
 const Address = ({ userRes, addressRes }) => {
   const email = userRes?.data[0]?.email
-  // console.log("addressRes==>", JSON.stringify(addressRes?.data,null,2));
+  console.log("addressRes==>", JSON.stringify(addressRes?.closeModal,null,2));
+  const closeModal=addressRes?.closeModal
   const addressesData=addressRes?.data
 
   const { fetchUserAddress } = useActions();
@@ -30,6 +31,9 @@ const Address = ({ userRes, addressRes }) => {
 
 
 
+  useEffect(() => {
+    if (closeModal)  setIsModalVisible(false)
+  }, [closeModal]);
   useEffect(() => {
     if (email) fetchUserAddress({ email });
   }, []);
@@ -99,7 +103,7 @@ const Address = ({ userRes, addressRes }) => {
         visible={isModalVisible}
         onRequestClose={toggleModal}
         >
-        <AddAddress handlePressClose ={toggleModal} handlePressDone={toggleModal} email={email}/>
+        <AddAddress handlePressClose ={toggleModal} handlePressDone={toggleModal} email={email} done/>
       </ModalWrapper>
     </View>
   );

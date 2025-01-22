@@ -37,7 +37,8 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [cartItems, setCartItems] = useState(cartData);
-
+  const [ errorMessage, setErrorMessage ] = useState('');
+  
   const toggleModal = () => setIsModalVisible(!isModalVisible);
   const addtoggleModal = () => setIsAddVisible(!isAddVisible);
 
@@ -50,6 +51,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
   useEffect(() => {
     if (addressRes) {
       setSelectedIndex(addressRes[0]);
+      setErrorMessage("")
     }
   }, [addressRes]);
 
@@ -103,7 +105,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
     ({item, index}) => (
       <CartListCon
         item={item}
-        index={index} // Pass the index
+        index={index}
         incrementQuantity={incrementQuantity}
         decrementQuantity={decrementQuantity}
       />
@@ -137,6 +139,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
       />
       {cartItems?.length > 0 ? (
         <View style={[CommonStyles.bottomView]}>
+          
           <View style={styles.footerContainer}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Item Total</Text>
@@ -173,7 +176,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
               <View style={styles.deliveryAddress}>
                 <View style={styles.addressLeft}>
                   <View style={styles.avatarCircle}>
-                    <Text style={styles.avatarText}>👤</Text>
+                    <Text style={styles.avatarText}>📍</Text>
                   </View>
                   <View style={styles.addressDetails}>
                     <Text style={styles.deliveryTitle}>
@@ -196,32 +199,15 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                       {selectedIndex?.addressLine2}, {selectedIndex?.city}
                       {selectedIndex?.state}, {selectedIndex?.country},{' '}
                       {selectedIndex?.phone}
-                    </Text>: ""
-                 
-                    }
-                  
+                    </Text>:null}
                   </View>
-                  {/* <Address_DropDown listData={addressRes}
-                    initialValue={addressRes[0]}
-                    onValueChange={(add) => setselectedIndex(add)}
-                  /> */}
                   <TouchableOpacity onPress={() => navigate('Address')}>
                     <EditIcon />
                   </TouchableOpacity>
-                  {/* <Text
-              onPress={()=>{
-                navigate("Address")
-              }}
-                style={[
-                  styles.summaryValue,
-                  styles.discountText,
-                  {color: 'blue', textDecorationLine: 'underline'},
-                ]}>
-                Change
-              </Text> */}
                 </View>
               </View>
             </View>
+            {errorMessage ? <Text style={CommonStyles.errorText}>{errorMessage}</Text> : null}
             <View style={[styles.summaryRow, styles.totalRow]}>
               <Text style={[styles.summaryLabel, styles.totalText]}>
                 Total Payable
@@ -231,13 +217,16 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
               </Text>
             </View>
           </View>
+          
           <C_Button
             title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
             onPress={() => {
-              {
-                selectedIndex?toggleModal():alert("Select address")
+              if (selectedIndex !== null && selectedIndex !== undefined) {
+                setErrorMessage("")
+                toggleModal();
+              } else {
+                setErrorMessage("Select address");
               }
-              
             }}
           />
         </View>
@@ -278,8 +267,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                 // Alert.alert(`Success: ${data.razorpay_payment_id}`);
               })
               .catch(error => {
-                // handle failure
-                Alert.alert(`Error: ${error.code} | ${error.description}`);
+                setErrorMessage(`Error: ${error.code} | ${error.description}`)
               });
             toggleModal();
           }}
@@ -296,7 +284,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
           setSelectedIndex={setSelectedIndex}
           handlePressDone={selectedIndex => {
             setSelectedIndex(selectedIndex);
-            // console.log('Selected Address:', JSON.stringify(selectedIndex,null,2));
+            setErrorMessage("")
             addtoggleModal();
           }}
         />

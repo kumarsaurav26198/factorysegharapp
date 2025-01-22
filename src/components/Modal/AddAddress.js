@@ -18,7 +18,8 @@ import {CommonStyles} from '../../themes/CommonStyles';
 import {useActions} from '../../hooks/useActions';
 import {connect} from 'react-redux';
 
-const AddAddress = ({ handlePressClose, email, addressRes,handlePressDone}) => {
+const AddAddress = ({ handlePressClose, email, addressRes,handlePressDone,done}) => {
+  console.log(done)
   const {addAddressRequest} = useActions();
   const [numbers, setNumber] = useState('6202142166');
   const [selectedCountryCode, setSelectedCountryCode] = useState('91');

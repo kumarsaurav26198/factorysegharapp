@@ -8,7 +8,7 @@ const initialState = {
     fetchError: null,
     addError: null,
     updateError: null,
-    done: null,
+    closeModal: null,
 };
 
 export const addressReducers = (state = initialState, action) => {
@@ -42,6 +42,7 @@ export const addressReducers = (state = initialState, action) => {
                 ...state,
                 addLoading: true,
                 addError: null,
+                closeModal: false,
             };
 
         case ActionTypes.ADD_ADDRESS_SUCCESS:
@@ -51,7 +52,7 @@ export const addressReducers = (state = initialState, action) => {
                 addLoading: false,
                 data: [...state.data, action?.data?.data],
                 addError: null,
-                done: true,
+                closeModal: true,
             };
 
         case ActionTypes.ADD_ADDRESS_FAILURE:
