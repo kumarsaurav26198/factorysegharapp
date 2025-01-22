@@ -17,13 +17,13 @@ function* rootSaga() {
         registerSaga(),
         verifySaga(),
         getLoginUserSaga(),
-        pagebyNameSaga(),
         contactUsSaga(),
         getProductByCategorySaga(),
         placeOrderSaga(),
         getOrderHistorySaga(),
         addressSaga(),
-        cartSaga()
+        cartSaga(),
+        pagebyNameSaga()
     ]);
 }
 export default rootSaga;

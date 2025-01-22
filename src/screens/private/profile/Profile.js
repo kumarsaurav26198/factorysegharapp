@@ -28,7 +28,7 @@ const Profile = ({ navigation,userRes }) => {
     { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition ,pagename:"term&condition"},
     { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy ,pagename:"policy"},
     // { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
-    { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
+    // { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
     { title: 'Log Out', navigate: null, icon: LogoutIcon }, 
   ];
 
@@ -42,14 +42,11 @@ const Profile = ({ navigation,userRes }) => {
   };
 
   const handleMenuPress = (item) => {
-    // console.log("Menu item:", item); 
     if (item.title === 'Log Out') {
       handleLogout();
     } else if (item?.pagename) {
-      // console.log("Navigating with pagename:", item.pagename);
       navigation.navigate(item.navigate, { pagename: item.pagename,title:item.title });
     } else {
-      // console.log("Navigating without pagename");
       handleNavigation(item.navigate);
     }
   };

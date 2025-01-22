@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { CommonStyles } from '../../../themes/CommonStyles';
-import { BackButton, C_Text } from '../../../components';
+import { BackButton } from '../../../components';
 import Colors from '../../../themes/Colors';
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
 import { useActions } from '../../../hooks/useActions';
@@ -9,72 +17,113 @@ import { connect } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 
 const AboutUs = ({ navigation, pageRes }) => {
-        const route = useRoute();
-        const { pagename,title } = route.params || {}; // Access pagename from route.params
-        console.log("pagename=====>>", pagename);
-        console.log("title=====>>", title);
-  const pagedatares = pageRes?.data.data;
-  console.log(pagedatares);
+  const route = useRoute();
+  const { pagename, title } = route.params || {};
   const { fetchPagebyNameDetails } = useActions();
-  const [ refreshing, setRefreshing ] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
-    fetchPagebyNameDetails({ pagename: 'policy' });
-  }, [ ]); 
+    if (pagename) {
+      fetchPagebyNameDetails({ pagename });
+    }
+  }, [pagename]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchPagebyNameDetails({ pagename: 'policy' });
+    if (pagename) {
+      fetchPagebyNameDetails({ pagename });
+    }
     setRefreshing(false);
-  }, []);
+  }, [pagename]);
 
-
-  const policyText = [
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
-  ];
+  const policyText = pageRes?.data[0]; // Assuming pageRes.data is an array and you're accessing the first item
 
   return (
     <View style={CommonStyles.container}>
-      <BackButton left   text={title}/>
-      <View style={{ paddingHorizontal: 20, }}>
-     
-        <FlatList
-          data={policyText}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={ <Text style={[styles.policyText,styles.headingText]}>{pagedatares?.heading}</Text>}
-          renderItem={({ item }) => (
-            <Text style={styles.policyText}>{item}</Text>
-          )}
-          ListFooterComponent={<View style={{ height: 150 }} />}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
+      <BackButton left text={title} />
+      <View style={{ paddingHorizontal: 20 }}>
+        {pageRes?.loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        ) : pageRes?.error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>
+              {pageRes.error?.response?.data?.message ||
+                'An error occurred. Please try again later.'}
+            </Text>
+            <TouchableOpacity style={styles.refreshButton} onPress={onRefresh}>
+              <Text style={styles.refreshButtonText}>Try Again</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <FlatList
+            data={[policyText]} // Wrap policyText in an array if it's not an array
+            keyExtractor={(item, index) => index.toString()} // Ensure a unique key is used
+            showsVerticalScrollIndicator={false}
+            ListHeaderComponent={
+              <Text style={[styles.policyText, styles.headingText]}>
+                {policyText?.Title}
+              </Text>
+            }
+            renderItem={({ item }) => (
+              <Text style={styles.policyText}>{item?.content}</Text>
+            )}
+            ListFooterComponent={<View style={{ height: 150 }} />}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          />
+        )}
       </View>
     </View>
   );
 };
-const mapStateToProps = state => ({
+
+const mapStateToProps = (state) => ({
   pageRes: state?.pagebyNameReducers,
 });
+
 export default connect(mapStateToProps)(AboutUs);
 
 const styles = StyleSheet.create({
   policyText: {
-    fontSize: FontSize.FS14,
+    fontSize: FontSize.FS15,
     color: Colors.black,
     lineHeight: 22,
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   headingText: {
     fontSize: FontSize.FS18,
-    fontWeight:FontsWeights.FW500,
+    fontWeight: FontsWeights.FW500,
     color: Colors.black,
     lineHeight: 22,
+    marginTop: 20,
+    marginBottom:20
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: FontSize.FS14,
+    color: Colors.red,
     marginBottom: 20,
   },
-
+  refreshButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: Colors.blue,
+    borderRadius: 5,
+  },
+  refreshButtonText: {
+    fontSize: FontSize.FS14,
+    color: Colors.white,
+  },
 });

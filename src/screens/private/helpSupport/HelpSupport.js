@@ -13,12 +13,12 @@ const HelpSupport = ({ navigation, pageRes }) => {
   const { fetchPagebyNameDetails } = useActions();
   const [ refreshing, setRefreshing ] = useState(false);
   useEffect(() => {
-    fetchPagebyNameDetails({ pagename: 'policy' });
+    // fetchPagebyNameDetails({ pagename: 'policy' });
   }, [ ]); 
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchPagebyNameDetails({ pagename: 'policy' });
+    // fetchPagebyNameDetails({ pagename: 'policy' });
     setRefreshing(false);
   }, []);
 
