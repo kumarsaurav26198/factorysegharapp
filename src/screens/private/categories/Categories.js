@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { ProductIcon } from '../../../assets/icons';
+import { navigate } from '../../../services/navigationService';
 
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -22,7 +23,7 @@ const Categories = () => {
         style={[styles.categoryItem, isSelected && styles.selectedCategory]}
         onPress={() => {
           setSelectedCategory(item.category)
-          
+          navigate('AllProduct',{category:item.category});
         }}
       >
         <Text style={[styles.categoryText, isSelected && styles.selectedText]}>{item.name}</Text>

@@ -71,7 +71,7 @@ const BottomNavigator = () => (
         tabBarIcon: ({color, size}) => (
           <OfferIcon fill={color} width={size} height={size} />
         ),
-        tabBarLabel: 'Offer',
+        tabBarLabel: 'Refer & Earn',
       }}
     />
     <Tab.Screen

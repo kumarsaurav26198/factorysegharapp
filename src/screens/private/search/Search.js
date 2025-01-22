@@ -12,20 +12,20 @@ import {connect} from 'react-redux';
 import SearchBar from '../../../components/AppComponent/SearchBox';
 import {useActions} from '../../../hooks/useActions';
 import {CommonStyles} from '../../../themes/CommonStyles';
-import {CommonProduct} from '../../../components';
+import {BackButton, CommonProduct} from '../../../components';
 
 const Search = ({allProductRes}) => {
   const allProduct = allProductRes?.data?.items || [];
-  // console.log("filteredProducts==>>",JSON.stringify(filteredProducts?.lenght,null,2))
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory] = useState('ALL');
   const [searchValue, setSearchValue] = useState();
 
   const filteredProducts = allProduct.filter(product =>
-    product?.name?.toLowerCase().includes(searchValue?.toLowerCase() || '')
+    (product?.name?.toLowerCase().includes(searchValue?.toLowerCase() || '') ||
+    product?.category?.toLowerCase().includes(searchValue?.toLowerCase() || ''))
   );
-  console.log("filteredProducts length==>>", filteredProducts?.length);
-  console.log("searchValue length==>>", searchValue);
+  // console.log("filteredProducts length==>>", JSON.stringify(filteredProducts.length,null,2));
+  // console.log("searchValue length==>>", searchValue);
 
   const {getProductByCategory} = useActions();
 
@@ -39,14 +39,15 @@ const Search = ({allProductRes}) => {
     setRefreshing(false);
   }, [getProductByCategory, selectedCategory]);
 
-  const renderItem = ({item}) => (
+  const renderItem = useCallback(({item}) => (
     <View style={styles.productItem}>
       <CommonProduct item={item} />
     </View>
-  );
+  ));
 
   return (
     <View style={[CommonStyles.container, {paddingTop: 25}]}>
+      <BackButton left text="Search" />
       <SearchBar
         placeholder="Search your product categories here..."
         value={searchValue}
