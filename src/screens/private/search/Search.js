@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   FlatList,
   View,
@@ -8,17 +8,26 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import SearchBar from '../../../components/AppComponent/SearchBox';
-import { useActions } from '../../../hooks/useActions';
-import { CommonStyles } from '../../../themes/CommonStyles';
-import { CommonProduct } from '../../../components';
+import {useActions} from '../../../hooks/useActions';
+import {CommonStyles} from '../../../themes/CommonStyles';
+import {CommonProduct} from '../../../components';
 
-const Search = ({ allProductRes }) => {
+const Search = ({allProductRes}) => {
   const allProduct = allProductRes?.data?.items || [];
+  // console.log("filteredProducts==>>",JSON.stringify(filteredProducts?.lenght,null,2))
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory] = useState('ALL');
-  const { getProductByCategory } = useActions();
+  const [searchValue, setSearchValue] = useState();
+
+  const filteredProducts = allProduct.filter(product =>
+    product?.name?.toLowerCase().includes(searchValue?.toLowerCase() || '')
+  );
+  console.log("filteredProducts length==>>", filteredProducts?.length);
+  console.log("searchValue length==>>", searchValue);
+
+  const {getProductByCategory} = useActions();
 
   useEffect(() => {
     getProductByCategory(selectedCategory);
@@ -26,26 +35,32 @@ const Search = ({ allProductRes }) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await getProductByCategory(selectedCategory);
+    getProductByCategory(selectedCategory);
     setRefreshing(false);
   }, [getProductByCategory, selectedCategory]);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}) => (
     <View style={styles.productItem}>
       <CommonProduct item={item} />
     </View>
   );
 
   return (
-    <View style={[CommonStyles.container, { paddingTop: 25 }]}>
-      <SearchBar placeholder="Search your product categories here..." />
+    <View style={[CommonStyles.container, {paddingTop: 25}]}>
+      <SearchBar
+        placeholder="Search your product categories here..."
+        value={searchValue}
+        editable={true}
+        onChangeText={setSearchValue}
+        clearValue={() => setSearchValue('')}
+      />
       {allProductRes?.loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       ) : (
         <FlatList
-          data={allProduct}
+          data={filteredProducts}
           numColumns={2}
           renderItem={renderItem}
           keyExtractor={(item, index) => item.id || index.toString()}
@@ -58,7 +73,7 @@ const Search = ({ allProductRes }) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          ListFooterComponent={<View style={{ height: 20 }} />}
+          ListFooterComponent={<View style={{height: 20}} />}
         />
       )}
     </View>
@@ -81,6 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
   },
   errorText: {
     fontSize: 16,
