@@ -18,7 +18,6 @@ import { capitalizeFirstLetter } from '../../../utils/validators';
 
 const Address = ({ userRes, addressRes }) => {
   const email = userRes?.data[0]?.email
-  console.log("addressRes==>", JSON.stringify(addressRes?.closeModal,null,2));
   const closeModal=addressRes?.closeModal
   const addressesData=addressRes?.data
 

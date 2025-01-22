@@ -10,7 +10,9 @@ import Colors from '../../themes/Colors';
 import { Close } from '../../assets/icons';
 import C_Text from '../Common/C_Text';
 import { capitalizeFirstLetter } from '../../utils/validators';
-import C_SmallButton from '../Common/C_SmallButton';
+import { CommonStyles } from '../../themes/CommonStyles';
+import C_Button from '../Common/C_Button';
+import { navigate } from '../../services/navigationService';
 
 const Address_DropDown = ({
   handlePressClose,
@@ -52,7 +54,6 @@ const Address_DropDown = ({
   const renderEmptyList = () => (
     <View style={{ alignItems: 'center', marginTop: 50 }}>
       <Text>---- No Address Found ----</Text>
-      <C_SmallButton title="Add New" />
     </View>
   );
 
@@ -74,6 +75,15 @@ const Address_DropDown = ({
         ListFooterComponent={<View style={{ height: 120 }} />}
         ListEmptyComponent={renderEmptyList}
       />
+      <View style={CommonStyles.bottomView}>
+       <C_Button title="Add Address"  onPress={()=>{
+        handlePressDone()
+        navigate("Address")
+
+       }}/>
+
+
+      </View>
     </View>
   );
 };

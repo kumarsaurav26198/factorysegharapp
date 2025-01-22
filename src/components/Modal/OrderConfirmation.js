@@ -6,40 +6,11 @@ import { Close } from '../../assets/icons';
 import { capitalizeFirstLetter } from '../../utils/validators';
 
 export default function OrderConfirmation({ handlePressOrderConfirmation, handlePressClose,itemTotal ,deliveryFee,totalPayable,address}) {
-    console.log("address",address)
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handlePressClose} style={styles.Closecon}>
                 <Close />
             </TouchableOpacity>
-            <View style={styles.section}>
-                {/* <View style={styles.cardOption}>
-                    <Image
-                        source={{ uri: "https://raw.githubusercontent.com/kristiyanP/creditcard-generator/master/src/main/resources/mc.png" }}
-                        style={styles.cardIcon}
-                    />
-                    <View style={styles.cardDetails}>
-                        <Text style={styles.cardType}>Credit card</Text>
-                        <Text style={styles.cardNumber}>2441 **** **** 4567</Text>
-                    </View>
-                    <View style={styles.radioOuter}>
-                        <View style={styles.radioInner} />
-                    </View>
-                </View> */}
-
-                {/* <View style={styles.cardOption}>
-                    <Image
-                        source={{ uri: "https://raw.githubusercontent.com/kristiyanP/creditcard-generator/master/src/main/resources/visa.png" }}
-                        style={styles.cardIcon}
-                    />
-                    <View style={styles.cardDetails}>
-                        <Text style={styles.cardType}>Credit card</Text>
-                        <Text style={styles.cardNumber}>2441 **** **** 4567</Text>
-                    </View>
-                    <View style={[ styles.radioOuter, styles.radioOuterEmpty ]} />
-                </View> */}
-            </View>
-
             <View style={styles.section}>
                 <View style={styles.deliveryAddress}>
                     <View style={styles.addressLeft}>
@@ -49,10 +20,7 @@ export default function OrderConfirmation({ handlePressOrderConfirmation, handle
                         <View style={styles.addressDetails}>
                             <Text style={styles.deliveryTitle}>Delivery Address</Text>
                             <Text style={styles.addressText} numberOfLines={3}>
-                            {capitalizeFirstLetter(address?.name)}, {address?.addressLine1}
-                            {address?.addressLine2}, {address?.city}
-                            {address?.state}, {address?.country}, {address?.phone}
-                            {/* {item?.addressLine2}, {item?.city}, {item?.state}, {item?.country}, {item?.zipCode},{item?.phone} */}
+                            {capitalizeFirstLetter(address?.name)}, {address?.addressLine1}, {address?.addressLine2}, {address?.city}, {address?.state}, {address?.country}, {address?.phone}
                             </Text>
                         </View>
                     </View>

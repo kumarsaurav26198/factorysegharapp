@@ -18,8 +18,7 @@ import {CommonStyles} from '../../themes/CommonStyles';
 import {useActions} from '../../hooks/useActions';
 import {connect} from 'react-redux';
 
-const AddAddress = ({ handlePressClose, email, addressRes,handlePressDone,done}) => {
-  console.log(done)
+const AddAddress = ({ handlePressClose, email, addressRes}) => {
   const {addAddressRequest} = useActions();
   const [numbers, setNumber] = useState('6202142166');
   const [selectedCountryCode, setSelectedCountryCode] = useState('91');
@@ -57,7 +56,6 @@ const AddAddress = ({ handlePressClose, email, addressRes,handlePressDone,done})
     });
     if (isValid) {
       addAddressRequest(formData);
-    // handlePressDone && handlePressDone(formData);
 
     } else {
       setErrorMessage(errorMessage); // Show error message
@@ -148,9 +146,7 @@ const AddAddress = ({ handlePressClose, email, addressRes,handlePressDone,done})
           />
         </View>
       </ScrollView>
-      <View style={styles.buttonContainer}>
         <C_Button title="Add Address" onPress={handleSubmit}  loading={addressRes?.addLoading}/>
-      </View>
     </View>
   );
 };
@@ -178,9 +174,5 @@ const styles = StyleSheet.create({
     fontSize: FontSize.FS14,
     fontWeight: FontsWeights.FW500,
     color: Colors.darkgrey,
-  },
-  buttonContainer: {
-    // marginTop: 20,
-    // paddingHorizontal: 10,
   },
 });

@@ -189,14 +189,13 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                         style={[
                           {color: 'blue', textDecorationLine: 'underline'},
                         ]}>
-                       {selectedIndex?("Change"):("Add Address ➡️")} 
+                       {selectedIndex?("(Change)"):("(Add Address ➡️)")} 
                       </Text>
                     </Text>
                     {
                       selectedIndex?  <Text style={styles.addressText} numberOfLines={2}>
-                      {capitalizeFirstLetter(selectedIndex?.name)},{' '}
-                      {selectedIndex?.addressLine1}
-                      {selectedIndex?.addressLine2}, {selectedIndex?.city}
+                      {capitalizeFirstLetter(selectedIndex?.name)},
+                      {selectedIndex?.addressLine1}, {selectedIndex?.addressLine2}, {selectedIndex?.city}
                       {selectedIndex?.state}, {selectedIndex?.country},{' '}
                       {selectedIndex?.phone}
                     </Text>:null}
@@ -263,11 +262,12 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
             RazorpayCheckout.open(options)
               .then(data => {
                 navigate('BottomNavigator');
-                // handle success
                 // Alert.alert(`Success: ${data.razorpay_payment_id}`);
               })
               .catch(error => {
-                setErrorMessage(`Error: ${error.code} | ${error.description}`)
+                console.log("error",JSON.stringify(error,null,2))
+                setErrorMessage(`Payment Failed`)
+                // setErrorMessage(`Error: ${error.code} | ${error.description}`)
               });
             toggleModal();
           }}

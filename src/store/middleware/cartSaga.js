@@ -9,10 +9,10 @@ function* fetchAddressApiCall(action) {
     try {
       const mobile = yield AsyncStorage.getItem('mobile');
 
-        console.log("mobile received:", mobile);
+        // console.log("mobile received:", mobile);
 
         const fullUrl = `${baseURL}${apiUri.factoyHome.getCart}`;
-        console.log("Full URL for getAddress request: ", fullUrl);
+        // console.log("Full URL for getAddress request: ", fullUrl);
 
         const response = yield axios({
           method: 'post',
