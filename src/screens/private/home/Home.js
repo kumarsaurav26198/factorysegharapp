@@ -9,6 +9,7 @@ import {AllCategories, HeaderWithOption, HomeBanner} from '../../../components';
 import SearchBar from '../../../components/AppComponent/SearchBox';
 import {ProductContainer} from '../../../container';
 import {useActions} from '../../../hooks/useActions';
+import { navigate } from '../../../services/navigationService';
 
 const Home = () => {
   const {getProductByCategory,fetchLoginUser,getCartRequest} = useActions();
@@ -57,7 +58,9 @@ const Home = () => {
         data={[1]}
         renderItem={() => (
           <>
-            <SearchBar placeholder="Search your products categories here..." />
+            <SearchBar placeholder="Search your products categories here..." editable ={false} onPress={()=>{
+              navigate("Search")
+            }}/>
             <HomeBanner />
             <AllCategories
               categories={categories}
