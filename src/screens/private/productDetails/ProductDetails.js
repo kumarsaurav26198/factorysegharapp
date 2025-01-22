@@ -69,7 +69,7 @@ const ProductDetails = ({userRes, cartRes}) => {
 
       };
       console.log("handleAddToCart payload===>>",JSON.stringify(payload,null,2));
-      addToCartRequest(payload);
+      // addToCartRequest(payload);
       return updatedCart;
     });
   };
@@ -136,13 +136,11 @@ const ProductDetails = ({userRes, cartRes}) => {
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>{item?.name}</Text>
-            {item.productDetail[0]?.variants?.length > 0 && (
-              <Text style={styles.categoryText}>
-                {item.productDetail[0].variants.length === 1
-                  ? ` ${item.productDetail[0].variants[0]}`
-                  : `${item.productDetail[0].variants.length} Variants`}
-              </Text>
-            )}
+              {item.productDetail[0]?.variants?.length > 0 ? (
+                <Text style={styles.categoryText}>
+                  {item.productDetail[0].variants.length} Variants
+                </Text>
+              ) : null}
             <FragranceList
               fragrances={transformedFragrances}
               selectedname={selectedName}

@@ -10,40 +10,37 @@ import {
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {connect} from 'react-redux';
-import {useActions} from '../../hooks/useActions';
 import Colors from '../../themes/Colors';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-const CommonProduct = ({item, cartRes}) => {
-    const navigation = useNavigation();
-  
-  const {addToCartRequest} = useActions();
+const CommonProduct = ({item}) => {
+  const navigation = useNavigation();
+
 
   return (
     <LinearGradient
-    
       colors={['#ffffff', '#f5f5f5']}
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
       <View style={styles.badgeContainer}>
         <Text style={styles.badgeText}>Bestseller</Text>
-        {item.productDetail[0]?.variants?.length > 0 && (
+        {item.productDetail[0]?.variants?.length > 0 ? (
           <Text style={styles.categoryText}>
-            {item.productDetail[0].variants.length === 1
-              ? ` ${item.productDetail[0].variants[0]}`
-              : `${item.productDetail[0].variants.length} Variants`}
+            {item.productDetail[0].variants.length} Variants
           </Text>
-        )}
+        ) : null}
       </View>
-      <TouchableOpacity onPress={()=>{navigation.navigate("ProductDetails",{item})}}>
-
-      <Image
-        source={{uri: item?.image}}
-        style={styles.productImage}
-        resizeMode="contain"
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('ProductDetails', {item});
+        }}>
+        <Image
+          source={{uri: item?.image}}
+          style={styles.productImage}
+          resizeMode="contain"
         />
-        </TouchableOpacity>
+      </TouchableOpacity>
       <Text numberOfLines={1} style={styles.productTitle}>
         {item?.name}
       </Text>
@@ -55,26 +52,10 @@ const CommonProduct = ({item, cartRes}) => {
       </View> */}
       <TouchableOpacity
         style={styles.buyButton}
-        onPress={()=>{navigation.navigate("ProductDetails",{item})}}
-//         onPress={() => {
-//  const payload={
-//   "customerName": "rahul sharma",
-//   "mobile": "9891234513",
-//   item
-
-//  }
-// // console.log("payload",JSON.stringify(payload,null,2))
-//           addToCartRequest(payload);
-//           // addToCartRequest({
-//           //   itemId: item?.id,
-//           //   quantity: 1,
-//           //   name: item?.name,
-//           //   description: item?.description,
-//           //   price: item?.price,
-//           //   stock_quantity: item?.stock_quantity,
-//           // });
-//         }}
-        >
+        onPress={() => {
+          navigation.navigate('ProductDetails', {item});
+        }}
+      >
         <Text style={styles.buyButtonText}>Buy</Text>
       </TouchableOpacity>
     </LinearGradient>
