@@ -21,6 +21,8 @@ export const addressReducers = (state = initialState, action) => {
             };
 
         case ActionTypes.FETCH_USER_ADDRESS_SUCCESS:
+            // console.log("FETCH_USER_ADDRESS_SUCCESS=====>>",JSON.stringify(action,null,2))
+
             return {
                 ...state,
                 data: action?.data,
@@ -43,11 +45,11 @@ export const addressReducers = (state = initialState, action) => {
             };
 
         case ActionTypes.ADD_ADDRESS_SUCCESS:
+            // console.log("ADD_ADDRESS_SUCCESS=====>>",JSON.stringify(action,null,2))
             return {
                 ...state,
                 addLoading: false,
-                // data: [...state.data, action.payload], // Assuming you want to add the new address to the list
-                data: action.payload, // Assuming you want to add the new address to the list
+                data: [...state.data, action?.data?.data],
                 addError: null,
                 done: true,
             };

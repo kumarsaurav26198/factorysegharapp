@@ -29,7 +29,7 @@ const AddAddress = ({ handlePressClose, email, addressRes,handlePressDone}) => {
   };
 
   const [formData, setFormData] = useState({
-    name: 'Saurav Kumar',
+    name: '',
     addressLine1: 'Thatha,Word No:11',
     addressLine2: 'Near By shivala',
     city: 'Khagaria',

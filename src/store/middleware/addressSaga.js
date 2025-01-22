@@ -7,7 +7,7 @@ import { apiUri, baseURL } from '../../services/apiEndPoints';
 function* fetchAddressApiCall(action) {
     try {
         const { payload } = action; // Extract payload from action
-        console.log("Payload received:", payload);
+        // console.log(" fetchAddressApiCall Payload received:", payload);
 
         const fullUrl = `${baseURL}${apiUri.factoyHome.getAddress}`;
         // console.log("Full URL for getAddress request: ", fullUrl);
@@ -49,12 +49,10 @@ function* fetchAddressApiCall(action) {
 
 function* addAddressApiCall(action) {
     const { payload } = action; // Extract payload from action
-    // console.log("Payload received:", payload);
 
     try {
-        console.log('Sending Request...');
         const fullUrl = `${baseURL}${apiUri.factoyHome.addAddress}`;
-        console.log("Full URL for addAddress request: ", fullUrl);
+        // console.log("Full URL for addAddress request: ", fullUrl);
 
         const response = yield axios.post(fullUrl, payload, {
             headers: {
@@ -62,8 +60,8 @@ function* addAddressApiCall(action) {
             },
         });
 
-        const data = response?.data?.data;
-        // console.log('Response received:', JSON.stringify(data, null, 2));
+        const data = response?.data;
+        // console.log(' addAddressApiCall Response received:', JSON.stringify(data, null, 2));
         yield put({ type: ActionTypes.ADD_ADDRESS_SUCCESS, data });
     } catch (error) {
         const errorPayload = {

@@ -12,31 +12,46 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {useActions} from '../../../hooks/useActions';
 import Colors from '../../../themes/Colors';
-import {BackButton, C_Button, C_SmallButton} from '../../../components';
+import {
+  Address_DropDown,
+  BackButton,
+  C_Button,
+  C_SmallButton,
+} from '../../../components';
 import {CommonStyles} from '../../../themes/CommonStyles';
 import {CartListCon} from '../../../container';
 import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
 import {navigate} from '../../../services/navigationService';
 import RazorpayCheckout from 'react-native-razorpay';
 import Images from '../../../utils/Images';
-import { EditIcon } from '../../../assets/icons';
+import {EditIcon} from '../../../assets/icons';
+import {capitalizeFirstLetter} from '../../../utils/validators';
 
 const CartScreen = ({cartRes, userRes, addressRes}) => {
   const {getCartRequest} = useActions();
   const cartData = cartRes?.data?.cartItems || [];
   const cashback = userRes[0]?.cashback || 0;
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [refreshing, setRefreshing] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAddVisible, setIsAddVisible] = useState(false);
   const [cartItems, setCartItems] = useState(cartData);
 
   const toggleModal = () => setIsModalVisible(!isModalVisible);
+  const addtoggleModal = () => setIsAddVisible(!isAddVisible);
 
   useEffect(() => {
     if (cartData.length) {
       setCartItems(cartData);
     }
   }, [cartData]);
+
+  useEffect(() => {
+    if (addressRes) {
+      setSelectedIndex(addressRes[0]);
+    }
+  }, [addressRes]);
 
   useEffect(() => {
     getCartRequest();
@@ -161,14 +176,37 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                     <Text style={styles.avatarText}>👤</Text>
                   </View>
                   <View style={styles.addressDetails}>
-                    <Text style={styles.deliveryTitle}>Delivery Address</Text>
-                    <Text style={styles.addressText} numberOfLines={1}>
-                      Shreekar road rajendra nagar 98...
+                    <Text style={styles.deliveryTitle}>
+                      Delivery Address{' '}
+                      <Text
+                        onPress={() => {
+                          selectedIndex?addtoggleModal():
+                          navigate('Address');
+                        }}
+                        style={[
+                          {color: 'blue', textDecorationLine: 'underline'},
+                        ]}>
+                       {selectedIndex?("Change"):("Add Address ➡️")} 
+                      </Text>
                     </Text>
+                    {
+                      selectedIndex?  <Text style={styles.addressText} numberOfLines={2}>
+                      {capitalizeFirstLetter(selectedIndex?.name)},{' '}
+                      {selectedIndex?.addressLine1}
+                      {selectedIndex?.addressLine2}, {selectedIndex?.city}
+                      {selectedIndex?.state}, {selectedIndex?.country},{' '}
+                      {selectedIndex?.phone}
+                    </Text>: ""
+                 
+                    }
+                  
                   </View>
-                  <TouchableOpacity onPress={() =>navigate("Address")}>
-
-                  <EditIcon/>
+                  {/* <Address_DropDown listData={addressRes}
+                    initialValue={addressRes[0]}
+                    onValueChange={(add) => setselectedIndex(add)}
+                  /> */}
+                  <TouchableOpacity onPress={() => navigate('Address')}>
+                    <EditIcon />
                   </TouchableOpacity>
                   {/* <Text
               onPress={()=>{
@@ -196,11 +234,10 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
           <C_Button
             title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
             onPress={() => {
-              // console.log(
-              //   'cartItems===>>>',
-              //   JSON.stringify(cartItems, null, 2),
-              // );
-              toggleModal();
+              {
+                selectedIndex?toggleModal():alert("Select address")
+              }
+              
             }}
           />
         </View>
@@ -216,6 +253,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
           deliveryFee={deliveryFee}
           totalPayable={totalPayable}
           handlePressClose={toggleModal}
+          address={selectedIndex}
           handlePressOrderConfirmation={() => {
             var options = {
               description: 'Credits towards consultation',
@@ -244,6 +282,22 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                 Alert.alert(`Error: ${error.code} | ${error.description}`);
               });
             toggleModal();
+          }}
+        />
+      </ModalWrapper>
+      <ModalWrapper
+        visible={isAddVisible}
+        onRequestClose={addtoggleModal}
+        center={false}>
+        <Address_DropDown
+          addressRes={addressRes}
+          handlePressClose={addtoggleModal}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
+          handlePressDone={selectedIndex => {
+            setSelectedIndex(selectedIndex);
+            // console.log('Selected Address:', JSON.stringify(selectedIndex,null,2));
+            addtoggleModal();
           }}
         />
       </ModalWrapper>
@@ -292,10 +346,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   addressText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#333',
     marginTop: 2,
-},
+  },
   footerContainer: {
     backgroundColor: Colors.bgColor,
     padding: 20,

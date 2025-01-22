@@ -3,8 +3,10 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react-native';
 import Colors from '../../themes/Colors';
 import { Close } from '../../assets/icons';
+import { capitalizeFirstLetter } from '../../utils/validators';
 
-export default function OrderConfirmation({ handlePressOrderConfirmation, handlePressClose,itemTotal ,deliveryFee,totalPayable}) {
+export default function OrderConfirmation({ handlePressOrderConfirmation, handlePressClose,itemTotal ,deliveryFee,totalPayable,address}) {
+    console.log("address",address)
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handlePressClose} style={styles.Closecon}>
@@ -46,8 +48,11 @@ export default function OrderConfirmation({ handlePressOrderConfirmation, handle
                         </View>
                         <View style={styles.addressDetails}>
                             <Text style={styles.deliveryTitle}>Delivery Address</Text>
-                            <Text style={styles.addressText} numberOfLines={1}>
-                                Shreekar road rajendra nagar 98...
+                            <Text style={styles.addressText} numberOfLines={3}>
+                            {capitalizeFirstLetter(address?.name)}, {address?.addressLine1}
+                            {address?.addressLine2}, {address?.city}
+                            {address?.state}, {address?.country}, {address?.phone}
+                            {/* {item?.addressLine2}, {item?.city}, {item?.state}, {item?.country}, {item?.zipCode},{item?.phone} */}
                             </Text>
                         </View>
                     </View>

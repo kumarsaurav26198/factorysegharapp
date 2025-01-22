@@ -58,7 +58,7 @@ const Address = ({ userRes, addressRes }) => {
       <View style={styles.addressDetails}>
         <Text style={styles.addressType}>{capitalizeFirstLetter(item?.name)},{item?.addressLine1}</Text>
         <Text style={styles.addressText} numberOfLines={2}>
-          {item?.addressLine2}, {item?.city}, {item.state}, {item?.country}, {item.zipCode},{item?.phone}
+          {item?.addressLine2}, {item?.city}, {item?.state}, {item?.country}, {item?.zipCode},{item?.phone}
         </Text>
       </View>
       {/* <View style={styles.actionIcons}>
@@ -71,11 +71,6 @@ const Address = ({ userRes, addressRes }) => {
       </View> */}
     </View>
   );
-
-  const addresses = [
-    { type: 'Home', address: '123 Main St, Apt 4B, Cityville, State 12345' },
-    { type: 'Work', address: '456 Office Blvd, Suite 789, Business Park, State 67890' },
-  ];
 
   const renderEmptyList = () => (
     <View style={{ alignItems: 'center', marginTop: 50 }}>
@@ -90,7 +85,6 @@ const Address = ({ userRes, addressRes }) => {
         data={addressesData}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-
         keyExtractor={(item, index) => `address-${index}`}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
