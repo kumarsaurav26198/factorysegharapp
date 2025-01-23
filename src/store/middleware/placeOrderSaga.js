@@ -19,10 +19,10 @@ function* placeOrderApi(action) {
     });
 
     const placeOrderApires = response?.data;
-    console.log(
-      'placeOrderApires (Order Created):',
-      JSON.stringify(placeOrderApires, null, 2),
-    );
+    // console.log(
+    //   'placeOrderApires (Order Created):',
+    //   JSON.stringify(placeOrderApires, null, 2),
+    // );
 
     // Proceed to Razorpay Checkout with the response
     yield call(handleRazorpayCheckout, placeOrderApires);
@@ -55,10 +55,10 @@ function* placeOrderApi(action) {
 
 function* handleRazorpayCheckout(orderDetails) {
   try {
-    console.log(
-      'handleRazorpayCheckout: Initializing Razorpay Checkout with order details:',
-      JSON.stringify(orderDetails, null, 2),
-    );
+    // console.log(
+    //   'handleRazorpayCheckout: Initializing Razorpay Checkout with order details:',
+    //   JSON.stringify(orderDetails, null, 2),
+    // );
 
     const options = {
       description: 'Credits towards consultation',
@@ -76,10 +76,10 @@ function* handleRazorpayCheckout(orderDetails) {
       theme: {color: 'red'},
     };
 
-    console.log(
-      'handleRazorpayCheckout: Calling RazorpayCheckout.open with options:',
-      JSON.stringify(options, null, 2),
-    );
+    // console.log(
+    //   'handleRazorpayCheckout: Calling RazorpayCheckout.open with options:',
+    //   JSON.stringify(options, null, 2),
+    // );
 
     // Open Razorpay Checkout
     const data = yield RazorpayCheckout.open(options);
@@ -166,7 +166,7 @@ function* verifyPaymentApi(paymentData) {
       'verifyPaymentApi: Payment Verification Failed:',
       JSON.stringify(error, null, 2),
     );
-    yield put({type: ActionTypes.PAYMENT_VERIFICATION_FAILURE, error});
+    // yield put({type: ActionTypes.PAYMENT_VERIFICATION_FAILURE, error});
   }
 }
 

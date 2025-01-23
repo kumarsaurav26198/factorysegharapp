@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import { FontSize, FontsWeights } from '../../themes/Fonts';
+import {FontSize, FontsWeights} from '../../themes/Fonts';
 import Colors from '../../themes/Colors';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {SmallProductIcon} from '../../assets/icons';
 // import SmallProductIcon from '../../assets/icons/SmallProductIcon';
 
-const HistoryCard = ({ item }) => {
+const HistoryCard = ({item}) => {
   const navigation = useNavigation();
 
   return (
@@ -18,15 +19,31 @@ const HistoryCard = ({ item }) => {
           <Text style={styles.emailText}>{item.userEmail}</Text>
         </View>
         <Text style={styles.dateText}>
-          {new Date(item.orderDate).toLocaleDateString()}
+          {new Date(item.createdAt).toLocaleDateString()}
         </Text>
       </View>
       <View style={styles.itemsContainer}>
         {item.items.map(item => (
           <View key={item._id} style={styles.itemRow}>
             <View>
-              {/* <SmallProductIcon /> */}
-              <Text style={styles.itemIdText}>{item.itemId}</Text>
+              <SmallProductIcon />
+              <Text style={styles.itemIdText}>{item.productName}</Text>
+              {item?.productDetail?.variants && (
+                <Text style={styles.itemIdText}>
+                  Variants: {item.productDetail.variants}
+                </Text>
+              )}
+              {item?.productDetail?.sku && (
+                <Text style={styles.itemIdText}>
+                  SKU:{item.productDetail.sku}
+                </Text>
+              )}
+              {item?.productDetail?.caseSize && (
+                <Text style={styles.itemIdText}>
+                  CaseSize :{item.productDetail.caseSize}
+                </Text>
+              )}
+
             </View>
             <Text style={styles.itemQuantityText}>Qty: {item.quantity}</Text>
           </View>
@@ -43,8 +60,8 @@ const HistoryCard = ({ item }) => {
                 item.status === 'Pending'
                   ? Colors.orange
                   : item.status === 'Completed'
-                    ? Colors.green
-                    : Colors.red,
+                  ? Colors.green
+                  : Colors.red,
             },
           ]}>
           {item.status}
@@ -97,12 +114,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemIdText: {
-    fontSize: FontSize.FS14,
+    fontSize: FontSize.FS16,
     color: Colors.black,
+    fontWeight: '700',
+    marginBottom: 4,
   },
   itemQuantityText: {
-    fontSize: FontSize.FS14,
-    color: Colors.darkgrey,
+    fontSize: FontSize.FS16,
+    color: Colors.black,
   },
   footer: {
     flexDirection: 'row',
