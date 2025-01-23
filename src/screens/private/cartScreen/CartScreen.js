@@ -25,8 +25,8 @@ import RazorpayCheckout from 'react-native-razorpay';
 import {EditIcon} from '../../../assets/icons';
 import {capitalizeFirstLetter} from '../../../utils/validators';
 
-const CartScreen = ({cartRes, userRes, addressRes}) => {
-  const {getCartRequest,placeOderReq} = useActions();
+const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
+  const {getCartRequest, placeOderReq} = useActions();
   const cartData = cartRes?.data?.cartItems || [];
   const cashback = userRes[0]?.cashback || 0;
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -35,7 +35,8 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [cartItems, setCartItems] = useState(cartData);
-  const [ errorMessage, setErrorMessage ] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   const toggleModal = () => setIsModalVisible(!isModalVisible);
   const addtoggleModal = () => setIsAddVisible(!isAddVisible);
@@ -86,7 +87,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
     );
   }, []);
 
-  const handlePressOrderConfirmation = ()=>{
+  const handlePressOrderConfirmation = () => {
     if (selectedIndex) {
       const payload = {
         customerName: userRes[0]?.fullName,
@@ -118,8 +119,9 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
       };
       placeOderReq(payload);
     } else {
-     setErrorMessage('Selected address is missing!');
-    }};
+      setErrorMessage('Selected address is missing!');
+    }
+  };
 
   const itemTotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -215,22 +217,25 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                       Delivery Address{' '}
                       <Text
                         onPress={() => {
-                          selectedIndex ? addtoggleModal() :
-                          navigate('Address');
+                          selectedIndex
+                            ? addtoggleModal()
+                            : navigate('Address');
                         }}
                         style={[
                           {color: 'blue', textDecorationLine: 'underline'},
                         ]}>
-                       {selectedIndex ? ('(Change)') : ('(Add Address ➡️)')}
+                        {selectedIndex ? '(Change)' : '(Add Address ➡️)'}
                       </Text>
                     </Text>
-                    {
-                      selectedIndex ?  <Text style={styles.addressText} numberOfLines={2}>
-                      {capitalizeFirstLetter(selectedIndex?.name)},
-                      {selectedIndex?.addressLine1}, {selectedIndex?.addressLine2}, {selectedIndex?.city}
-                      {selectedIndex?.state}, {selectedIndex?.country},{' '}
-                      {selectedIndex?.phone}
-                    </Text> : null}
+                    {selectedIndex ? (
+                      <Text style={styles.addressText} numberOfLines={2}>
+                        {capitalizeFirstLetter(selectedIndex?.name)},
+                        {selectedIndex?.addressLine1},{' '}
+                        {selectedIndex?.addressLine2}, {selectedIndex?.city}
+                        {selectedIndex?.state}, {selectedIndex?.country},{' '}
+                        {selectedIndex?.phone}
+                      </Text>
+                    ) : null}
                   </View>
                   <TouchableOpacity onPress={() => navigate('Address')}>
                     <EditIcon />
@@ -238,7 +243,9 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                 </View>
               </View>
             </View>
-            {errorMessage ? <Text style={CommonStyles.errorText}>{errorMessage}</Text> : null}
+            {errorMessage ? (
+              <Text style={CommonStyles.errorText}>{errorMessage}</Text>
+            ) : null}
             <View style={[styles.summaryRow, styles.totalRow]}>
               <Text style={[styles.summaryLabel, styles.totalText]}>
                 Total Payable
@@ -269,7 +276,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
         onRequestClose={toggleModal}
         center={false}>
         <OrderConfirmation
-        errorMessage={errorMessage}
+          errorMessage={errorMessage}
           itemTotal={itemTotal.toFixed(2)}
           deliveryFee={deliveryFee.toFixed(2)}
           totalPayable={totalPayable.toFixed(2)}
@@ -277,7 +284,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
           address={selectedIndex}
           handlePressOrderConfirmation={() => {
             handlePressOrderConfirmation();
-
+            toggleModal();
 
             // var options = {
             //   description: 'Credits towards consultation',
@@ -305,7 +312,6 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
             //     setErrorMessage('Payment Failed');
             //     // setErrorMessage(`Error: ${error.code} | ${error.description}`)
             //   });
-            // toggleModal();
           }}
         />
       </ModalWrapper>
@@ -333,6 +339,7 @@ const mapStateToProps = state => ({
   cartRes: state?.cartReducers,
   userRes: state?.userReducers?.data,
   addressRes: state?.addressReducers?.data,
+  placeOderReducers: state?.placeOderReducers,
 });
 
 export default connect(mapStateToProps)(CartScreen);

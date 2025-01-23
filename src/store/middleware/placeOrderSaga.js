@@ -97,6 +97,7 @@ function* handleRazorpayCheckout(orderDetails) {
     });
 
     // Navigate to success screen
+    yield put({type: ActionTypes.PAYMENT_VERIFICATION_REQUEST});
     yield put({type: ActionTypes.PLACE_ORDER_SUCCESS, data});
     console.log(
       'handleRazorpayCheckout: Payment verified and order placed. Navigating to BottomNavigator',
