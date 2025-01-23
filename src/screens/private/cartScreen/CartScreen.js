@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  Alert,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -38,7 +37,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [cartItems, setCartItems] = useState(cartData);
   const [ errorMessage, setErrorMessage ] = useState('');
-  
+
   const toggleModal = () => setIsModalVisible(!isModalVisible);
   const addtoggleModal = () => setIsAddVisible(!isAddVisible);
 
@@ -51,7 +50,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
   useEffect(() => {
     if (addressRes) {
       setSelectedIndex(addressRes[0]);
-      setErrorMessage("")
+      setErrorMessage('');
     }
   }, [addressRes]);
 
@@ -88,12 +87,35 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
     );
   }, []);
 
+  const handlePressOrderConfirmation = ()=>{
+    console.log('handlePressOrderConfirmation');
+    // cons
+    const payload = {
+      'items': cartItems,
+      'totalAmount':totalPayable.toFixed(2),
+      'cashbackUsed':cashback.toFixed(2),
+      'address':{
+        'name': selectedIndex.name,
+        'email': selectedIndex.email,
+        'phone': selectedIndex.phone,
+        'addressLine1': selectedIndex?.addressLine1,
+        'addressLine2':  selectedIndex?.addressLine2,
+        'city': selectedIndex?.city,
+        'state':  selectedIndex?.city,
+        'zipCode': selectedIndex?.zipCode,
+        'country': selectedIndex?.country,
+      },
+
+    };
+    console.log('payload====>>',JSON.stringify(payload,null,2));
+  };
+
   const itemTotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
 
-  const specialDiscount = itemTotal >= 2500 ? itemTotal * 0.5 : 0.2;
+  const specialDiscount = itemTotal >= 2500 ? itemTotal * 0.5 : itemTotal * 0.2;
   const deliveryFee = 0;
   const deliveryFeeDiscount = deliveryFee;
   const totalPayable = Math.max(
@@ -132,14 +154,13 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
             />
           </View>
         }
-        ListFooterComponent={<View style={{height: 340}} />}
+        ListFooterComponent={<View style={{height: 400}} />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
       {cartItems?.length > 0 ? (
         <View style={[CommonStyles.bottomView]}>
-          
           <View style={styles.footerContainer}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Item Total</Text>
@@ -183,22 +204,22 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
                       Delivery Address{' '}
                       <Text
                         onPress={() => {
-                          selectedIndex?addtoggleModal():
+                          selectedIndex ? addtoggleModal() :
                           navigate('Address');
                         }}
                         style={[
                           {color: 'blue', textDecorationLine: 'underline'},
                         ]}>
-                       {selectedIndex?("(Change)"):("(Add Address ➡️)")} 
+                       {selectedIndex ? ('(Change)') : ('(Add Address ➡️)')}
                       </Text>
                     </Text>
                     {
-                      selectedIndex?  <Text style={styles.addressText} numberOfLines={2}>
+                      selectedIndex ?  <Text style={styles.addressText} numberOfLines={2}>
                       {capitalizeFirstLetter(selectedIndex?.name)},
                       {selectedIndex?.addressLine1}, {selectedIndex?.addressLine2}, {selectedIndex?.city}
                       {selectedIndex?.state}, {selectedIndex?.country},{' '}
                       {selectedIndex?.phone}
-                    </Text>:null}
+                    </Text> : null}
                   </View>
                   <TouchableOpacity onPress={() => navigate('Address')}>
                     <EditIcon />
@@ -216,15 +237,15 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
               </Text>
             </View>
           </View>
-          
+
           <C_Button
             title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
             onPress={() => {
               if (selectedIndex !== null && selectedIndex !== undefined) {
-                setErrorMessage("")
+                setErrorMessage('');
                 toggleModal();
               } else {
-                setErrorMessage("Select address");
+                setErrorMessage('Select address');
               }
             }}
           />
@@ -237,39 +258,42 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
         onRequestClose={toggleModal}
         center={false}>
         <OrderConfirmation
-          itemTotal={itemTotal}
-          deliveryFee={deliveryFee}
-          totalPayable={totalPayable}
+          itemTotal={itemTotal.toFixed(2)}
+          deliveryFee={deliveryFee.toFixed(2)}
+          totalPayable={totalPayable.toFixed(2)}
           handlePressClose={toggleModal}
           address={selectedIndex}
           handlePressOrderConfirmation={() => {
-            var options = {
-              description: 'Credits towards consultation',
-              image: Images.banner,
-              currency: 'INR',
-              key: 'rzp_test_xC0HuBfFYisteo',
-              amount: '5000',
-              name: 'Factory Se Ghar',
-              order_id: '', // Replace this with an order_id created using Orders API.
-              prefill: {
-                email: 'gaurav.kumar@example.com',
-                contact: '916202142166',
-                name: 'Saurav Kumar',
-              },
-              theme: {color: Colors.red},
-            };
+            handlePressOrderConfirmation();
 
-            RazorpayCheckout.open(options)
-              .then(data => {
-                navigate('BottomNavigator');
-                // Alert.alert(`Success: ${data.razorpay_payment_id}`);
-              })
-              .catch(error => {
-                console.log("error",JSON.stringify(error,null,2))
-                setErrorMessage(`Payment Failed`)
-                // setErrorMessage(`Error: ${error.code} | ${error.description}`)
-              });
-            toggleModal();
+
+            // var options = {
+            //   description: 'Credits towards consultation',
+            //   image: Images.banner,
+            //   currency: 'INR',
+            //   key: 'rzp_test_xC0HuBfFYisteo',
+            //   amount: itemTotal,
+            //   name: 'Factory Se Ghar',
+            //   order_id: '', // Replace this with an order_id created using Orders API.
+            //   prefill: {
+            //     email: 'gaurav.kumar@example.com',
+            //     contact: '916202142166',
+            //     name: 'Saurav Kumar',
+            //   },
+            //   theme: {color: Colors.red},
+            // };
+
+            // RazorpayCheckout.open(options)
+            //   .then(data => {
+            //     navigate('BottomNavigator');
+            //     // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+            //   })
+            //   .catch(error => {
+            //     console.log('error',JSON.stringify(error,null,2));
+            //     setErrorMessage('Payment Failed');
+            //     // setErrorMessage(`Error: ${error.code} | ${error.description}`)
+            //   });
+            // toggleModal();
           }}
         />
       </ModalWrapper>
@@ -284,7 +308,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
           setSelectedIndex={setSelectedIndex}
           handlePressDone={selectedIndex => {
             setSelectedIndex(selectedIndex);
-            setErrorMessage("")
+            setErrorMessage('');
             addtoggleModal();
           }}
         />

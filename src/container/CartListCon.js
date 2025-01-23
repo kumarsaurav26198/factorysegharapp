@@ -61,7 +61,7 @@ const CartListCon = ({ item ,decrementQuantity,incrementQuantity,index}) => {
                 <Text style={styles.productName}>Varients :{item?.productDetail?.variants}</Text>
                 <Text style={styles.productName}>Price :{item?.price}</Text>
                 <Text style={styles.productName}>SKU :{item?.productDetail?.sku}</Text>
-                <Text style={styles.productName}>Case Size :{item?.productDetail?.caseSize}</Text>
+                {/* <Text style={styles.productName}>Case Size :{item?.productDetail?.caseSize}</Text> */}
             </View>
         </View>
     );

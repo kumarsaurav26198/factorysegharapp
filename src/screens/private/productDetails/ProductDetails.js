@@ -81,7 +81,7 @@ const ProductDetails = ({ userRes, cartRes }) => {
       };
 
       console.log("handleAddToCart payload for variant===>>", JSON.stringify(payload, null, 2));
-      // addToCartRequest(payload);
+      addToCartRequest(payload);
       return updated;
     });
   };
