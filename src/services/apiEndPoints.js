@@ -21,7 +21,7 @@ const apiUri = {
         addCart:'api/addCart',
         getCart:'api/getCart',
         pagename:'api/pages?pagename=',
-        contact:'/contact',
+        getcontact:'api/contact-us',
 
     },
 };

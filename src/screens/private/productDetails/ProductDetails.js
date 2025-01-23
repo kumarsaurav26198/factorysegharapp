@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   FlatList,
   View,
@@ -8,22 +8,23 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
-import {CommonStyles} from '../../../themes/CommonStyles';
-import {useActions} from '../../../hooks/useActions';
+import { CommonStyles } from '../../../themes/CommonStyles';
+import { useActions } from '../../../hooks/useActions';
 import ImageSlider from '../../../components/AppComponent/ImageSlider';
 import Colors from '../../../themes/Colors';
-import {BackButton, C_Button, FragranceList} from '../../../components';
-import {useRoute} from '@react-navigation/native';
-import {connect} from 'react-redux';
+import { BackButton, C_Button, FragranceList } from '../../../components';
+import { useRoute } from '@react-navigation/native';
+import { connect } from 'react-redux';
 
-const ProductDetails = ({userRes, cartRes}) => {
+const ProductDetails = ({ userRes, cartRes }) => {
   const route = useRoute();
-  const {item} = route?.params;
-  const {fetchLoginUser, addToCartRequest} = useActions();
+  const { item } = route?.params;
+  const { fetchLoginUser, addToCartRequest } = useActions();
   const [refreshing, setRefreshing] = useState(false);
   const cartData = cartRes?.data?.cartItems || [];
 
   const [cart, setCart] = useState({});
+  const [updatedCart, setUpdatedCart] = useState({}); 
   const scale = new Animated.Value(1);
 
   const transformedFragrances = item.productDetail[0]?.variants?.map(
@@ -39,59 +40,31 @@ const ProductDetails = ({userRes, cartRes}) => {
 
   const handleSelectFragrance = name => {
     setSelectedName(name);
-  };
 
-  const handleAddToCart = (sku, caseSize, price) => {
-    setCart(prevCart => {
-      const existingItem = prevCart[sku];
-      const updatedCart = {
-        ...prevCart,
-        [sku]: {
-          sku,
-          caseSize,
-          price,
-          quantity: existingItem ? existingItem.quantity + 1 : 1,
-        },
-      };
-      const payload = {
-      customerName: userRes[0]?.fullName,
-        mobile: userRes[0]?.mobile,
-        cartItems:{
-          productName: item?.name,
-        productDetail: {
-          variants: selectedName,
-          sku: updatedCart[sku]?.sku,
-          caseSize: updatedCart[sku]?.caseSize,
-        },
-        quantity: updatedCart[sku]?.quantity,
-        price: updatedCart[sku]?.price,
-        }
-
-      };
-      console.log("handleAddToCart payload===>>",JSON.stringify(payload,null,2));
-      // addToCartRequest(payload);
-      return updatedCart;
+    setUpdatedCart(prevCart => {
+      const updated = { ...prevCart };
+      item.productDetail[0]?.variants.forEach(variant => {
+        const variantSku = `${item.sku}_${variant}`;
+        updated[variantSku] = { quantity: 0, previousQuantity: 0 }
+      });
+      return updated;
     });
   };
 
-  const handleRemoveFromCart = (sku) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart[sku]; // Check if the item exists in the cart
-  
-      if (!existingItem) {
-        return prevCart; // If the item doesn't exist, return the cart as is
-      }
-  
-      // Always keep the item in the cart, even if quantity is 0
-      const updatedCart = {
-        ...prevCart,
-        [sku]: {
-          ...existingItem,
-          quantity: Math.max(existingItem.quantity - 1, 0), // Decrement quantity but don't go below 0
-        },
+  const handleAddToCart = (sku, caseSize, price) => {
+    setUpdatedCart(prevCart => {
+      const updated = { ...prevCart };
+      const variantSku = `${sku}_${selectedName}`;
+
+      const existingItem = prevCart[variantSku];
+      updated[variantSku] = {
+        sku: sku,
+        caseSize,
+        price,
+        previousQuantity: existingItem ? existingItem.quantity : 0,
+        quantity: existingItem ? existingItem.quantity + 1 : 1,
       };
-  
-      // Create the payload for the updated cart
+
       const payload = {
         customerName: userRes[0]?.fullName,
         mobile: userRes[0]?.mobile,
@@ -99,21 +72,55 @@ const ProductDetails = ({userRes, cartRes}) => {
           productName: item?.name,
           productDetail: {
             variants: selectedName,
-            sku: updatedCart[sku]?.sku, // Ensure `sku` is included
-            caseSize: updatedCart[sku]?.caseSize, // Ensure `caseSize` is included
+            sku: updated[variantSku]?.sku,
+            caseSize: updated[variantSku]?.caseSize,
           },
-          quantity: updatedCart[sku]?.quantity || 0, // Quantity can be 0 but keep the item
-          price: updatedCart[sku]?.price || 0, // Price can be 0 if the item is not in the cart
+          quantity: updated[variantSku]?.quantity,
+          price: updated[variantSku]?.price,
         },
       };
-  
-      console.log("handleRemoveFromCart payload===>>", JSON.stringify(payload, null, 2));
-      addToCartRequest(payload);
-  
-      return updatedCart; // Update the cart state
+
+      console.log("handleAddToCart payload for variant===>>", JSON.stringify(payload, null, 2));
+      // addToCartRequest(payload);
+      return updated;
     });
   };
-  
+
+  const handleRemoveFromCart = (sku) => {
+    setUpdatedCart(prevCart => {
+      const updated = { ...prevCart };
+      const variantSku = `${sku}_${selectedName}`;
+
+      const existingItem = prevCart[variantSku];
+
+      if (!existingItem) return prevCart;
+
+      updated[variantSku] = {
+        ...existingItem,
+        previousQuantity: existingItem.quantity,
+        quantity: Math.max(existingItem.quantity - 1, 0),
+      };
+
+      const payload = {
+        customerName: userRes[0]?.fullName,
+        mobile: userRes[0]?.mobile,
+        cartItems: {
+          productName: item?.name,
+          productDetail: {
+            variants: selectedName,
+            sku: updated[variantSku]?.sku,
+            caseSize: updated[variantSku]?.caseSize,
+          },
+          quantity: updated[variantSku]?.quantity || 0,
+          price: updated[variantSku]?.price || 0,
+        },
+      };
+
+      console.log("handleRemoveFromCart payload===>>", JSON.stringify(payload, null, 2));
+      addToCartRequest(payload);
+      return updated;
+    });
+  };
 
   const onPressIn = () => {
     Animated.spring(scale, {
@@ -136,11 +143,11 @@ const ProductDetails = ({userRes, cartRes}) => {
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>{item?.name}</Text>
-              {item.productDetail[0]?.variants?.length > 0 ? (
-                <Text style={styles.categoryText}>
-                  {item.productDetail[0].variants.length} Variants
-                </Text>
-              ) : null}
+            {item.productDetail[0]?.variants?.length > 0 ? (
+              <Text style={styles.categoryText}>
+                {item.productDetail[0].variants.length} Variants
+              </Text>
+            ) : null}
             <FragranceList
               fragrances={transformedFragrances}
               selectedname={selectedName}
@@ -157,9 +164,6 @@ const ProductDetails = ({userRes, cartRes}) => {
                 <View style={styles.productDetailsRow}>
                   <View style={styles.productTextContainer}>
                     <Text style={styles.productName}>SKU: {cartItem?.sku}</Text>
-                    {/* <Text style={styles.productName}>
-                      Case Size: {cartItem?.caseSize}
-                    </Text> */}
                     <Text style={styles.productName}>
                       Price: {cartItem?.price || 100}
                     </Text>
@@ -171,17 +175,14 @@ const ProductDetails = ({userRes, cartRes}) => {
                       style={[
                         styles.quantityButton,
                         styles.minusButton,
-                        {transform: [{scale}]},
+                        { transform: [{ scale }] },
                       ]}>
                       <TouchableOpacity
                         onPressIn={onPressIn}
+                        disabled={cart[`${cartItem.sku}_${selectedName}`]?.quantity <= 0}
                         onPressOut={onPressOut}
                         onPress={() => {
-                          handleRemoveFromCart(
-                            cartItem.sku,
-                            cartItem.caseSize,
-                            cartItem.price,
-                          );
+                          handleRemoveFromCart(cartItem.sku);
                         }}>
                         <Text style={styles.quantityButtonText}>−</Text>
                       </TouchableOpacity>
@@ -189,7 +190,7 @@ const ProductDetails = ({userRes, cartRes}) => {
 
                     <View style={styles.quantityTextContainer}>
                       <Text style={styles.quantityText}>
-                        {cart[cartItem.sku]?.quantity || 0}
+                        {updatedCart[`${cartItem.sku}_${selectedName}`]?.quantity || 0} 
                       </Text>
                     </View>
 
@@ -197,17 +198,13 @@ const ProductDetails = ({userRes, cartRes}) => {
                       style={[
                         styles.quantityButton,
                         styles.plusButton,
-                        {transform: [{scale}]},
+                        { transform: [{ scale }] },
                       ]}>
                       <TouchableOpacity
                         onPressIn={onPressIn}
                         onPressOut={onPressOut}
                         onPress={() => {
-                          handleAddToCart(
-                            cartItem.sku,
-                            cartItem.caseSize,
-                            cartItem.price,
-                          );
+                          handleAddToCart(cartItem.sku, cartItem.caseSize, cartItem.price);
                         }}>
                         <Text style={styles.quantityButtonText}>+</Text>
                       </TouchableOpacity>
@@ -222,10 +219,6 @@ const ProductDetails = ({userRes, cartRes}) => {
     );
   };
 
-  // useEffect(() => {
-  //   // fetchLoginUser();
-  // }, [fetchLoginUser]);
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchLoginUser();
@@ -239,56 +232,25 @@ const ProductDetails = ({userRes, cartRes}) => {
         data={[1]}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-        ListFooterComponent={<View style={{height: 150}} />}
+        ListFooterComponent={<View style={{ height: 150 }} />}
         keyExtractor={(item, index) => index.toString()}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      <View style={[CommonStyles.bottomView, {paddingHorizontal: 20}]}>
-        <C_Button
-          title="Add To cart"
-          disabled={Object.keys(cart).length === 0}
-          // loading
-          // onPress={() => {
-          //   const cartItems = Object.values(cart).map(detail => {
-          //     const productDetail = {};
-
-          //     if (selectedName) {
-          //       productDetail.varients = selectedName;
-          //     }
-          //     if (detail?.sku) {
-          //       productDetail.sku = detail.sku;
-          //     }
-          //     if (detail?.caseSize) {
-          //       productDetail.caseSize = detail.caseSize;
-          //     }
-          //     return {
-          //       productName: item?.name,
-          //       productDetail: productDetail,
-          //       quantity: detail?.quantity || 1,
-          //       price: detail?.price || 100,
-          //     };
-          //   });
-
-          //   const payload = {
-          //     customerName: userRes[0]?.fullName,
-          //     mobile: userRes[0]?.mobile,
-          //     cartItems: cartItems,
-          //   };
-          //   addToCartRequest(payload);
-          //   console.log('payload=====>>', JSON.stringify(payload, null, 2));
-          // }}
-        />
-      </View>
     </View>
   );
 };
+
 const mapStateToProps = state => ({
   userRes: state?.userReducers?.data,
+ 
+
   addressRes: state?.addressReducers?.data,
   cartRes: state?.cartReducers,
 });
+
+
 export default connect(mapStateToProps)(ProductDetails);
 
 const styles = StyleSheet.create({

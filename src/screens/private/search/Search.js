@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {
   FlatList,
   View,
@@ -20,10 +20,12 @@ const Search = ({allProductRes}) => {
   const [selectedCategory] = useState('ALL');
   const [searchValue, setSearchValue] = useState();
 
-  const filteredProducts = allProduct.filter(product =>
-    (product?.name?.toLowerCase().includes(searchValue?.toLowerCase() || '') ||
-    product?.category?.toLowerCase().includes(searchValue?.toLowerCase() || ''))
-  );
+  const filteredProducts = useMemo(() => {
+    return allProduct.filter(product => 
+      (product?.name?.toLowerCase().includes(searchValue?.toLowerCase() ?? '') ||
+       product?.category?.toLowerCase().includes(searchValue?.toLowerCase() ?? ''))
+    );
+  }, [allProduct, searchValue]); 
   // console.log("filteredProducts length==>>", JSON.stringify(filteredProducts.length,null,2));
   // console.log("searchValue length==>>", searchValue);
 

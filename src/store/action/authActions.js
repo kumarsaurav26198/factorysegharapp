@@ -55,8 +55,9 @@ export const fetchPagebyNameDetails = (payload) => ({
     payload
 });
 
-export const fetchConstchUsDetails = () => ({
+export const fetchConstchUsDetails = (payload) => ({
     type: ActionTypes.GET_CONTACT_US_REQUEST,
+    payload
 });
 
 export const ContactUsRequest = (payload) => ({

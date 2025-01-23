@@ -1,119 +1,238 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { CommonStyles } from '../../../themes/CommonStyles';
-import { BackButton, C_Button, C_Text, C_TextInput } from '../../../components';
-import { FontSize, FontsWeights } from '../../../themes/Fonts';
-import { useActions } from '../../../hooks/useActions';
-import { connect } from 'react-redux';
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  FlatList,
+  Linking,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {CommonStyles} from '../../../themes/CommonStyles';
+import {BackButton, C_Text} from '../../../components';
+import {FontSize, FontsWeights} from '../../../themes/Fonts';
+import {useActions} from '../../../hooks/useActions';
+import {connect} from 'react-redux';
+import {AddressIcon, Calling, ContactUsIcon, EmailIcon} from '../../../assets/icons';
+import {capitalizeFirstLetter} from '../../../utils/validators';
+import Colors from '../../../themes/Colors';
 
-const ContactUs = ({ navigation, contactRes }) => {
-  const { fetchConstchUsDetails, ContactUsRequest } = useActions();
-
+const ContactUs = ({contactRes}) => {
+  const {fetchConstchUsDetails} = useActions();
   const contactAddress = contactRes?.data;
-
-  const [ refreshing, setRefreshing ] = useState(false);
-  const [ errorMessage, setErrorMessage ] = useState('');
-  const [ message, setMessage ] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchConstchUsDetails();
   }, []);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchConstchUsDetails();
     setRefreshing(false);
   }, []);
 
+  const handleEmailPress = email => {
+    if (email) {
+      Linking.openURL(`mailto:${email}`).catch(err =>
+        console.error('Failed to open email app', err),
+      );
+    }
+  };
 
+  const handlePhonePress = phoneNumber => {
+    if (phoneNumber) {
+      Linking.openURL(`tel:${phoneNumber}`).catch(err =>
+        console.error('Failed to open dialer', err),
+      );
+    }
+  };
+  const handleAddressePress = phoneNumber => {
+    // if (phoneNumber) {
+    //   Linking.openURL(`tel:${phoneNumber}`).catch(err =>
+    //     console.error('Failed to open dialer', err),
+    //   );
+    // }
+  };
 
-  const handlePresSendMessage = () => {
-
-    if (message.length >= 3)
-    {
-      console.log(JSON.stringify(message, null, 2));
-      ContactUsRequest({ message: message });
-      setErrorMessage('');
-      setMessage("");
-      // You may want to navigate or show a success message here
-    } else
-    {
-      setErrorMessage("Message is required!");
+  const handleWhatsAppPress = phoneNumber => {
+    if (phoneNumber) {
+      const whatsappURL = `https://wa.me/${phoneNumber}`;
+      Linking.openURL(whatsappURL).catch(err =>
+        console.error('Failed to open WhatsApp', err),
+      );
     }
   };
 
   return (
     <View style={CommonStyles.container}>
       <BackButton left text="Contact Us" />
-      <View style={{ paddingHorizontal: 20, }}>
+      <View style={styles.contentContainer}>
         <FlatList
-          data={[ 1 ]}
+          data={[1]}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <>
-              {
-                !contactRes?.loading && (
-                  <>
-                    <C_Text content={contactAddress?.heading} style={styles.headerbold} />
-                    <C_Text content={'Address'} style={styles.headerbold} />
-                    <C_Text content={contactAddress?.address} />
-                    <C_Text content={` Call : ${ contactAddress?.phone }`} />
-                    <C_Text content={` Email : ${ contactAddress?.email }`} />
-                    <C_Text content={'Send Message'} style={[ styles.headerbold, { marginVertical: 15 } ]} />
-                  </>
-                )
-              }
+          renderItem={({item}) => {
+            if (contactRes?.error) {
+              return (
+                <View
+                  style={[
+                    CommonStyles.container,
+                    {
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      CommonStyles.errorText,
+                      {textAlign: 'center', fontSize: FontSize.FS18},
+                    ]}>
+                    {contactRes?.error?.message ||
+                      'Something went wrong. Please try again.'}
+                  </Text>
+                </View>
+              );
+            }
 
-              <C_TextInput
-                placeholder="Write your text"
-                value={message}
-                onChangeText={txt => {
-                  setMessage(txt);
-                }}
-                multiline
-                numberOfLines={4}
-              />
-              {errorMessage ? (
-                <Text style={[ CommonStyles.errorText, { right: 20 } ]}>
-                  {errorMessage}
-                </Text>
-              ) : null}
-              {contactRes?.senderror ? (
-                <Text style={[ CommonStyles.errorText, { right: 20 } ]}>
-                  {contactRes?.senderror?.message}
-                </Text>
-              ) : null}
-            </>
-          )}
+            return (
+              <View>
+                {!contactRes?.loading && (
+                  <View style={styles.card}>
+                    <C_Text
+                      content={contactAddress?.heading}
+                      style={styles.header}
+                    />
+
+                    <View style={styles.section}>
+                      <Text style={styles.sectionHeader}>Address</Text>
+                      <TouchableOpacity
+                        style={styles.row}
+                        onPress={() =>
+                          handleAddressePress(contactAddress?.address)
+                        }
+                      >
+                        <AddressIcon
+                          width={22}
+                          height={22}
+                          color={Colors.black}
+                        />
+                        <Text style={styles.linkText2}>
+                         {' '} {capitalizeFirstLetter(contactAddress?.address)}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.section}>
+                      <Text style={styles.sectionHeader}>Call</Text>
+                      <TouchableOpacity
+                        style={styles.row}
+                        onPress={() =>
+                          handlePhonePress(contactAddress?.contactUs)
+                        }>
+                        <Calling />
+                        <Text style={styles.linkText}>
+                          {contactAddress?.contactUs}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.section}>
+                      <Text style={styles.sectionHeader}>Email</Text>
+                      <TouchableOpacity
+                        style={styles.row}
+                        onPress={() => handleEmailPress(contactAddress?.email)}>
+                          <EmailIcon/>
+                        <Text style={styles.linkText}>
+                          {contactAddress?.email}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.section}>
+                      <Text style={styles.sectionHeader}>WhatsApp</Text>
+                      <TouchableOpacity
+                        style={styles.row}
+                        onPress={() =>
+                          handleWhatsAppPress(contactAddress?.contactUs)
+                        }>
+                        <ContactUsIcon />
+                        <Text style={styles.linkText}>
+                          Chat on WhatsApp ({contactAddress?.contactUs})
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
+              </View>
+            );
+          }}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          ListFooterComponent={<View style={{ height: 180 }} />}
-        />
-      </View>
-
-      <View style={[ CommonStyles.bottomView ,{paddingHorizontal:20}]}>
-        <C_Button
-          // disabled={ message.length <= 3}
-          title="Send Message"
-          onPress={handlePresSendMessage}
-          loading={contactRes?.sendloading}
+          ListFooterComponent={<View style={{height: 180}} />}
         />
       </View>
     </View>
   );
 };
+
 const mapStateToProps = state => ({
-  pageRes: state?.pagebyNameReducers,
   contactRes: state?.contactUsReducer,
 });
 export default connect(mapStateToProps)(ContactUs);
 
-
 const styles = StyleSheet.create({
-  headerbold: {
+  contentContainer: {
+    paddingHorizontal: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  header: {
+    fontSize: FontSize.FS24,
+    fontWeight: FontsWeights.FW600,
+    color: '#333',
+    marginBottom: 10,
+  },
+  section: {
+    marginVertical: 10,
+  },
+  sectionHeader: {
+    fontSize: FontSize.FS20,
     fontWeight: FontsWeights.FW500,
-    fontSize: FontSize.FS22,
-    marginVertical: 10
+    color: '#444',
+    marginBottom: 5,
+  },
+  text: {
+    fontSize: FontSize.FS18,
+    color: '#555',
+    alignItems: 'flex-start',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  linkText: {
+    fontSize: FontSize.FS18,
+    color: '#007AFF',
+    marginLeft: 8,
+    textDecorationLine: 'underline',
+  },
+  linkText2: {
+    fontSize: FontSize.FS18,
+    // marginLeft: 8,
   },
 });

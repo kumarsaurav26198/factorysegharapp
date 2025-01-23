@@ -5,7 +5,7 @@ import { CommonStyles } from '../../../themes/CommonStyles';
 import { BackButton, DriverInfo2 } from '../../../components';
 import Colors from '../../../themes/Colors';
 import {
-  AboutIcon, AddressIcon, BackVerctor, CartIcon, ComplainIcon, DriverIcon, EditProfileIcon, Help,
+  AboutIcon, AddressIcon, BackVerctor, CartIcon, ComplainIcon, ContactUsIcon, DriverIcon, EditProfileIcon, Help,
   HistoryIcon, LogoutIcon, Privacy, ReferralIcon, SettingsIcon,
   TermCondition
 } from '../../../assets/icons';
@@ -28,6 +28,7 @@ const Profile = ({ navigation,userRes }) => {
     { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition ,pagename:"term&condition"},
     { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy ,pagename:"policy"},
     // { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
+    { title: 'Contact US', navigate: 'ContactUs', icon: ContactUsIcon },
     // { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
     { title: 'Log Out', navigate: null, icon: LogoutIcon }, 
   ];
