@@ -11,7 +11,7 @@ export const placeOderReducers = (state = initialState, action) => {
     {
         case ActionTypes.PLACE_ORDER_REQUEST:
             // console.warn("PLACE_ORDER_REQUEST Reducers", ActionTypes.PLACE_ORDER_REQUEST);
-            console.log("PLACE_ORDER_REQUEST Reducers action===>", action.payload);
+            // console.log("PLACE_ORDER_REQUEST Reducers action===>", action.payload);
             return {
                 ...state,
                 loading: true,

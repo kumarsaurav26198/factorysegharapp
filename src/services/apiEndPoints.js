@@ -15,6 +15,7 @@ const apiUri = {
     factoyHome: {
         getAllItems:'api/getItems',
         placeOrder:'api/placeOrder',
+        paymentVerification:'api/payment-verification',
         orderHistory:'api/orderHistory',
         getAddress:'api/getAddress',
         addAddress:'api/addAddress',

@@ -22,12 +22,11 @@ import {CartListCon} from '../../../container';
 import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
 import {navigate} from '../../../services/navigationService';
 import RazorpayCheckout from 'react-native-razorpay';
-import Images from '../../../utils/Images';
 import {EditIcon} from '../../../assets/icons';
 import {capitalizeFirstLetter} from '../../../utils/validators';
 
 const CartScreen = ({cartRes, userRes, addressRes}) => {
-  const {getCartRequest} = useActions();
+  const {getCartRequest,placeOderReq} = useActions();
   const cartData = cartRes?.data?.cartItems || [];
   const cashback = userRes[0]?.cashback || 0;
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -88,27 +87,39 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
   }, []);
 
   const handlePressOrderConfirmation = ()=>{
-    console.log('handlePressOrderConfirmation');
-    // cons
-    const payload = {
-      'items': cartItems,
-      'totalAmount':totalPayable.toFixed(2),
-      'cashbackUsed':cashback.toFixed(2),
-      'address':{
-        'name': selectedIndex.name,
-        'email': selectedIndex.email,
-        'phone': selectedIndex.phone,
-        'addressLine1': selectedIndex?.addressLine1,
-        'addressLine2':  selectedIndex?.addressLine2,
-        'city': selectedIndex?.city,
-        'state':  selectedIndex?.city,
-        'zipCode': selectedIndex?.zipCode,
-        'country': selectedIndex?.country,
-      },
-
-    };
-    console.log('payload====>>',JSON.stringify(payload,null,2));
-  };
+    if (selectedIndex) {
+      const payload = {
+        customerName: userRes[0]?.fullName,
+        mobile: userRes[0]?.mobile,
+        items: cartItems.map(item => ({
+          productName: item.productName,
+          productDetail: {
+            variants: item?.productDetail?.variants || '',
+            sku: item?.productDetail?.sku || '',
+            caseSize: item?.productDetail?.caseSize || '',
+          },
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        totalAmount: totalPayable.toFixed(2),
+        cashbackUsed: cashback.toFixed(2),
+        address: {
+          name: selectedIndex.name,
+          email: selectedIndex.email,
+          phone: selectedIndex.phone,
+          addressLine1: selectedIndex?.addressLine1 || '',
+          addressLine2: selectedIndex?.addressLine2 || '',
+          landMark: selectedIndex?.addressLine2 || '',
+          city: selectedIndex?.city || '',
+          state: selectedIndex?.state || '',
+          pinCode: selectedIndex?.zipCode || '',
+          country: selectedIndex?.country || '',
+        },
+      };
+      placeOderReq(payload);
+    } else {
+     setErrorMessage('Selected address is missing!');
+    }};
 
   const itemTotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -258,6 +269,7 @@ const CartScreen = ({cartRes, userRes, addressRes}) => {
         onRequestClose={toggleModal}
         center={false}>
         <OrderConfirmation
+        errorMessage={errorMessage}
           itemTotal={itemTotal.toFixed(2)}
           deliveryFee={deliveryFee.toFixed(2)}
           totalPayable={totalPayable.toFixed(2)}
