@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
-import { ProductIcon } from '../../../assets/icons';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import { navigate } from '../../../services/navigationService';
+import Images from '../../../utils/Images';
+import Colors from '../../../themes/Colors';
 
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const categories = [
-    { category: 'ALL', name: 'All' },
-    { category: 'pooja_range', name: 'Pooja Range' },
-    { category: 'tissue_range', name: 'Tissue Range' },
-    { category: 'cleaning_range', name: 'Cleaning Range' },
-    { category: 'aluminum_foil', name: 'Aluminum Foil' },
-    { category: 'food_wrapping_paper', name: 'Food Wrapping Paper' },
-    { category: 'institution_range', name: 'Institution Range' },
+    { category: 'ALL', name: 'All', imagepath: Images.p7 },
+    { category: 'pooja_range', name: 'Pooja Range', imagepath: Images.p1 },
+    { category: 'tissue_range', name: 'Tissue Range', imagepath: Images.p6 },
+    { category: 'cleaning_range', name: 'Cleaning Range', imagepath: Images.p4 },
+    { category: 'aluminum_foil', name: 'Aluminum Foil', imagepath: Images.p5 },
+    { category: 'food_wrapping_paper', name: 'Food Wrapping Paper', imagepath: Images.p6 },
+    { category: 'institution_range', name: 'Institution Range', imagepath: Images.p7 },
   ];
 
   const renderItem = ({ item }) => {
@@ -22,12 +23,18 @@ const Categories = () => {
       <TouchableOpacity
         style={[styles.categoryItem, isSelected && styles.selectedCategory]}
         onPress={() => {
-          setSelectedCategory(item.category)
-          navigate('AllProduct',{category:item.category});
+          setSelectedCategory(item.category);
+          // navigate('AllProduct', { category: item.category });
         }}
       >
-        <Text style={[styles.categoryText, isSelected && styles.selectedText]}>{item.name}</Text>
-        <ProductIcon />
+        <Image
+          source={item.imagepath}
+          style={styles.imageContainer}
+          resizeMode="contain"
+        />
+        {/* <Text style={[styles.categoryText, isSelected && styles.selectedText]}>
+          {item.name}
+        </Text> */}
       </TouchableOpacity>
     );
   };
@@ -40,7 +47,8 @@ const Categories = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.category}
         contentContainerStyle={styles.listContainer}
-        numColumns={2} 
+        ListFooterComponent={<View style={{ height: 20 }} />}
+        numColumns={2}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -59,39 +67,46 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#333', // Darker color for title
+    color: '#333',
   },
   listContainer: {
     marginTop: 8,
   },
   categoryItem: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 16,
+    backgroundColor: Colors.white,
+    padding: 10,
     margin: 8,
-    borderRadius: 12, // Rounded corners for category items
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000', // Shadow for iOS
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    elevation: 4, // Shadow for Android
-    transition: 'transform 0.2s ease', // Smooth scaling on press
+    elevation: 4,
   },
   selectedCategory: {
-    backgroundColor: '#dcdcdc', // Lighter background for selected category
-    shadowColor: '#007bff', // More prominent shadow on selection
+    backgroundColor: '#dcdcdc',
+    shadowColor: '#007bff',
     shadowOpacity: 0.2,
-    elevation: 6, // Slightly bigger shadow on selected category
+    elevation: 6,
   },
   categoryText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#555', // Slightly lighter text color for categories
+    color: '#555',
+    marginTop: 8, // Add spacing between the image and text
   },
   selectedText: {
-    color: '#007bff', // Change text color for selected category
+    color: '#007bff',
     fontWeight: 'bold',
+  },
+  imageContainer: {
+    width:150,
+    height: 150,
+    // borderRadius: 20,
+    borderWidth:2,
+    borderColor:Colors.white
   },
 });

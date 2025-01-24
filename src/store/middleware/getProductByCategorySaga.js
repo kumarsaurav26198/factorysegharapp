@@ -8,7 +8,7 @@ function* getProductByCategoryApiCall(action) {
 
   try {
     const fullUrl = `${baseURL}${apiUri.factoyHome.getAllItems}`;
-    // console.log("Full URL for getAllItems request: ", fullUrl);
+    console.log("Full URL for getAllItems request: ", fullUrl);
 
     const response = yield axios({
       method: 'post',

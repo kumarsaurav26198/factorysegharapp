@@ -10,7 +10,7 @@ function* fetchLoginUserApiCall() {
     // console.log('Payload received:', mobile);
 
     const fullUrl = `${baseURL}${apiUri.auth.userProfile}`;
-    // console.log('Full URL for login request: ', fullUrl);
+    console.log('Full URL for login request: ', fullUrl);
 
     const response = yield axios({
       method: 'post',

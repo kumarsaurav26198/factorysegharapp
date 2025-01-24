@@ -94,6 +94,7 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
         mobile: userRes[0]?.mobile,
         items: cartItems.map(item => ({
           productName: item.productName,
+          image:item.image,
           productDetail: {
             variants: item?.productDetail?.variants || '',
             sku: item?.productDetail?.sku || '',

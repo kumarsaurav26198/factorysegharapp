@@ -70,6 +70,7 @@ const ProductDetails = ({userRes, cartRes}) => {
         mobile: userRes[0]?.mobile,
         cartItems: {
           productName: item?.name,
+          image:item?.image,
           productDetail: {
             ...(selectedName && {variants: selectedName}),
             ...(updated[variantSku]?.sku && {sku: updated[variantSku]?.sku}),
@@ -106,6 +107,7 @@ const ProductDetails = ({userRes, cartRes}) => {
         mobile: userRes[0]?.mobile,
         cartItems: {
           productName: item?.name,
+          image:item?.image,
           productDetail: {
             ...(selectedName && {variants: selectedName}),
             ...(updated[variantSku]?.sku && {sku: updated[variantSku]?.sku}),

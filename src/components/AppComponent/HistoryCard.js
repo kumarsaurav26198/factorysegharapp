@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {FontSize, FontsWeights} from '../../themes/Fonts';
 import Colors from '../../themes/Colors';
@@ -26,7 +26,7 @@ const HistoryCard = ({item}) => {
         {item.items.map(item => (
           <View key={item._id} style={styles.itemRow}>
             <View>
-              <SmallProductIcon />
+        <Image source={{ uri: item?.image }} style={styles.img} />
               <Text style={styles.itemIdText}>{item.productName}</Text>
               {item?.productDetail?.variants && (
                 <Text style={styles.itemIdText}>
@@ -74,6 +74,10 @@ const HistoryCard = ({item}) => {
 export default HistoryCard;
 
 const styles = StyleSheet.create({
+  img:{
+height:100,
+width:100
+  },
   container: {
     backgroundColor: Colors.white,
     borderRadius: 10,

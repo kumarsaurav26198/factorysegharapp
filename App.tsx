@@ -11,7 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { setNavigator } from './src/services/navigationService';
 import { BottomSheetProvider } from './src/components/Modal/BottomSheetWrapper';
-// import {API_URL} from '@env';
+import {API_URL} from '@env';
 
 const App = () => {
   const navigationRef = useRef();

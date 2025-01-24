@@ -44,7 +44,7 @@ export const placeOderReducers = (state = initialState, action) => {
       };
     case ActionTypes.PAYMENT_VERIFICATION_FAILURE:
       // console.warn("PAYMENT_VERIFICATION_FAILURE Reducers", ActionTypes.PAYMENT_VERIFICATION_FAILURE);
-      console.log('PAYMENT_VERIFICATION_FAILURE Reducers action===>', action.error);
+      // console.log('PAYMENT_VERIFICATION_FAILURE Reducers action===>', action.error);
       return {
         ...state,
         paymentVerificationData: null, // Clear any previous success data

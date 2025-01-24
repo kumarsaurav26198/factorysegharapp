@@ -1,6 +1,8 @@
 import {API_URL} from '@env';
 
-const baseURL = API_URL;
+// const baseURL=  "https://mlmtesting.loca.lt/";
+const baseURL=  "https://factoryseghar-backend.onrender.com/";
+// const baseURL = API_URL;
 const apiUri = {
     auth: {
         emaillogin:'auth/login',

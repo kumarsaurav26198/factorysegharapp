@@ -9,7 +9,7 @@ import Images from '../../utils/Images';
 function* placeOrderApi(action) {
   const {payload} = action;
   try {
-    // console.log('placeOrderApi: Sending place order request with payload:', JSON.stringify(payload, null, 2));
+    console.log('placeOrderApi: Sending place order request with payload:', JSON.stringify(payload, null, 2));
 
     const fullUrl = `${baseURL}${apiUri.factoyHome.placeOrder}`;
     const response = yield axios.post(fullUrl, payload, {

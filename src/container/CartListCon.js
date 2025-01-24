@@ -1,6 +1,5 @@
-import {StyleSheet, Text, View, TouchableOpacity, Animated} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Animated, Image} from 'react-native';
 import React from 'react';
-import {SmallProductIcon} from '../assets/icons';
 import Colors from '../themes/Colors';
 
 const CartListCon = ({item, decrementQuantity, incrementQuantity, index}) => {
@@ -23,7 +22,7 @@ const CartListCon = ({item, decrementQuantity, incrementQuantity, index}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <SmallProductIcon />
+      <Image source={{ uri: item?.image }} style={styles.img} />
         <View style={styles.quantityContainer}>
           <Animated.View
             style={[
@@ -84,6 +83,10 @@ const CartListCon = ({item, decrementQuantity, incrementQuantity, index}) => {
 export default CartListCon;
 
 const styles = StyleSheet.create({
+  img: {
+    height: 100,
+    width: 100,
+  },
   container: {
     paddingHorizontal: 16,
     paddingVertical: 12,
