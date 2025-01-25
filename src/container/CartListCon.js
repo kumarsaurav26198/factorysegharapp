@@ -86,6 +86,8 @@ const styles = StyleSheet.create({
   img: {
     height: 100,
     width: 100,
+    borderWidth:1,
+    borderColor:Colors.white
   },
   container: {
     paddingHorizontal: 16,

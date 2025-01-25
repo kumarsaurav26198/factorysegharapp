@@ -21,7 +21,6 @@ import {CommonStyles} from '../../../themes/CommonStyles';
 import {CartListCon} from '../../../container';
 import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
 import {navigate} from '../../../services/navigationService';
-import RazorpayCheckout from 'react-native-razorpay';
 import {EditIcon} from '../../../assets/icons';
 import {capitalizeFirstLetter} from '../../../utils/validators';
 
@@ -129,8 +128,8 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
     0,
   );
 
-  const specialDiscount = itemTotal >= 2500 ? itemTotal * 0.5 : itemTotal * 0.2;
-  const deliveryFee = 0;
+  const specialDiscount = itemTotal >= 2000 ? itemTotal * 0.5 : itemTotal * 0.25;
+  const deliveryFee = 75;
   const deliveryFeeDiscount = deliveryFee;
   const totalPayable = Math.max(
     itemTotal - deliveryFeeDiscount - cashback - specialDiscount,

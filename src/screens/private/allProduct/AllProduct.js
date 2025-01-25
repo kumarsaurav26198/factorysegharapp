@@ -13,14 +13,15 @@ import {CommonStyles} from '../../../themes/CommonStyles';
 import {AllCategories, BackButton, CommonProduct} from '../../../components';
 import {connect} from 'react-redux';
 import {useActions} from '../../../hooks/useActions';
-import { useRoute } from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import Colors from '../../../themes/Colors';
 
-
 const AllProduct = ({allProductRes, cartRes}) => {
-      const route = useRoute();
-      const { category } = route?.params; 
-  const allProduct = allProductRes?.data?.items || [];
+  const route = useRoute();
+  const {category} = route?.params;
+    useEffect(() => {
+      getProductByCategory(selectedCategory);
+    }, [selectedCategory]);
 
   const {getProductByCategory} = useActions();
   const [selectedCategory, setSelectedCategory] = useState(category);
@@ -37,11 +38,9 @@ const AllProduct = ({allProductRes, cartRes}) => {
     {category: 'institution_range', name: 'Institution Range'},
   ];
   const handlePress = category => {
+    getProductByCategory(category);
     setSelectedCategory(category);
-    getProductByCategory(selectedCategory);
-
   };
-
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -58,6 +57,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
     ),
     [],
   );
+  const allProduct = allProductRes?.data?.items || [];
 
   return (
     <View style={CommonStyles.container}>
@@ -106,7 +106,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={
                   <View style={styles.errorContainer}>
-                    <Text style={[styles.errorText,{color:Colors.black}]}>
+                    <Text style={[styles.errorText, {color: Colors.black}]}>
                       ---- No Data Found ---
                     </Text>
                   </View>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop:50
+    marginTop: 50,
   },
   errorText: {
     color: 'red',

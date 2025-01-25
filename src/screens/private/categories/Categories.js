@@ -5,16 +5,16 @@ import Images from '../../../utils/Images';
 import Colors from '../../../themes/Colors';
 
 const Categories = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
 
   const categories = [
     { category: 'ALL', name: 'All', imagepath: Images.p7 },
     { category: 'pooja_range', name: 'Pooja Range', imagepath: Images.p1 },
     { category: 'tissue_range', name: 'Tissue Range', imagepath: Images.p6 },
-    { category: 'cleaning_range', name: 'Cleaning Range', imagepath: Images.p4 },
-    { category: 'aluminum_foil', name: 'Aluminum Foil', imagepath: Images.p5 },
-    { category: 'food_wrapping_paper', name: 'Food Wrapping Paper', imagepath: Images.p6 },
-    { category: 'institution_range', name: 'Institution Range', imagepath: Images.p7 },
+    { category: 'cleaning_range', name: 'Cleaning Range', imagepath: Images.p2 },
+    { category: 'aluminum_foil', name: 'Aluminum Foil', imagepath: Images.p3 },
+    { category: 'food_wrapping_paper', name: 'Food Wrapping Paper', imagepath: Images.p4 },
+    { category: 'institution_range', name: 'Institution Range', imagepath: Images.p5 },
   ];
 
   const renderItem = ({ item }) => {
@@ -24,7 +24,8 @@ const Categories = () => {
         style={[styles.categoryItem, isSelected && styles.selectedCategory]}
         onPress={() => {
           setSelectedCategory(item.category);
-          // navigate('AllProduct', { category: item.category });
+          console.log(item.category)
+          navigate('AllProduct', { category: item.category });
         }}
       >
         <Image
@@ -32,9 +33,9 @@ const Categories = () => {
           style={styles.imageContainer}
           resizeMode="contain"
         />
-        {/* <Text style={[styles.categoryText, isSelected && styles.selectedText]}>
+        <Text style={[styles.categoryText, isSelected && styles.selectedText]}>
           {item.name}
-        </Text> */}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   categoryItem: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: Colors.white,
     padding: 10,
     margin: 8,
@@ -85,6 +86,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 4,
+    // width:160,
+    // height: 160,
+    // borderRadius: 20,
+    borderWidth:2,
+    borderColor:Colors.white
   },
   selectedCategory: {
     backgroundColor: '#dcdcdc',
