@@ -20,7 +20,7 @@ const ImageSlider = ({ image }) => {
             <Image 
               source={{ uri: image }} 
               style={[styles.card]} // Adjust height dynamically
-              // resizeMode="contain" 
+              resizeMode="contain" 
             />
           </View>
         </SwiperFlatList>

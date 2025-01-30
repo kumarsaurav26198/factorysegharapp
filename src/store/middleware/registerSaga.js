@@ -9,7 +9,7 @@ function* registerUser(action) {
   try
   {
     const fullUrl = `${ baseURL }${ apiUri.auth.register }`;
-    console.log("Full URL for login request: ", fullUrl);
+    // console.log("Full URL for login request: ", fullUrl);
     console.log("Full payload for login request: ", payload);
 
     const response = yield axios.post(fullUrl, payload, {

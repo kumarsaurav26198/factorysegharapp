@@ -1,9 +1,9 @@
-import { LogBox,StatusBar} from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import Navigator from './src/navigation/Navigator';
 import { Splashscreen } from './src/screens/public';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaView,SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import store, { persistor } from './src/store/store';
@@ -11,8 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { setNavigator } from './src/services/navigationService';
 import { BottomSheetProvider } from './src/components/Modal/BottomSheetWrapper';
-import {API_URL} from '@env';
-import Colors from './src/themes/Colors';
+import { API_URL } from '@env';
 
 const App = () => {
   const navigationRef = useRef();
@@ -31,28 +30,21 @@ const App = () => {
   if (loading) return <Splashscreen />;
   return (
     <SafeAreaProvider>
-          <StatusBar
-          backgroundColor="#fff" // Set status bar background color
-          // backgroundColor="#D90404" // Set status bar background color
-          barStyle="dark-content" // Set status bar text color (dark or light)
-          translucent={false} // Make status bar translucent (optional)
-        />
-    <GestureHandlerRootView style={{ flex: 1 }}>
-
-      <SafeAreaView style={{ flex: 1}}>
-        <BottomSheetProvider>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <QueryClientProvider client={queryClient}>
-                <NavigationContainer ref={navigationRef} onReady={() => setNavigator(navigationRef.current)}>
-                  <Navigator />
-                </NavigationContainer>
-              </QueryClientProvider>
-            </PersistGate>
-          </Provider>
-        </BottomSheetProvider>
-      </SafeAreaView>
-    </GestureHandlerRootView>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <BottomSheetProvider>
+            <Provider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
+                <QueryClientProvider client={queryClient}>
+                  <NavigationContainer ref={navigationRef} onReady={() => setNavigator(navigationRef.current)}>
+                    <Navigator />
+                  </NavigationContainer>
+                </QueryClientProvider>
+              </PersistGate>
+            </Provider>
+          </BottomSheetProvider>
+        </SafeAreaView>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 };

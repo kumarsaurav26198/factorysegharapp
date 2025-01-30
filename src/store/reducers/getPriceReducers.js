@@ -11,7 +11,7 @@ export const getPriceReducers = (state = initialState, action) => {
     switch (action.type)
     {
         case ActionTypes.GET_CART_REQUEST:
-            console.log("GET_CART_REQUEST Reducers action===>", action);
+            // console.log("GET_CART_REQUEST Reducers action===>", action);
             return {
               ...state,
               openModal:false

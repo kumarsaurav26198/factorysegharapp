@@ -3345,7 +3345,6 @@ __metadata:
     react-native-dotenv: ^3.4.11
     react-native-element-dropdown: ^2.12.2
     react-native-gesture-handler: ^2.21.2
-    react-native-linear-gradient: ^2.8.3
     react-native-otp-textinput: ^1.1.6
     react-native-razorpay: ^2.3.0
     react-native-reanimated: ^3.16.6
@@ -8966,16 +8965,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 31be1a30d35b20dc72426147b3c5b8a2bf23a4666a4208208c423baec098850564e8cb555d360b87435ffe65a4f51f84e5471bf2140979c84589bd787cf5cfe0
-  languageName: node
-  linkType: hard
-
-"react-native-linear-gradient@npm:^2.8.3":
-  version: 2.8.3
-  resolution: "react-native-linear-gradient@npm:2.8.3"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
   languageName: node
   linkType: hard
 

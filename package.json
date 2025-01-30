@@ -31,7 +31,6 @@
     "react-native-dotenv": "^3.4.11",
     "react-native-element-dropdown": "^2.12.2",
     "react-native-gesture-handler": "^2.21.2",
-    "react-native-linear-gradient": "^2.8.3",
     "react-native-otp-textinput": "^1.1.6",
     "react-native-razorpay": "^2.3.0",
     "react-native-safe-area-context": "^5.1.0",

@@ -172,7 +172,7 @@ function* verifyPaymentApi(paymentData) {
 }
 
 function* placeOrderSaga() {
-  console.log('placeOrderSaga: Watching for PLACE_ORDER_REQUEST action...');
+  // console.log('placeOrderSaga: Watching for PLACE_ORDER_REQUEST action...');
   yield takeEvery(ActionTypes.PLACE_ORDER_REQUEST, placeOrderApi);
 }
 

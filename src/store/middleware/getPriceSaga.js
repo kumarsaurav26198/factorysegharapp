@@ -9,7 +9,7 @@ function* getPriceApiCall(action) {
   try {
 
     const fullUrl = `${baseURL}${apiUri.factoyHome.getPrice}`;
-    console.log('Full URL for login request: ', fullUrl);
+    // console.log('Full URL for login request: ', fullUrl);
 
     const response = yield axios({
       method: 'post',

@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   FlatList,
   View,
@@ -8,28 +7,26 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import SearchBar from '../../../components/AppComponent/SearchBox';
-import {useActions} from '../../../hooks/useActions';
-import {CommonStyles} from '../../../themes/CommonStyles';
-import {BackButton, CommonProduct} from '../../../components';
+import { useActions } from '../../../hooks/useActions';
+import { CommonStyles } from '../../../themes/CommonStyles';
+import { BackButton, CommonProduct } from '../../../components';
 
-const Search = ({allProductRes}) => {
+const Search = ({ allProductRes }) => {
   const allProduct = allProductRes?.data?.items || [];
-  const [refreshing, setRefreshing] = useState(false);
-  const [selectedCategory] = useState('ALL');
-  const [searchValue, setSearchValue] = useState();
+  const [ refreshing, setRefreshing ] = useState(false);
+  const [ selectedCategory ] = useState('ALL');
+  const [ searchValue, setSearchValue ] = useState();
 
   const filteredProducts = useMemo(() => {
-    return allProduct.filter(product => 
-      (product?.name?.toLowerCase().includes(searchValue?.toLowerCase() ?? '') ||
-       product?.category?.toLowerCase().includes(searchValue?.toLowerCase() ?? ''))
+    return allProduct.filter(product =>
+    (product?.name?.toLowerCase().includes(searchValue?.toLowerCase() ?? '') ||
+      product?.category?.toLowerCase().includes(searchValue?.toLowerCase() ?? ''))
     );
-  }, [allProduct, searchValue]); 
-  // console.log("filteredProducts length==>>", JSON.stringify(filteredProducts.length,null,2));
-  // console.log("searchValue length==>>", searchValue);
+  }, [ allProduct, searchValue ]);
 
-  const {getProductByCategory} = useActions();
+  const { getProductByCategory } = useActions();
 
   useEffect(() => {
     getProductByCategory(selectedCategory);
@@ -39,17 +36,18 @@ const Search = ({allProductRes}) => {
     setRefreshing(true);
     getProductByCategory(selectedCategory);
     setRefreshing(false);
-  }, [getProductByCategory, selectedCategory]);
+  }, [ getProductByCategory, selectedCategory ]);
 
-  const renderItem = useCallback(({item}) => (
+  const renderItem = useCallback(({ item }) => (
     <View style={styles.productItem}>
       <CommonProduct item={item} />
     </View>
   ));
 
   return (
-    <View style={[CommonStyles.container]}>
-      <BackButton  text="Search" />
+
+    <View style={[ CommonStyles.container ]}>
+      <BackButton text="Search" />
       <SearchBar
         placeholder="Search your product categories here..."
         value={searchValue}
@@ -76,7 +74,7 @@ const Search = ({allProductRes}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          ListFooterComponent={<View style={{height: 20}} />}
+          ListFooterComponent={<View style={{ height: 20 }} />}
         />
       )}
     </View>

@@ -35,7 +35,9 @@ const CommonProduct = ({ item }) => {
         onPress={() => navigation.navigate('ProductDetails', { item })}>
         <Image
           source={{ uri: item?.image }}
-          style={styles.productImage}
+          // style={[styles.productImage]}
+          style={[styles.productImage, { aspectRatio: item?.aspectRatio || 1 }]}
+          // resizeMode="cover"
           resizeMode="contain"
         />
       </TouchableOpacity>
@@ -68,6 +70,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    overflow:"hidden",
+    borderWidth:0.3,
+    borderColor:Colors.black
+    // marginHorizontal:10
   },
   badgeContainer: {
     flexDirection: 'row',
@@ -81,6 +87,8 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 6,
+    right:15,
+    bottom:10
   },
   badgeText: {
     color: 'white',
@@ -91,26 +99,34 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'black',
     fontWeight: '500',
+    // right:15,
+    bottom:10
   },
   imageContainer: {
     width: '100%',
     height: IMAGE_HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop:10
+    bottom:5,
+    overflow:"hidden",
+
   },
   productImage: {
     width: '100%',
     height: '100%',
     borderRadius: 8,
-    borderWidth:1,
-    borderColor:Colors.white
+    borderWidth:0.2,
+    borderColor:Colors.black,
+    // transform: [{ scale: 1.1 }],
+    aspectRatio: 5,
+
+    resizeMode: 'contain',
   },
   productTitle: {
-    fontSize: 14,
+    // fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
-    marginVertical: 6,
+    // marginVertical: 6,
     textAlign: 'center',
   },
   buyButton: {
