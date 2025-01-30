@@ -49,7 +49,7 @@ const Search = ({allProductRes}) => {
 
   return (
     <View style={[CommonStyles.container, {paddingTop: 25}]}>
-      <BackButton left text="Search" />
+      <BackButton  text="Search" />
       <SearchBar
         placeholder="Search your product categories here..."
         value={searchValue}

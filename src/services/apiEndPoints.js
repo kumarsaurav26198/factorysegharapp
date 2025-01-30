@@ -23,6 +23,7 @@ const apiUri = {
         addAddress:'api/addAddress',
         addCart:'api/addCart',
         getCart:'api/getCart',
+        getPrice:'api/getPrice',
         pagename:'api/pages?pagename=',
         getcontact:'api/contact-us',
 

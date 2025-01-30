@@ -5,7 +5,7 @@ import { apiUri, baseURL } from '../../services/apiEndPoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function* fetchAddressApiCall(action) {
+function* fetchAddressApiCall() {
     try {
       const mobile = yield AsyncStorage.getItem('mobile');
 

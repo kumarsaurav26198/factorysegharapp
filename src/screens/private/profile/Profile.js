@@ -55,7 +55,7 @@ const Profile = ({ navigation,userRes }) => {
 
   return (
     <View style={CommonStyles.container}>
-      <BackButton text="Profile" left />
+      <BackButton text="Profile" />
       <FlatList
         showsVerticalScrollIndicator={false}
         data={menuItems}

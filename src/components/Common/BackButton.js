@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     fontWeight: FontsWeights.FW600,
     fontSize: FontSize.FS18,
     color: Colors.white,
-    marginLeft: 10,
+    // marginLeft: 10,
   },
   leftText: {
     fontWeight: FontsWeights.FW600,

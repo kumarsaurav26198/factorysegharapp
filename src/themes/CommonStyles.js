@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-keys */
 import { StyleSheet, Dimensions } from 'react-native';
 import Colors from './Colors';
 import { FontSize } from './Fonts';
@@ -93,6 +94,7 @@ export const CommonStyles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingBottom: 10,
     alignItems:"center",
+    paddingHorizontal:20
   },
   modalText: {
     fontSize: FontSize.FS16,

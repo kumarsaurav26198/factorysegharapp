@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   StyleSheet,
   Text,
@@ -5,6 +6,7 @@ import {
   FlatList,
   RefreshControl,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { BackButton, C_Button } from '../../../components';
@@ -13,7 +15,6 @@ import { connect } from 'react-redux';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { useActions } from '../../../hooks/useActions';
 import { AddAddress, AddSuccess, ModalWrapper } from '../../../components/Modal';
-// import { Close, EditIcon } from '../../../assets/icons';
 import { capitalizeFirstLetter } from '../../../utils/validators';
 
 const Address = ({ userRes, addressRes }) => {
@@ -82,30 +83,49 @@ const Address = ({ userRes, addressRes }) => {
   );
 
   return (
-    <View style={CommonStyles.container}>
-      <BackButton left text="Address" />
-      <FlatList
-        data={addressesData}
-        showsVerticalScrollIndicator={false}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => `address-${index}`}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListFooterComponent={<View style={{ height: 120 }} />}
-        ListEmptyComponent={renderEmptyList}
-      />
-      <View style={[CommonStyles.bottomView, { padding: 15 }]}>
-        <C_Button title="Add new address" onPress={toggleModal} />
+      <View style={CommonStyles.container}>
+        <BackButton left text="Address" />
+        {addressRes?.fetchLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        ) : addressRes.error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>
+              {addressRes.error?.response?.data?.message ||
+                'An error occurred. Please try again later.'}
+            </Text>
+            <TouchableOpacity style={styles.refreshButton} onPress={onRefresh}>
+              <Text style={styles.refreshButtonText}>Try Again</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <FlatList
+            data={addressesData}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => `address-${index}`}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            ListFooterComponent={<View style={{ height: 120 }} />}
+            ListEmptyComponent={renderEmptyList}
+          />
+        )}
+        <View style={[CommonStyles.bottomView, { padding: 15 }]}>
+          <C_Button title="Add new address" onPress={toggleModal} />
+        </View>
+        <ModalWrapper visible={isModalVisible} onRequestClose={toggleModal}>
+          <AddAddress
+            handlePressClose={toggleModal}
+            handlePressDone={toggleModal}
+            email={email}
+            done
+          />
+        </ModalWrapper>
       </View>
-      <ModalWrapper
-        visible={isModalVisible}
-        onRequestClose={toggleModal}
-        >
-        <AddAddress handlePressClose ={toggleModal} handlePressDone={toggleModal} email={email} done/>
-      </ModalWrapper>
-    </View>
-  );
+    );
+    
 };
 
 const mapStateToProps = (state) => ({
@@ -158,5 +178,11 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     marginHorizontal: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:10
   },
 });

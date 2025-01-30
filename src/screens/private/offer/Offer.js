@@ -20,7 +20,7 @@ const Offer = ({usersRes}) => {
   );
   return (
     <View>
-      <BackButton left text="Refer & Earn" cashback={usersRes[0]?.cashback} />
+      <BackButton  text="Refer & Earn" cashback={usersRes[0]?.cashback} />
       <FlatList
         data={referrals}
         keyExtractor={item => item._id}

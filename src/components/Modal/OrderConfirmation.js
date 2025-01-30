@@ -1,9 +1,11 @@
+/* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Colors from '../../themes/Colors';
-import {Close} from '../../assets/icons';
+import {Close, EditIcon} from '../../assets/icons';
 import {capitalizeFirstLetter} from '../../utils/validators';
 import {CommonStyles} from '../../themes/CommonStyles';
+import {navigate} from '../../services/navigationService';
 
 export default function OrderConfirmation({
   handlePressOrderConfirmation,
@@ -13,6 +15,8 @@ export default function OrderConfirmation({
   totalPayable,
   address,
   errorMessage,
+  selectedIndex,
+  handleAddressModal,
 }) {
   return (
     <View style={styles.container}>
@@ -26,17 +30,55 @@ export default function OrderConfirmation({
               <Text style={styles.avatarText}>👤</Text>
             </View>
             <View style={styles.addressDetails}>
-              <Text style={styles.deliveryTitle}>Delivery Address</Text>
+              <Text style={styles.deliveryTitle}>
+                Delivery Address
+                <Text
+                  onPress={() => {
+                    selectedIndex ? handleAddressModal() : navigate('Address');
+                  }}
+                  style={[{color: 'blue', textDecorationLine: 'underline'}]}>
+                  {selectedIndex ? '(Change)' : '(Add Address ➡️)'}
+                </Text>
+              </Text>
               {errorMessage ? (
-                <Text style={CommonStyles.errorText}>{errorMessage}</Text>
-              ) :   <Text style={styles.addressText} numberOfLines={3}>
-              {capitalizeFirstLetter(address?.name)}, {address?.addressLine1},{' '}
-              {address?.addressLine2}, {address?.city}, {address?.state},{' '}
-              {address?.country}, {address?.phone}
-            </Text>}
-
-            
+                <Text
+                  onPress={() => {
+                    handlePressClose();
+                    // navigate('Address')
+                  }}
+                  style={CommonStyles.errorText}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                <>
+                  {address ? (
+                    <Text style={styles.addressText} numberOfLines={3}>
+                      {capitalizeFirstLetter(address?.name)},{' '}
+                      {address?.addressLine1}, {address?.addressLine2},{' '}
+                      {address?.city}, {address?.state}, {address?.country},{' '}
+                      {address?.phone}
+                    </Text>
+                  ) : (
+                    <Text
+                      // onPress={() => {
+                      //   handlePressClose()
+                      //   // navigate('Address')
+                      // }}
+                      style={CommonStyles.errorText}>
+                      Address is missing!
+                    </Text>
+                  )}
+                </>
+              )}
             </View>
+            <TouchableOpacity 
+                   onPress={() => {
+                    handlePressClose();
+                    navigate('Address')
+                  }}
+            >
+              <EditIcon />
+            </TouchableOpacity>
           </View>
         </View>
       </View>

@@ -24,8 +24,10 @@ import {navigate} from '../../../services/navigationService';
 import {EditIcon} from '../../../assets/icons';
 import {capitalizeFirstLetter} from '../../../utils/validators';
 
-const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
-  const {getCartRequest, placeOderReq} = useActions();
+const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes}) => {
+  const openModal=getPriceRes.openModal
+
+  const {getCartRequest, placeOderReq,getPriceDiscount} = useActions();
   const cartData = cartRes?.data?.cartItems || [];
   const cashback = userRes[0]?.cashback || 0;
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -36,6 +38,11 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
   const [cartItems, setCartItems] = useState(cartData);
   const [errorMessage, setErrorMessage] = useState('');
 
+  console.log("openModal=====>>",openModal)
+
+    useEffect(() => {
+      if (openModal) setIsModalVisible(true)
+    }, [openModal]);
 
   const toggleModal = () => setIsModalVisible(!isModalVisible);
   const addtoggleModal = () => setIsAddVisible(!isAddVisible);
@@ -93,7 +100,7 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
         mobile: userRes[0]?.mobile,
         items: cartItems.map(item => ({
           productName: item.productName,
-          image:item.image,
+          image: item.image,
           productDetail: {
             variants: item?.productDetail?.variants || '',
             sku: item?.productDetail?.sku || '',
@@ -119,7 +126,7 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
       };
       placeOderReq(payload);
     } else {
-      setErrorMessage('Selected address is missing!');
+      setErrorMessage('Address is missing!');
     }
   };
 
@@ -128,8 +135,10 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
     0,
   );
 
-  const specialDiscount = itemTotal >= 2000 ? itemTotal * 0.5 : itemTotal * 0.25;
-  const deliveryFee = 75;
+  const specialDiscount =
+    itemTotal >= 2000 ? itemTotal * 0.5 : itemTotal * 0.25;
+  const deliveryFee =getPriceRes?.data?.deliveryFee;
+  console.log("deliveryFee",deliveryFee)
   const deliveryFeeDiscount = deliveryFee;
   const totalPayable = Math.max(
     itemTotal - deliveryFeeDiscount - cashback - specialDiscount,
@@ -150,7 +159,7 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
 
   return (
     <View style={[CommonStyles.container]}>
-      <BackButton left text={`Cart (${cartItems.length})`} />
+      <BackButton left text={`Cart (${cartItems.length})`} cashback={1} />
       <FlatList
         data={cartItems}
         showsVerticalScrollIndicator={false}
@@ -167,14 +176,14 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
             />
           </View>
         }
-        ListFooterComponent={<View style={{height: 400}} />}
+        ListFooterComponent={<View style={{height: 100}} />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
       {cartItems?.length > 0 ? (
         <View style={[CommonStyles.bottomView]}>
-          <View style={styles.footerContainer}>
+          {/* <View style={styles.footerContainer}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Item Total</Text>
               <Text style={styles.summaryValue}>₹{itemTotal.toFixed(2)}</Text>
@@ -254,17 +263,28 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
                 ₹{totalPayable.toFixed(2)}
               </Text>
             </View>
-          </View>
+          </View> */}
 
           <C_Button
-            title={`Continue to pay ₹${totalPayable.toFixed(2)}`}
+            // title={`Continue to pay ₹${itemTotal.toFixed(2)}`}
+            title={`Continue To Pay`}
+            loading={getPriceRes?.loading}
             onPress={() => {
-              if (selectedIndex !== null && selectedIndex !== undefined) {
-                setErrorMessage('');
-                toggleModal();
-              } else {
-                setErrorMessage('Select address');
-              }
+              const payload = {
+                price: itemTotal,
+                cashback: cashback,
+              };
+              getPriceDiscount(payload)
+              // toggleModal();
+
+              // console.log(payload);
+              // setIsModalVisible(true)
+              // if (selectedIndex !== null && selectedIndex !== undefined) {
+              //   setErrorMessage('');
+              // toggleModal();
+              // } else {
+              //   setErrorMessage('Select address');
+              // }
             }}
           />
         </View>
@@ -278,40 +298,15 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
         <OrderConfirmation
           errorMessage={errorMessage}
           itemTotal={itemTotal.toFixed(2)}
-          deliveryFee={deliveryFee.toFixed(2)}
-          totalPayable={totalPayable.toFixed(2)}
+          deliveryFee={deliveryFee}
+          totalPayable={totalPayable}
           handlePressClose={toggleModal}
+          selectedIndex={selectedIndex}
+          handleAddressModal={addtoggleModal}
           address={selectedIndex}
           handlePressOrderConfirmation={() => {
-            handlePressOrderConfirmation();
-            toggleModal();
-
-            // var options = {
-            //   description: 'Credits towards consultation',
-            //   image: Images.banner,
-            //   currency: 'INR',
-            //   key: 'rzp_test_xC0HuBfFYisteo',
-            //   amount: itemTotal,
-            //   name: 'Factory Se Ghar',
-            //   order_id: '', // Replace this with an order_id created using Orders API.
-            //   prefill: {
-            //     email: 'gaurav.kumar@example.com',
-            //     contact: '916202142166',
-            //     name: 'Saurav Kumar',
-            //   },
-            //   theme: {color: Colors.red},
-            // };
-
-            // RazorpayCheckout.open(options)
-            //   .then(data => {
-            //     navigate('BottomNavigator');
-            //     // Alert.alert(`Success: ${data.razorpay_payment_id}`);
-            //   })
-            //   .catch(error => {
-            //     console.log('error',JSON.stringify(error,null,2));
-            //     setErrorMessage('Payment Failed');
-            //     // setErrorMessage(`Error: ${error.code} | ${error.description}`)
-            //   });
+            // handlePressOrderConfirmation();
+            // toggleModal();
           }}
         />
       </ModalWrapper>
@@ -328,6 +323,7 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers}) => {
             setSelectedIndex(selectedIndex);
             setErrorMessage('');
             addtoggleModal();
+            setIsModalVisible(false);
           }}
         />
       </ModalWrapper>
@@ -340,6 +336,7 @@ const mapStateToProps = state => ({
   userRes: state?.userReducers?.data,
   addressRes: state?.addressReducers?.data,
   placeOderReducers: state?.placeOderReducers,
+  getPriceRes: state?.getPriceReducers,
 });
 
 export default connect(mapStateToProps)(CartScreen);

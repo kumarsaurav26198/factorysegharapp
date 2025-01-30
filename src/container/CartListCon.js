@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
     borderColor:Colors.white
   },
   container: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    // paddingHorizontal: 16,
+    // paddingVertical: 12,
     backgroundColor: '#FFFFFF',
     borderRadius: 15,
     elevation: 5,
@@ -99,7 +99,9 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 6},
     shadowOpacity: 0.15,
     shadowRadius: 8,
-    marginVertical: 10,
+    margin: 10,
+    marginHorizontal: 15,
+    padding:12,
   },
   row: {
     flexDirection: 'row',

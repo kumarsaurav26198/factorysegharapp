@@ -1,4 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   Choosevehicle,
@@ -74,7 +73,6 @@ const Navigator = () => {
   }, []);
 
   if (initialRoute === null) {
-    // Render a placeholder screen or loading spinner until the initial route is determined
     return null;
   }
 

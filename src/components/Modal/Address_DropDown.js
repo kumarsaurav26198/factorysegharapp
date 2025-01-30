@@ -78,7 +78,7 @@ const Address_DropDown = ({
       <View style={CommonStyles.bottomView}>
        <C_Button title="Add Address"  onPress={()=>{
         handlePressDone()
-        navigate("Address")
+        // navigate("Address")
 
        }}/>
 

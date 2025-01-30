@@ -78,6 +78,10 @@ export const getProductByCategory = (payload) => ({
     payload,
   });
 
+  export const getPriceDiscount = (payload) => ({
+    type: ActionTypes.FETCH_PRICE_DISCOUNT_REQUEST,
+    payload,
+  });
   export const incrementQuantity = (payload) => ({
     type: ActionTypes.INCREMENT_QUANTITY,
     payload, 
