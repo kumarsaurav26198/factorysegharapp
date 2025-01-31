@@ -1,17 +1,30 @@
 export const validatePhoneNumber = (selectedCountryCode, numbers) => {
-  let isValid = true;
-  let errorMessage = '';
-
-  if (selectedCountryCode !== '91') {
-    isValid = false;
-    errorMessage = 'Select Indian Number only';
-  } else if (!numbers || numbers.length !== 10) {
-    isValid = false;
-    errorMessage = 'Enter a valid 10-digit phone number.';
+  if (!selectedCountryCode) {
+    return { isValid: false, errorMessage: 'Please select a country.' };
   }
 
-  return { isValid, errorMessage };
+  const countryRules = {
+    '91': { min: 10, max: 10, message: 'Enter a valid 10-digit phone number for India.' },
+    '1': { min: 10, max: 10, message: 'Enter a valid 10-digit phone number for the USA.' },
+    '44': { min: 10, max: 11, message: 'Enter a valid UK phone number (10-11 digits).' },
+    '61': { min: 9, max: 9, message: 'Enter a valid 9-digit phone number for Australia.' },
+    '81': { min: 10, max: 11, message: 'Enter a valid Japanese phone number (10-11 digits).' },
+  };
+
+  if (!countryRules[selectedCountryCode]) {
+    return { isValid: false, errorMessage: 'Unsupported country code.' };
+  }
+
+  const { min, max, message } = countryRules[selectedCountryCode];
+  const numberLength = numbers ? numbers.length : 0;
+
+  if (numberLength < min || numberLength > max) {
+    return { isValid: false, errorMessage: message };
+  }
+
+  return { isValid: true, errorMessage: '' };
 };
+
 
 export const addressValidiadtion=(formData)=>{
   let isValid = true;

@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { setNavigator } from './src/services/navigationService';
 import { BottomSheetProvider } from './src/components/Modal/BottomSheetWrapper';
 import { API_URL } from '@env';
+import Colors from './src/themes/Colors';
 
 const App = () => {
   const navigationRef = useRef();
@@ -30,8 +31,13 @@ const App = () => {
   if (loading) return <Splashscreen />;
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 ,backgroundColor: Colors.primary}}>
+        <StatusBar
+          backgroundColor={Colors.primary} // Set status bar background color
+          barStyle="light-content" // Set status bar text color (dark or light)
+          translucent={true} // Make status bar translucent (optional)
+        />
+        <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetProvider>
             <Provider store={store}>
               <PersistGate loading={null} persistor={persistor}>
@@ -43,8 +49,8 @@ const App = () => {
               </PersistGate>
             </Provider>
           </BottomSheetProvider>
-        </SafeAreaView>
-      </GestureHandlerRootView>
+        </GestureHandlerRootView>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 };

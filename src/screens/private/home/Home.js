@@ -2,7 +2,7 @@
 
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, useCallback} from 'react';
-import {FlatList, View, RefreshControl, StatusBar} from 'react-native';
+import {FlatList, View, RefreshControl} from 'react-native';
 import {useSelector} from 'react-redux';
 import {CommonStyles} from '../../../themes/CommonStyles';
 import {AllCategories, HeaderWithOption, HomeBanner} from '../../../components';
@@ -54,12 +54,6 @@ const Home = () => {
 
   return (
     <View style={[CommonStyles.container, {paddingTop: 0}]}>
-                <StatusBar
-                // backgroundColor="#fff" // Set status bar background color
-                backgroundColor="#D90404" // Set status bar background color
-                barStyle="dark-content" // Set status bar text color (dark or light)
-                translucent={false} // Make status bar translucent (optional)
-              />
       <FlatList
         data={[1]}
         renderItem={() => (

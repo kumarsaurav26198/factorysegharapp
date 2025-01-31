@@ -17,7 +17,8 @@ export const cartReducers = (state = initialState, action) => {
       };
 
     case ActionTypes.ADD_TO_CART_SUCCESS:
-      console.log("ADD_TO_CART_SUCCESS Reducers action===>", action);
+      console.log("ADD_TO_CART_SUCCESS Reducers action===>",);
+      // console.log("ADD_TO_CART_SUCCESS Reducers action===>", action);
       return {
         ...state,
         data: action.payload, // Corrected spelling of payload

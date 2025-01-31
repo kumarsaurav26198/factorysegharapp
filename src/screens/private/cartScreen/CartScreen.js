@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {useActions} from '../../../hooks/useActions';
+import React, { useCallback, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useActions } from '../../../hooks/useActions';
 import Colors from '../../../themes/Colors';
 import {
   Address_DropDown,
@@ -17,48 +17,48 @@ import {
   C_Button,
   C_SmallButton,
 } from '../../../components';
-import {CommonStyles} from '../../../themes/CommonStyles';
-import {CartListCon} from '../../../container';
-import {ModalWrapper, OrderConfirmation} from '../../../components/Modal';
-import {navigate} from '../../../services/navigationService';
-import {EditIcon} from '../../../assets/icons';
-import {capitalizeFirstLetter} from '../../../utils/validators';
+import { CommonStyles } from '../../../themes/CommonStyles';
+import { CartListCon } from '../../../container';
+import { ModalWrapper, OrderConfirmation } from '../../../components/Modal';
+import { navigate } from '../../../services/navigationService';
 
-const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes}) => {
-  const openModal=getPriceRes.openModal
 
-  const {getCartRequest, placeOderReq,getPriceDiscount} = useActions();
+const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceRes }) => {
+  const openModal = getPriceRes.openModal;
+
+  const { getCartRequest, placeOderReq, getPriceDiscount,addToCartRequest } = useActions();
   const cartData = cartRes?.data?.cartItems || [];
-  const cashback = userRes[0]?.cashback || 0;
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const cashback = userRes[ 0 ]?.cashback || 0;
+  const [ selectedIndex, setSelectedIndex ] = useState(0);
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isAddVisible, setIsAddVisible] = useState(false);
-  const [cartItems, setCartItems] = useState(cartData);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [ refreshing, setRefreshing ] = useState(false);
+  const [ isModalVisible, setIsModalVisible ] = useState(false);
+  const [ isAddVisible, setIsAddVisible ] = useState(false);
+  const [ cartItems, setCartItems ] = useState(cartData);
+  const [ errorMessage, setErrorMessage ] = useState('');
 
-  console.log("openModal=====>>",openModal)
 
-    useEffect(() => {
-      if (openModal) setIsModalVisible(true)
-    }, [openModal]);
+  useEffect(() => {
+    if (openModal) setIsModalVisible(true);
+  }, [ openModal ]);
 
   const toggleModal = () => setIsModalVisible(!isModalVisible);
   const addtoggleModal = () => setIsAddVisible(!isAddVisible);
 
   useEffect(() => {
-    if (cartData.length) {
+    if (cartData.length)
+    {
       setCartItems(cartData);
     }
-  }, [cartData]);
+  }, [ cartData ]);
 
   useEffect(() => {
-    if (addressRes) {
-      setSelectedIndex(addressRes[0]);
+    if (addressRes)
+    {
+      setSelectedIndex(addressRes[ 0 ]);
       setErrorMessage('');
     }
-  }, [addressRes]);
+  }, [ addressRes ]);
 
   useEffect(() => {
     getCartRequest();
@@ -68,24 +68,42 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
     setRefreshing(true);
     getCartRequest();
     setRefreshing(false);
-  }, [getCartRequest]);
+  }, [ getCartRequest ]);
 
   const incrementQuantity = useCallback(index => {
     setCartItems(prevItems =>
       prevItems.map((item, i) =>
-        i === index ? {...item, quantity: item.quantity + 1} : item,
+        i === index ? { ...item, quantity: item.quantity + 1 } : item,
       ),
     );
-  }, []);
+    const clickedItem = cartItems[ index ];
+    const payload = {
+      customerName: userRes[ 0 ]?.fullName,
+      mobile: userRes[ 0 ]?.mobile,
+      cartItems: {
+        productName: clickedItem?.productName, // Use clicked item details
+        image: clickedItem?.image,
+        productDetail: clickedItem.productDetail,
+        quantity: clickedItem?.quantity + 1, // Use the quantity from the clicked item
+        price: clickedItem?.price, // Use price from the clicked item
+      },
+    };
+    addToCartRequest(payload);
+
+    // console.log("payload", JSON.stringify(payload,null,2));
+  }, [ cartItems ]);
 
   const decrementQuantity = useCallback(index => {
     setCartItems(prevItems =>
       prevItems.reduce((acc, item, i) => {
-        if (i === index) {
-          if (item.quantity > 1) {
-            acc.push({...item, quantity: item.quantity - 1});
+        if (i === index)
+        {
+          if (item.quantity > 1)
+          {
+            acc.push({ ...item, quantity: item.quantity - 1 });
           }
-        } else {
+        } else
+        {
           acc.push(item);
         }
         return acc;
@@ -94,10 +112,11 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
   }, []);
 
   const handlePressOrderConfirmation = () => {
-    if (selectedIndex) {
+    if (selectedIndex)
+    {
       const payload = {
-        customerName: userRes[0]?.fullName,
-        mobile: userRes[0]?.mobile,
+        customerName: userRes[ 0 ]?.fullName,
+        mobile: userRes[ 0 ]?.mobile,
         items: cartItems.map(item => ({
           productName: item.productName,
           image: item.image,
@@ -125,7 +144,8 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
         },
       };
       placeOderReq(payload);
-    } else {
+    } else
+    {
       setErrorMessage('Address is missing!');
     }
   };
@@ -137,8 +157,8 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
 
   const specialDiscount =
     itemTotal >= 2000 ? itemTotal * 0.5 : itemTotal * 0.25;
-  const deliveryFee =getPriceRes?.data?.deliveryFee;
-  console.log("deliveryFee",deliveryFee)
+  const deliveryFee = getPriceRes?.data?.deliveryFee;
+  // console.log("deliveryFee",deliveryFee)
   const deliveryFeeDiscount = deliveryFee;
   const totalPayable = Math.max(
     itemTotal - deliveryFeeDiscount - cashback - specialDiscount,
@@ -146,7 +166,7 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
   );
 
   const renderItem = useCallback(
-    ({item, index}) => (
+    ({ item, index }) => (
       <CartListCon
         item={item}
         index={index}
@@ -154,12 +174,12 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
         decrementQuantity={decrementQuantity}
       />
     ),
-    [incrementQuantity, decrementQuantity],
+    [ incrementQuantity, decrementQuantity ],
   );
 
   return (
-    <View style={[CommonStyles.container]}>
-      <BackButton left text={`Cart (${cartItems.length})`} cashback={1} />
+    <View style={[ CommonStyles.container ]}>
+      <BackButton left text={`Cart (${ cartItems.length })`} cashback={cashback} />
       <FlatList
         data={cartItems}
         showsVerticalScrollIndicator={false}
@@ -176,13 +196,13 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
             />
           </View>
         }
-        ListFooterComponent={<View style={{height: 100}} />}
+        ListFooterComponent={<View style={{ height: 100 }} />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
       {cartItems?.length > 0 ? (
-        <View style={[CommonStyles.bottomView]}>
+        <View style={[ CommonStyles.bottomView ]}>
           {/* <View style={styles.footerContainer}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Item Total</Text>
@@ -274,7 +294,7 @@ const CartScreen = ({cartRes, userRes, addressRes, placeOderReducers,getPriceRes
                 price: itemTotal,
                 cashback: cashback,
               };
-              getPriceDiscount(payload)
+              getPriceDiscount(payload);
               // toggleModal();
 
               // console.log(payload);

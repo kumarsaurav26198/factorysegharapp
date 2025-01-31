@@ -27,7 +27,7 @@ const ProductDetails = ({userRes, cartRes}) => {
   const [updatedCart, setUpdatedCart] = useState({});
   const scale = new Animated.Value(1);
 
-  const transformedFragrances = item.productDetail[0]?.variants?.map(
+  const transformedFragrances = item?.productDetail[0]?.variants?.map(
     (variant, index) => ({
       id: index,
       name: variant,
@@ -82,6 +82,8 @@ const ProductDetails = ({userRes, cartRes}) => {
           price: updated[variantSku]?.price,
         },
       };
+    console.log("payload",payload)
+
       addToCartRequest(payload);
       return updated;
     });
@@ -195,10 +197,11 @@ const ProductDetails = ({userRes, cartRes}) => {
                         {transform: [{scale}]},
                       ]}>
                       <TouchableOpacity
-                        onPressIn={onPressIn}
                         disabled={
-                          cart[`${cartItem.sku}_${selectedName}`]?.quantity <= 0
+                          updatedCart[`${cartItem.sku}_${selectedName}`]?.quantity <= 0
                         }
+                        onPressIn={onPressIn}
+                     
                         onPressOut={onPressOut}
                         onPress={() => {
                           handleRemoveFromCart(cartItem.sku);

@@ -3350,6 +3350,7 @@ __metadata:
     react-native-reanimated: ^3.16.6
     react-native-safe-area-context: ^5.1.0
     react-native-screens: ^4.4.0
+    react-native-status-bar-height: ^2.6.0
     react-native-svg: ^15.10.1
     react-native-svg-transformer: ^1.5.0
     react-native-swiper-flatlist: ^3.2.5
@@ -9031,6 +9032,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 866dbc4803980ce589a212c1a8b15f8cdf428f39895b00edfcc9aaf5f658c8fce0ddf37e7f8d259e4f7385909485c0720209ca6fc5f8ebd8531a7b2ec07fc658
+  languageName: node
+  linkType: hard
+
+"react-native-status-bar-height@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "react-native-status-bar-height@npm:2.6.0"
+  checksum: ee9e95ce30d346e113ecb68d6db66a5a2653263b03605428558e11956840bcc7498282c450a8bcc1c03ced9372ede6c4a5c51ab133c563492acedf328e8feecb
   languageName: node
   linkType: hard
 

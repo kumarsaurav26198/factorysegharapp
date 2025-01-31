@@ -134,8 +134,8 @@ function* addToCartApiCall(action) {
     
     try {
       const fullUrl = `${baseURL}${apiUri.factoyHome.addCart}`;
-      console.log("Full URL for addCart request: ", fullUrl);
-      console.log("Full payload for addCart request: ", payload);
+      // console.log("Full URL for addCart request: ", fullUrl);
+      console.log("Full payload for addCart request: ", JSON.stringify(payload,null,2));
       
       const response = yield axios.post(fullUrl, payload, {
         headers: {
