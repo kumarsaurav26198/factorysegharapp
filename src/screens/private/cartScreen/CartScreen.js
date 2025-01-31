@@ -1,10 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   FlatList,
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -81,15 +79,14 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
       customerName: userRes[ 0 ]?.fullName,
       mobile: userRes[ 0 ]?.mobile,
       cartItems: {
-        productName: clickedItem?.productName, // Use clicked item details
+        productName: clickedItem?.productName,
         image: clickedItem?.image,
         productDetail: clickedItem.productDetail,
-        quantity: clickedItem?.quantity + 1, // Use the quantity from the clicked item
-        price: clickedItem?.price, // Use price from the clicked item
+        quantity: clickedItem?.quantity + 1,
+        price: clickedItem?.price,
       },
     };
     addToCartRequest(payload);
-
     // console.log("payload", JSON.stringify(payload,null,2));
   }, [ cartItems ]);
 
@@ -109,7 +106,21 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
         return acc;
       }, []),
     );
-  }, []);
+
+    const clickedItem = cartItems[ index ];
+    const payload = {
+      customerName: userRes[ 0 ]?.fullName,
+      mobile: userRes[ 0 ]?.mobile,
+      cartItems: {
+        productName: clickedItem?.productName, // Use clicked item details
+        image: clickedItem?.image,
+        productDetail: clickedItem.productDetail,
+        quantity: clickedItem?.quantity - 1, // Use the quantity from the clicked item
+        price: clickedItem?.price, // Use price from the clicked item
+      },
+    };
+    addToCartRequest(payload);
+  }, [cartItems]);
 
   const handlePressOrderConfirmation = () => {
     if (selectedIndex)
