@@ -3,18 +3,23 @@ import { Modal, TouchableOpacity, View } from 'react-native';
 import { CommonStyles } from '../../themes/CommonStyles';
 import { ModalClose } from '../../assets/icons';
 
-const ModalWrapper = ({ visible, onRequestClose, children, center, extraClose }) => {
+const ModalWrapper = ({ visible, onRequestClose, children, center, extraClose, zIndexValue = 1 }) => {
     return (
         <Modal
             animationType="slide"
             transparent={true}
             visible={visible}
             onRequestClose={onRequestClose}>
-            <View style={[ CommonStyles.modalContainer, center ? CommonStyles.modalContainerCenter : CommonStyles.modalContainer ]}>
-                {extraClose &&
+            <View style={[
+                CommonStyles.modalContainer,
+                center ? CommonStyles.modalContainerCenter : CommonStyles.modalContainer,
+                { zIndex: zIndexValue, elevation: zIndexValue } 
+            ]}>
+                {extraClose && (
                     <TouchableOpacity style={{ position: "absolute", bottom: 400, alignSelf: "center" }} onPress={onRequestClose}>
                         <ModalClose />
-                    </TouchableOpacity>}
+                    </TouchableOpacity>
+                )}
                 <View style={[ CommonStyles.modalContentCenter, center ? CommonStyles.modalContentCenter : CommonStyles.modalContent ]}>
                     {children}
                 </View>

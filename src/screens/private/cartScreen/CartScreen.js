@@ -22,7 +22,6 @@ import { navigate } from '../../../services/navigationService';
 
 
 const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceRes }) => {
-  const openModal = getPriceRes.openModal;
 
   const { getCartRequest, placeOderReq, getPriceDiscount,addToCartRequest } = useActions();
   const cartData = cartRes?.data?.cartItems || [];
@@ -35,6 +34,11 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
   const [ cartItems, setCartItems ] = useState(cartData);
   const [ errorMessage, setErrorMessage ] = useState('');
 
+  const openModal = getPriceRes.openModal;
+  const deliveryFee = getPriceRes?.data?.deliveryFee;
+  const discount = getPriceRes?.data?.discount;
+  const price = getPriceRes?.data?.price;
+  const totalAmount = getPriceRes?.data?.totalAmount;
 
   useEffect(() => {
     if (openModal) setIsModalVisible(true);
@@ -166,13 +170,13 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
     0,
   );
 
-  const specialDiscount =
-    itemTotal >= 2000 ? itemTotal * 0.5 : itemTotal * 0.25;
-  const deliveryFee = getPriceRes?.data?.deliveryFee;
-  // console.log("deliveryFee",deliveryFee)
+
+
+
+  console.log("deliveryFee",discount)
   const deliveryFeeDiscount = deliveryFee;
   const totalPayable = Math.max(
-    itemTotal - deliveryFeeDiscount - cashback - specialDiscount,
+    itemTotal - deliveryFeeDiscount - cashback,
     0,
   );
 
@@ -329,20 +333,26 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
         <OrderConfirmation
           errorMessage={errorMessage}
           itemTotal={itemTotal.toFixed(2)}
-          deliveryFee={deliveryFee}
-          totalPayable={totalPayable}
+
+          // deliveryFee={deliveryFee}
+          discount={discount}
+          // price={price}
+          // totalAmount={totalAmount}
+          // totalPayable={totalPayable}
+
           handlePressClose={toggleModal}
           selectedIndex={selectedIndex}
           handleAddressModal={addtoggleModal}
           address={selectedIndex}
           handlePressOrderConfirmation={() => {
-            // handlePressOrderConfirmation();
+            handlePressOrderConfirmation();
             // toggleModal();
           }}
         />
       </ModalWrapper>
       <ModalWrapper
         visible={isAddVisible}
+        zIndex={2}
         onRequestClose={addtoggleModal}
         center={false}>
         <Address_DropDown
@@ -354,7 +364,7 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
             setSelectedIndex(selectedIndex);
             setErrorMessage('');
             addtoggleModal();
-            setIsModalVisible(false);
+            setIsModalVisible(true);
           }}
         />
       </ModalWrapper>

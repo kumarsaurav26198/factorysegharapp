@@ -1,11 +1,10 @@
-/* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import Colors from '../../themes/Colors';
-import {Close, EditIcon} from '../../assets/icons';
-import {capitalizeFirstLetter} from '../../utils/validators';
-import {CommonStyles} from '../../themes/CommonStyles';
-import {navigate} from '../../services/navigationService';
+import { Close, EditIcon } from '../../assets/icons';
+import { capitalizeFirstLetter } from '../../utils/validators';
+import { CommonStyles } from '../../themes/CommonStyles';
+import { navigate } from '../../services/navigationService';
 
 export default function OrderConfirmation({
   handlePressOrderConfirmation,
@@ -17,6 +16,9 @@ export default function OrderConfirmation({
   errorMessage,
   selectedIndex,
   handleAddressModal,
+  discount,
+  price,
+  totalAmount
 }) {
   return (
     <View style={styles.container}>
@@ -34,9 +36,18 @@ export default function OrderConfirmation({
                 Delivery Address
                 <Text
                   onPress={() => {
-                    selectedIndex ? handleAddressModal() : navigate('Address');
+                    if (selectedIndex)
+                    {
+                      handleAddressModal();
+                      handlePressClose();
+                    } else
+                    {
+                      handlePressClose();
+                      navigate('Address');
+                    }
                   }}
-                  style={[{color: 'blue', textDecorationLine: 'underline'}]}>
+
+                  style={[ { color: 'blue', textDecorationLine: 'underline' } ]}>
                   {selectedIndex ? '(Change)' : '(Add Address ➡️)'}
                 </Text>
               </Text>
@@ -44,7 +55,7 @@ export default function OrderConfirmation({
                 <Text
                   onPress={() => {
                     handlePressClose();
-                    // navigate('Address')
+                    navigate('Address')
                   }}
                   style={CommonStyles.errorText}>
                   {errorMessage}
@@ -60,10 +71,10 @@ export default function OrderConfirmation({
                     </Text>
                   ) : (
                     <Text
-                      // onPress={() => {
-                      //   handlePressClose()
-                      //   // navigate('Address')
-                      // }}
+                      onPress={() => {
+                        handlePressClose()
+                        navigate('Address')
+                      }}
                       style={CommonStyles.errorText}>
                       Address is missing!
                     </Text>
@@ -71,11 +82,11 @@ export default function OrderConfirmation({
                 </>
               )}
             </View>
-            <TouchableOpacity 
-                   onPress={() => {
-                    handlePressClose();
-                    navigate('Address')
-                  }}
+            <TouchableOpacity
+              onPress={() => {
+                handlePressClose();
+                navigate('Address');
+              }}
             >
               <EditIcon />
             </TouchableOpacity>
@@ -86,13 +97,23 @@ export default function OrderConfirmation({
       <View style={styles.section}>
         <View style={styles.priceRow}>
           <Text style={styles.priceLabel}>Item Total</Text>
-          <Text style={styles.priceValue}>₹ {itemTotal}</Text>
+          <Text style={styles.priceValue}>₹ {totalAmount}</Text>
         </View>
         <View style={styles.priceRow}>
           <Text style={styles.priceLabel}>Delivery fee</Text>
           <Text style={styles.priceValue}>₹ {deliveryFee}</Text>
         </View>
-        <View style={[styles.priceRow, styles.totalRow]}>
+        {discount && (
+          <View style={styles.priceRow}>
+            <Text style={[ styles.priceLabel, styles.discountText ]}>
+              Special Discount ({discount} )
+            </Text>
+            <Text style={[ styles.summaryValue, styles.discountText ]}>
+              -₹{price?.toFixed(2)}
+            </Text>
+          </View>
+        )}
+        <View style={[ styles.priceRow, styles.totalRow ]}>
           <Text style={styles.totalLabel}>Total Payable</Text>
           <Text style={styles.totalValue}>₹ {totalPayable}</Text>
         </View>
@@ -241,5 +262,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  discountText: {
+    color: Colors.green,
   },
 });

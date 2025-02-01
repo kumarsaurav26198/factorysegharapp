@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Text, FlatList } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, FlatList, Alert } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import { C_Button, C_Text } from '../../../components';
 import Colors from '../../../themes/Colors';
@@ -15,10 +15,16 @@ const OtpScreen = ({ route, verifyRes, loginRes }) => {
   const { mobile } = route?.params;
   const { verifyReq, loginRequest } = useActions();
   const otpInputRef = useRef(null);
-  const [ otp, setOtp ] = useState('');
+  const [ otp, setOtp ] = useState('2222');
   const [ errorMessage, setErrorMessage ] = useState('');
   const [ timer, setTimer ] = useState(10);
 
+  useEffect(() => {
+    testingotp();
+  }, []);
+  const testingotp = () => {
+    Alert.alert("For Testing  OTP is 2222");
+  };
   useEffect(() => {
     if (timer > 0)
     {
@@ -33,12 +39,13 @@ const OtpScreen = ({ route, verifyRes, loginRes }) => {
     setOtp(value);
   };
 
+
   const handlePressContinue = () => {
     const { isValid, errorMessage } = validateOtp(otp);
     if (isValid)
     {
-      setErrorMessage("")
-      const payload = {mobile,otp};
+      setErrorMessage("");
+      const payload = { mobile, otp };
       verifyReq(payload);
     } else
     {
@@ -100,6 +107,7 @@ const OtpScreen = ({ route, verifyRes, loginRes }) => {
                   onPress={() => {
                     setOtp('');
                     loginRequest({ mobile: mobile });
+                    testingotp();
                     setTimer(10);
                   }}>
                   <C_Text content="Resend" style={styles.resendText} />

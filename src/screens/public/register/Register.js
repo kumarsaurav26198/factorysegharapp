@@ -16,9 +16,9 @@ const Register = ({ loginRes }) => {
     const { mobile } = route?.params; 
     const { registerRequest, registerReset } = useActions();
     const [ errorMessage, setErrorMessage ] = useState('');
-    const [ name, setName ] = useState('Saurav Kumar');
+    const [ name, setName ] = useState('');
     const [ email, setEmail ] = useState('');
-    const [ refcode, setRefcode ] = useState('mohitvijay8888');
+    const [ refcode, setRefcode ] = useState('');
 
     useEffect(() => {
         registerReset();

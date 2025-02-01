@@ -20,7 +20,7 @@ import {connect} from 'react-redux';
 
 const AddAddress = ({ handlePressClose, email, addressRes}) => {
   const {addAddressRequest} = useActions();
-  const [numbers, setNumber] = useState('6202142166');
+  const [numbers, setNumber] = useState('');
   const [selectedCountryCode, setSelectedCountryCode] = useState('91');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -29,19 +29,20 @@ const AddAddress = ({ handlePressClose, email, addressRes}) => {
   };
 
   const [formData, setFormData] = useState({
-    name: '',
-    addressLine1: '',
-    addressLine2: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: '',
-    // addressLine1: 'Thatha,Word No:11',
-    // addressLine2: 'Near By shivala',
-    // city: 'Khagaria',
-    // state: 'Bihar',
-    // zipCode: '851214',
-    // country: 'India',
+    // name: '',
+    // addressLine1: '',
+    // addressLine2: '',
+    // city: '',
+    // state: '',
+    // zipCode: '',
+    // country: '',
+    name: 'Testing user',
+    addressLine1: 'Thatha,Word No:11',
+    addressLine2: 'Near By shivala',
+    city: 'Khagaria',
+    state: 'Bihar',
+    zipCode: '851214',
+    country: 'India',
     email,
     phone: selectedCountryCode + numbers,
   });

@@ -20,7 +20,7 @@ export const getPriceReducers = (state = initialState, action) => {
             };
         case ActionTypes.FETCH_PRICE_DISCOUNT_REQUEST:
             // console.warn("FETCH_PRICE_DISCOUNT_REQUEST Reducers", ActionTypes.FETCH_PRICE_DISCOUNT_REQUEST);
-            // console.log('FETCH_PRICE_DISCOUNT_REQUEST Reducers action===>',);
+            console.log('FETCH_PRICE_DISCOUNT_REQUEST Reducers action===>',action);
             return {
                 ...state,
                 loading: true,
