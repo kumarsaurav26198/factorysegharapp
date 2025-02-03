@@ -1,4 +1,3 @@
-/* eslint-disable no-dupe-keys */
 import { StyleSheet, Dimensions } from 'react-native';
 import Colors from './Colors';
 import { FontSize } from './Fonts';

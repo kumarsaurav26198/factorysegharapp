@@ -1,34 +1,51 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Colors from '../../themes/Colors';
 import { FontSize, FontsWeights } from '../../themes/Fonts';
 
-const BasicDetails = () => {
+const BasicDetails = ({ item }) => {
+    const items = item?.items;
+    console.log("items====>>", JSON.stringify(items, null, 2));
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Basic Details</Text>
-            <View style={styles.detailsContainer}>
-                <View style={styles.detailItem}>
-                    <Text style={styles.label}>Trip ID:</Text>
-                    <Text style={styles.value}>#0CAC6C665</Text>
+            {items.map(item => (
+                <View key={item._id} style={styles.detailsContainer}>
+
+                    <View >
+                    <Text style={[ styles.label, { fontSize: FontSize.FS17,fontWeight:FontsWeights.FW600,marginBottom:6 } ]}>{item.productName}</Text>
+                        {item?.productDetail?.variants && (
+                            <View style={styles.detailItem}>
+                                <Text style={styles.label}> Variants: </Text>
+                                <Text style={styles.value}>{item.productDetail.variants}</Text>
+                            </View>)}
+                        {item?.productDetail?.variants && (
+                            <View style={styles.detailItem}>
+                                <Text style={styles.label}> Variants: </Text>
+                                <Text style={styles.value}>{item.productDetail.variants}</Text>
+                            </View>)}
+                        {item?.productDetail?.sku && (
+                            <View style={styles.detailItem}>
+                                <Text style={styles.label}>SKU: </Text>
+                                <Text style={styles.value}>{item.productDetail.sku}</Text>
+                            </View>)}
+                        {
+                            item?.productDetail?.caseSize && (
+                                <View style={styles.detailItem}>
+                                    <Text style={styles.label}>CaseSize: </Text>
+                                    <Text style={styles.value}>{item.productDetail.caseSize}</Text>
+                                </View>)}
+                        {item?.quantity && (
+                                <View style={styles.detailItem}>
+                                    <Text style={styles.label}>Quantity: </Text>
+                                    <Text style={styles.value}>{item.quantity}</Text>
+                                </View>)}
+                    </View>
                 </View>
-                <View style={styles.detailItem}>
-                    <Text style={styles.label}>Trip Type:</Text>
-                    <Text style={styles.value}>Round Trip</Text>
-                </View>
-                <View style={styles.detailItem}>
-                    <Text style={styles.label}>Trip Distance:</Text>
-                    <Text style={styles.value}>30 km</Text>
-                </View>
-                <View style={styles.detailItem}>
-                    <Text style={styles.label}>Trip Duration:</Text>
-                    <Text style={styles.value}>1 hr</Text>
-                </View>
-                <View style={styles.detailItem}>
-                    <Text style={styles.label}>Vehicle Type:</Text>
-                    <Text style={styles.value}>Bike - Splendor</Text>
-                </View>
-            </View>
+
+
+            ))}
+
         </View>
     );
 };
@@ -51,6 +68,7 @@ const styles = StyleSheet.create({
     },
     detailsContainer: {
         paddingVertical: 10,
+        borderBottomWidth:0.3
     },
     detailItem: {
         flexDirection: 'row',

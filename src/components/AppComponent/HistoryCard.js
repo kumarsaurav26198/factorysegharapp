@@ -12,7 +12,7 @@ const HistoryCard = ({item}) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate('HistoryDetails')}>
+      onPress={() => navigation.navigate('HistoryDetails',{item})}>
       <View style={styles.header}>
         <View>
           <Text style={styles.orderIdText}>Order ID: {item.orderId}</Text>

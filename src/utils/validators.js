@@ -199,3 +199,21 @@ export const capitalizeFirstLetter = (name) => {
   if (!name) return ''; // Return empty string if name is not provided
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 };
+
+export const formatDateTime = (isoString) => {
+  if (!isoString) return '';
+
+  const date = new Date(isoString);
+
+  // Extract date components
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+  const year = date.getFullYear();
+
+  // Extract time components
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  return `${day}-${month}-${year}, ${hours}:${minutes} ${ampm}`;
+};

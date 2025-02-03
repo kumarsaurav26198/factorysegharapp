@@ -29,20 +29,20 @@ const AddAddress = ({ handlePressClose, email, addressRes}) => {
   };
 
   const [formData, setFormData] = useState({
-    // name: '',
-    // addressLine1: '',
-    // addressLine2: '',
-    // city: '',
-    // state: '',
-    // zipCode: '',
-    // country: '',
-    name: 'Testing user',
-    addressLine1: 'Thatha,Word No:11',
-    addressLine2: 'Near By shivala',
-    city: 'Khagaria',
-    state: 'Bihar',
-    zipCode: '851214',
-    country: 'India',
+    name: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
+    // name: 'Testing user',
+    // addressLine1: 'Thatha,Word No:11',
+    // addressLine2: 'Near By shivala',
+    // city: 'Khagaria',
+    // state: 'Bihar',
+    // zipCode: '851214',
+    // country: 'India',
     email,
     phone: selectedCountryCode + numbers,
   });
@@ -55,7 +55,6 @@ const AddAddress = ({ handlePressClose, email, addressRes}) => {
   };
 
   const handleSubmit = () => {
-    // eslint-disable-next-line no-shadow
     const {isValid, errorMessage} = addressValidiadtion({
       ...formData,
       selectedCountryCode,

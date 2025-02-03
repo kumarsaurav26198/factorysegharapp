@@ -333,13 +333,11 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
         <OrderConfirmation
           errorMessage={errorMessage}
           itemTotal={itemTotal.toFixed(2)}
-
           // deliveryFee={deliveryFee}
           discount={discount}
           // price={price}
           // totalAmount={totalAmount}
           // totalPayable={totalPayable}
-
           handlePressClose={toggleModal}
           selectedIndex={selectedIndex}
           handleAddressModal={addtoggleModal}

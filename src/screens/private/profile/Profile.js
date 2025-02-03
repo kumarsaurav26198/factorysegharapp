@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { CommonStyles } from '../../../themes/CommonStyles';

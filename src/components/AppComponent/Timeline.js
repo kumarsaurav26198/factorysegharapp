@@ -2,24 +2,30 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Colors from '../../themes/Colors';
 import { FontSize, FontsWeights } from '../../themes/Fonts';
+import { capitalizeFirstLetter, formatDateTime } from '../../utils/validators';
 
-const Timeline = () => {
+const Timeline = ({ item }) => {
+    const address = item?.address;
+    console.log("address",JSON.stringify(item,null,2))
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Pickup & Destination</Text>
+            <Text style={styles.header}>Delivery Address</Text>
             <View style={styles.timelineItem}>
                 <View style={styles.timeContainer}>
-                    <View style={[styles.dot, { backgroundColor: "green" }]} />
+                    <View style={[ styles.dot, { backgroundColor: "green" } ]} />
                     <View style={styles.line} />
                 </View>
                 <View style={styles.contentContainer}>
-                    <Text style={styles.statusText}>Started : 17 Sep 2024, 09:30 AM</Text>
+                    <Text style={styles.statusText}>Order Time : {formatDateTime(item?.createdAt)}</Text>
                     <Text style={styles.location}>
-                        RR22, Block, Mianwali Nagar, paschim Vihar, New delhi 1100...
+                        {capitalizeFirstLetter(address?.name)},{' '}
+                        {address?.addressLine1}, {address?.addressLine2},{' '}
+                        {address?.city}, {address?.state}, {address?.country},{' '}
+                        {address?.phone}
                     </Text>
                 </View>
             </View>
-            <View style={styles.timelineItem}>
+            {/* <View style={styles.timelineItem}>
                 <View style={styles.timeContainer}>
                     <View style={[styles.dot, { backgroundColor: "red" }]} />
                 </View>
@@ -29,7 +35,7 @@ const Timeline = () => {
                         Main Rd, Block 1, West Patel Nagar, Patel Nagar, Delhi, 110008, India
                     </Text>
                 </View>
-            </View>
+            </View> */}
         </View>
     );
 };
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.primary,
         borderWidth: 1,
         borderRadius: 8,
-        margin:15
+        margin: 15
     },
     header: {
         fontSize: 16,
@@ -76,9 +82,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     location: {
-        fontSize:FontSize.FS14,
+        fontSize: FontSize.FS14,
         fontWeight: FontsWeights.FW400,
         color: Colors.black,
         marginTop: 10,
+        fontSize: 16,
+        color: '#333',
+        marginTop: 2,
     },
 });

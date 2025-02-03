@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {FlatList, RefreshControl, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {CommonStyles} from '../../../themes/CommonStyles';

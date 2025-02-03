@@ -4,7 +4,6 @@ import Colors from '../../themes/Colors';
 import { FontSize, FontsWeights } from '../../themes/Fonts';
 
 const AllCategories = ({ onPress, categories, selectedCategory }) => {
-  // eslint-disable-next-line react/no-unstable-nested-components
   const CategoryItem = ({ item }) => {
     const isSelected = item.category === selectedCategory;
 

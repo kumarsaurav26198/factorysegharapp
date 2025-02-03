@@ -87,7 +87,9 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderWidth:1,
-    borderColor:Colors.white
+    borderColor:Colors.white,
+    resizeMode:"contain",
+    
   },
   container: {
     // paddingHorizontal: 16,

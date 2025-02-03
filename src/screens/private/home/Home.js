@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
-/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, useCallback} from 'react';
 import {FlatList, View, RefreshControl} from 'react-native';
 import {useSelector} from 'react-redux';

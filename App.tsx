@@ -31,7 +31,7 @@ const App = () => {
   if (loading) return <Splashscreen />;
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 ,backgroundColor: Colors.primary}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.primary }}>
         <StatusBar
           backgroundColor={Colors.primary} // Set status bar background color
           barStyle="light-content" // Set status bar text color (dark or light)

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -26,7 +25,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
   const {getProductByCategory} = useActions();
   const [selectedCategory, setSelectedCategory] = useState(category);
   const [refreshing, setRefreshing] = useState(false);
-  // console.log("GET_PRODUCT_CATOG_SUCCESS Reducers action===>", JSON.stringify(allProduct,null,2));
+
 
   const categories = [
     {category: 'ALL', name: 'All'},
@@ -58,6 +57,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
     [],
   );
   const allProduct = allProductRes?.data?.items || [];
+  // console.log("GET_PRODUCT_CATOG_SUCCESS Reducers action===>", JSON.stringify(cartRes?.data?.cartItems.length,null,2));
 
   return (
     <View style={CommonStyles.container}>
@@ -65,7 +65,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
         text="All Product"
         left
         cart
-        cartLenght={cartRes?.data?.length}
+        cartLenght={cartRes?.data?.cartItems.length}
         passParameter={selectedCategory}
       />
       <AllCategories
