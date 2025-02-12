@@ -35,10 +35,7 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
   const [ errorMessage, setErrorMessage ] = useState('');
 
   const openModal = getPriceRes.openModal;
-  const deliveryFee = getPriceRes?.data?.deliveryFee;
-  const discount = getPriceRes?.data?.discount;
-  const price = getPriceRes?.data?.price;
-  const totalAmount = getPriceRes?.data?.totalAmount;
+  const deliveryPriceData = getPriceRes?.data;
 
   useEffect(() => {
     if (openModal) setIsModalVisible(true);
@@ -143,8 +140,8 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
           quantity: item.quantity,
           price: item.price,
         })),
-        totalAmount: totalPayable.toFixed(2),
-        cashbackUsed: cashback.toFixed(2),
+        totalAmount: deliveryPriceData?.totalAmount,
+        cashbackUsed: deliveryPriceData?.cashback,
         address: {
           name: selectedIndex.name,
           email: selectedIndex.email,
@@ -158,6 +155,7 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
           country: selectedIndex?.country || '',
         },
       };
+      // console.log("placeOderReq payload===>>",JSON.stringify(payload,null,2))
       placeOderReq(payload);
     } else
     {
@@ -173,12 +171,11 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
 
 
 
-  console.log("deliveryFee",discount)
-  const deliveryFeeDiscount = deliveryFee;
-  const totalPayable = Math.max(
-    itemTotal - deliveryFeeDiscount - cashback,
-    0,
-  );
+  // console.log("deliveryFee",discount)
+  // const totalPayable = Math.max(
+  //   itemTotal - deliveryFeeDiscount - cashback,
+  //   0,
+  // );
 
   const renderItem = useCallback(
     ({ item, index }) => (
@@ -218,90 +215,9 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
       />
       {cartItems?.length > 0 ? (
         <View style={[ CommonStyles.bottomView ]}>
-          {/* <View style={styles.footerContainer}>
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Item Total</Text>
-              <Text style={styles.summaryValue}>₹{itemTotal.toFixed(2)}</Text>
-            </View>
-            <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, styles.discountText]}>
-                Delivery Fee (₹{deliveryFeeDiscount} Saved)
-              </Text>
-              <Text style={[styles.summaryValue, styles.discountText]}>₹0</Text>
-            </View>
-            {cashback > 0 && (
-              <View style={styles.summaryRow}>
-                <Text style={[styles.summaryLabel, styles.cashbackText]}>
-                  Cashback Applied
-                </Text>
-                <Text style={[styles.summaryValue, styles.cashbackText]}>
-                  -₹{cashback.toFixed(2)}
-                </Text>
-              </View>
-            )}
-            {specialDiscount > 0 && (
-              <View style={styles.summaryRow}>
-                <Text style={[styles.summaryLabel, styles.discountText]}>
-                  Special Discount (on ₹2500+)
-                </Text>
-                <Text style={[styles.summaryValue, styles.discountText]}>
-                  -₹{specialDiscount.toFixed(2)}
-                </Text>
-              </View>
-            )}
-
-            <View style={styles.section}>
-              <View style={styles.deliveryAddress}>
-                <View style={styles.addressLeft}>
-                  <View style={styles.avatarCircle}>
-                    <Text style={styles.avatarText}>📍</Text>
-                  </View>
-                  <View style={styles.addressDetails}>
-                    <Text style={styles.deliveryTitle}>
-                      Delivery Address{' '}
-                      <Text
-                        onPress={() => {
-                          selectedIndex
-                            ? addtoggleModal()
-                            : navigate('Address');
-                        }}
-                        style={[
-                          {color: 'blue', textDecorationLine: 'underline'},
-                        ]}>
-                        {selectedIndex ? '(Change)' : '(Add Address ➡️)'}
-                      </Text>
-                    </Text>
-                    {selectedIndex ? (
-                      <Text style={styles.addressText} numberOfLines={2}>
-                        {capitalizeFirstLetter(selectedIndex?.name)},
-                        {selectedIndex?.addressLine1},{' '}
-                        {selectedIndex?.addressLine2}, {selectedIndex?.city}
-                        {selectedIndex?.state}, {selectedIndex?.country},{' '}
-                        {selectedIndex?.phone}
-                      </Text>
-                    ) : null}
-                  </View>
-                  <TouchableOpacity onPress={() => navigate('Address')}>
-                    <EditIcon />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-            {errorMessage ? (
-              <Text style={CommonStyles.errorText}>{errorMessage}</Text>
-            ) : null}
-            <View style={[styles.summaryRow, styles.totalRow]}>
-              <Text style={[styles.summaryLabel, styles.totalText]}>
-                Total Payable
-              </Text>
-              <Text style={[styles.summaryValue, styles.totalText]}>
-                ₹{totalPayable.toFixed(2)}
-              </Text>
-            </View>
-          </View> */}
 
           <C_Button
-            // title={`Continue to pay ₹${itemTotal.toFixed(2)}`}
+            // title={`Continue to pay ₹ ${itemTotal.toFixed(2)}`}
             title={`Continue To Pay`}
             loading={getPriceRes?.loading}
             onPress={() => {
@@ -310,16 +226,6 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
                 cashback: cashback,
               };
               getPriceDiscount(payload);
-              // toggleModal();
-
-              // console.log(payload);
-              // setIsModalVisible(true)
-              // if (selectedIndex !== null && selectedIndex !== undefined) {
-              //   setErrorMessage('');
-              // toggleModal();
-              // } else {
-              //   setErrorMessage('Select address');
-              // }
             }}
           />
         </View>
@@ -333,10 +239,16 @@ const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceR
         <OrderConfirmation
           errorMessage={errorMessage}
           itemTotal={itemTotal.toFixed(2)}
-          // deliveryFee={deliveryFee}
-          discount={discount}
-          // price={price}
-          // totalAmount={totalAmount}
+          deliveryPriceData={deliveryPriceData}
+
+          // deliveryFee={deliveryPriceData?.deliveryFee}
+          // // deliveryFee={deliveryFee}
+          // // discount={discount}
+          // discount={deliveryPriceData?.discount}
+          // price={deliveryPriceData?.price}
+          // // price={price}
+          // // totalAmount={totalAmount}
+          // totalAmount={deliveryPriceData?.totalAmount}
           // totalPayable={totalPayable}
           handlePressClose={toggleModal}
           selectedIndex={selectedIndex}

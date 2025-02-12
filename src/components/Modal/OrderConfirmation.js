@@ -9,16 +9,11 @@ import { navigate } from '../../services/navigationService';
 export default function OrderConfirmation({
   handlePressOrderConfirmation,
   handlePressClose,
-  itemTotal,
-  deliveryFee,
-  totalPayable,
   address,
   errorMessage,
   selectedIndex,
   handleAddressModal,
-  discount,
-  price,
-  totalAmount
+  deliveryPriceData
 }) {
   return (
     <View style={styles.container}>
@@ -33,7 +28,7 @@ export default function OrderConfirmation({
             </View>
             <View style={styles.addressDetails}>
               <Text style={styles.deliveryTitle}>
-                Delivery Address
+                Delivery Address {" "}
                 <Text
                   onPress={() => {
                     if (selectedIndex)
@@ -55,7 +50,7 @@ export default function OrderConfirmation({
                 <Text
                   onPress={() => {
                     handlePressClose();
-                    navigate('Address')
+                    navigate('Address');
                   }}
                   style={CommonStyles.errorText}>
                   {errorMessage}
@@ -72,8 +67,8 @@ export default function OrderConfirmation({
                   ) : (
                     <Text
                       onPress={() => {
-                        handlePressClose()
-                        navigate('Address')
+                        handlePressClose();
+                        navigate('Address');
                       }}
                       style={CommonStyles.errorText}>
                       Address is missing!
@@ -97,25 +92,27 @@ export default function OrderConfirmation({
       <View style={styles.section}>
         <View style={styles.priceRow}>
           <Text style={styles.priceLabel}>Item Total</Text>
-          <Text style={styles.priceValue}>₹ {totalAmount}</Text>
+          <Text style={styles.priceValue}>₹ {deliveryPriceData?.price?.toFixed(2)}</Text>
         </View>
-        <View style={styles.priceRow}>
-          <Text style={styles.priceLabel}>Delivery fee</Text>
-          <Text style={styles.priceValue}>₹ {deliveryFee}</Text>
-        </View>
-        {discount && (
+        {deliveryPriceData?.discount && (
           <View style={styles.priceRow}>
             <Text style={[ styles.priceLabel, styles.discountText ]}>
-              Special Discount ({discount} )
+              Special Discount ({deliveryPriceData?.discount} )
             </Text>
             <Text style={[ styles.summaryValue, styles.discountText ]}>
-              -₹{price?.toFixed(2)}
+              -₹{deliveryPriceData?.price - deliveryPriceData?.priceAfterDiscount}
             </Text>
           </View>
         )}
+        <View style={styles.priceRow}>
+          <Text style={styles.priceLabel}> {deliveryPriceData?.deliveryFee > 0 ? "Delivery fee" : 'Free Delivery '}</Text>
+          <Text style={styles.priceValue}>
+            {deliveryPriceData?.deliveryFee > 0 ? `+ ₹${ deliveryPriceData?.deliveryFee?.toFixed(2) }` : ' ₹0.00'}
+          </Text>
+        </View>
         <View style={[ styles.priceRow, styles.totalRow ]}>
           <Text style={styles.totalLabel}>Total Payable</Text>
-          <Text style={styles.totalValue}>₹ {totalPayable}</Text>
+          <Text style={styles.totalValue}>₹ {deliveryPriceData?.totalAmount?.toFixed(2)}</Text>
         </View>
       </View>
 
@@ -123,7 +120,7 @@ export default function OrderConfirmation({
         style={styles.continueButton}
         onPress={handlePressOrderConfirmation}>
         <Text style={styles.continueButtonText}>
-          Continue to pay ₹ {totalPayable}
+          Continue to pay ₹ {deliveryPriceData?.totalAmount?.toFixed(2)}
         </Text>
       </TouchableOpacity>
     </View>

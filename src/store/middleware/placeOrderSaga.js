@@ -19,13 +19,21 @@ function* placeOrderApi(action) {
     });
 
     const placeOrderApires = response?.data;
+    const orderDetails={
+      placeOrderApires,
+      customerName:payload?.customerName,
+      mobile:payload?.mobile,
+      totalAmount:payload?.totalAmount
+      // email:payload?.email,
+
+    }
     // console.log(
     //   'placeOrderApires (Order Created):',
-    //   JSON.stringify(placeOrderApires, null, 2),
+    //   JSON.stringify(orderDetails, null, 2),
     // );
 
     // Proceed to Razorpay Checkout with the response
-    yield call(handleRazorpayCheckout, placeOrderApires);
+    yield call(handleRazorpayCheckout, orderDetails);
   } catch (error) {
     const errorPayload = {
       message:
@@ -55,23 +63,23 @@ function* placeOrderApi(action) {
 
 function* handleRazorpayCheckout(orderDetails) {
   try {
-    // console.log(
-    //   'handleRazorpayCheckout: Initializing Razorpay Checkout with order details:',
-    //   JSON.stringify(orderDetails, null, 2),
-    // );
+    console.log(
+      'handleRazorpayCheckout: Initializing Razorpay Checkout with order details:',
+      JSON.stringify(orderDetails, null, 2),
+    );
 
     const options = {
       description: 'Credits towards consultation',
       image: Images.banner,
       currency: 'INR',
       key: 'rzp_test_xC0HuBfFYisteo', // Replace with your Razorpay API Key
-      amount: orderDetails.amount, // Amount in paise (e.g., 1000 for ₹10)
+      amount: orderDetails.totalAmount *100, // Amount in paise (e.g., 1000 for ₹10)
       name: 'Factory Se Ghar',
       order_id: orderDetails.razorpayOrderId, // Razorpay Order ID from placeOrder API
       prefill: {
-        email: 'user@example.com', // Replace with actual user data
-        contact: '916202142166', // Replace with actual user data
-        name: 'Saurav KUmar', // Replace with actual user data
+        // email: orderDetails?.email, // Replace with actual user data
+        contact: orderDetails?.mobile, // Replace with actual user data
+        name:orderDetails?.customerName, // Replace with actual user data
       },
       theme: {color: 'red'},
     };
@@ -90,15 +98,15 @@ function* handleRazorpayCheckout(orderDetails) {
     );
 
     // Verify Payment with received data
-    yield call(verifyPaymentApi, {
-      razorpayPaymentId: data.razorpay_payment_id,
-      razorpayOrderId: orderDetails.razorpayOrderId,
-      orderId: orderDetails.orderId,
-    });
+    // yield call(verifyPaymentApi, {
+    //   razorpayPaymentId: data.razorpay_payment_id,
+    //   razorpayOrderId: orderDetails.razorpayOrderId,
+    //   orderId: orderDetails.orderId,
+    // });
 
     // Navigate to success screen
     yield put({type: ActionTypes.PAYMENT_VERIFICATION_REQUEST});
-    yield put({type: ActionTypes.PLACE_ORDER_SUCCESS, data});
+    // yield put({type: ActionTypes.PLACE_ORDER_SUCCESS, data});
     console.log(
       'handleRazorpayCheckout: Payment verified and order placed. Navigating to BottomNavigator',
     );

@@ -13,15 +13,10 @@ const BasicDetails = ({ item }) => {
                 <View key={item._id} style={styles.detailsContainer}>
 
                     <View >
-                    <Text style={[ styles.label, { fontSize: FontSize.FS17,fontWeight:FontsWeights.FW600,marginBottom:6 } ]}>{item.productName}</Text>
+                        <Text style={[ styles.label, { fontSize: FontSize.FS17, fontWeight: FontsWeights.FW600, marginBottom: 6 } ]}>{item.productName}</Text>
                         {item?.productDetail?.variants && (
                             <View style={styles.detailItem}>
-                                <Text style={styles.label}> Variants: </Text>
-                                <Text style={styles.value}>{item.productDetail.variants}</Text>
-                            </View>)}
-                        {item?.productDetail?.variants && (
-                            <View style={styles.detailItem}>
-                                <Text style={styles.label}> Variants: </Text>
+                                <Text style={styles.label}>Variants: </Text>
                                 <Text style={styles.value}>{item.productDetail.variants}</Text>
                             </View>)}
                         {item?.productDetail?.sku && (
@@ -36,10 +31,10 @@ const BasicDetails = ({ item }) => {
                                     <Text style={styles.value}>{item.productDetail.caseSize}</Text>
                                 </View>)}
                         {item?.quantity && (
-                                <View style={styles.detailItem}>
-                                    <Text style={styles.label}>Quantity: </Text>
-                                    <Text style={styles.value}>{item.quantity}</Text>
-                                </View>)}
+                            <View style={styles.detailItem}>
+                                <Text style={styles.label}>Quantity: </Text>
+                                <Text style={styles.value}>{item.quantity}</Text>
+                            </View>)}
                     </View>
                 </View>
 
@@ -68,7 +63,7 @@ const styles = StyleSheet.create({
     },
     detailsContainer: {
         paddingVertical: 10,
-        borderBottomWidth:0.3
+        borderBottomWidth: 0.3
     },
     detailItem: {
         flexDirection: 'row',

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View ,Linking} from 'react-native';
 import { MobileIcon } from '../../../assets/icons';
-import { C_Button, C_Text, MobileWithCountryCode, } from '../../../components';
+import {  C_Button, C_Text, MobileWithCountryCode, } from '../../../components';
 import { validatePhoneNumber, } from '../../../utils/validators';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { useActions } from '../../../hooks/useActions';

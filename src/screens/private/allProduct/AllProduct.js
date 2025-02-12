@@ -65,7 +65,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
         text="All Product"
         left
         cart
-        cartLenght={cartRes?.data?.cartItems.length}
+        cartLenght={cartRes?.data?.cartItems?.length}
         passParameter={selectedCategory}
       />
       <AllCategories
