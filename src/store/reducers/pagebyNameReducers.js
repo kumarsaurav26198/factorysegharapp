@@ -11,7 +11,7 @@ export const pagebyNameReducers = (state = initialState, action) => {
     {
         case ActionTypes.FETCH_PAGEBYNAME_REQUEST:
             // console.warn("FETCH_PAGEBYNAME_REQUEST Reducers", ActionTypes.FETCH_PAGEBYNAME_REQUEST);
-            // console.log("FETCH_PAGEBYNAME_REQUEST Reducers action===>", action.payload);
+            // console.log("FETCH_PAGEBYNAME_REQUEST Reducers action===>", action?.payload);
             return {
                 ...state,
                 loading: true,
@@ -19,10 +19,10 @@ export const pagebyNameReducers = (state = initialState, action) => {
             };
         case ActionTypes.FETCH_PAGEBYNAME_SUCCESS:
             // console.warn("FETCH_PAGEBYNAME_SUCCESS Reducers", ActionTypes.FETCH_PAGEBYNAME_SUCCESS);
-            // console.warn("FETCH_PAGEBYNAME_SUCCESS Reducers action===>", action);
+            // console.log("FETCH_PAGEBYNAME_SUCCESS Reducers action===>", action);
             return {
                 ...state,
-                data: action,
+                data: action?.data,
                 loading: false,
             };
         case ActionTypes.FETCH_PAGEBYNAME_FAILURE:

@@ -1,32 +1,49 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
-import { FontSize, FontsWeights } from '../../themes/Fonts';
+import {FontSize, FontsWeights} from '../../themes/Fonts';
 import Colors from '../../themes/Colors';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {SmallProductIcon} from '../../assets/icons';
 // import SmallProductIcon from '../../assets/icons/SmallProductIcon';
 
-const HistoryCard = ({ item }) => {
+const HistoryCard = ({item}) => {
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate('HistoryDetails')}>
+      onPress={() => navigation.navigate('HistoryDetails',{item})}>
       <View style={styles.header}>
         <View>
           <Text style={styles.orderIdText}>Order ID: {item.orderId}</Text>
           <Text style={styles.emailText}>{item.userEmail}</Text>
         </View>
         <Text style={styles.dateText}>
-          {new Date(item.orderDate).toLocaleDateString()}
+          {new Date(item.createdAt).toLocaleDateString()}
         </Text>
       </View>
       <View style={styles.itemsContainer}>
         {item.items.map(item => (
           <View key={item._id} style={styles.itemRow}>
             <View>
-              {/* <SmallProductIcon /> */}
-              <Text style={styles.itemIdText}>{item.itemId}</Text>
+        <Image source={{ uri: item?.image }} style={styles.img} />
+              <Text style={styles.itemIdText}>{item.productName}</Text>
+              {item?.productDetail?.variants && (
+                <Text style={styles.itemIdText}>
+                  Variants: {item.productDetail.variants}
+                </Text>
+              )}
+              {item?.productDetail?.sku && (
+                <Text style={styles.itemIdText}>
+                  SKU:{item.productDetail.sku}
+                </Text>
+              )}
+              {item?.productDetail?.caseSize && (
+                <Text style={styles.itemIdText}>
+                  CaseSize :{item.productDetail.caseSize}
+                </Text>
+              )}
+
             </View>
             <Text style={styles.itemQuantityText}>Qty: {item.quantity}</Text>
           </View>
@@ -43,8 +60,8 @@ const HistoryCard = ({ item }) => {
                 item.status === 'Pending'
                   ? Colors.orange
                   : item.status === 'Completed'
-                    ? Colors.green
-                    : Colors.red,
+                  ? Colors.green
+                  : Colors.red,
             },
           ]}>
           {item.status}
@@ -57,6 +74,10 @@ const HistoryCard = ({ item }) => {
 export default HistoryCard;
 
 const styles = StyleSheet.create({
+  img:{
+height:100,
+width:100
+  },
   container: {
     backgroundColor: Colors.white,
     borderRadius: 10,
@@ -97,12 +118,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemIdText: {
-    fontSize: FontSize.FS14,
+    fontSize: FontSize.FS16,
     color: Colors.black,
+    fontWeight: '700',
+    marginBottom: 4,
   },
   itemQuantityText: {
-    fontSize: FontSize.FS14,
-    color: Colors.darkgrey,
+    fontSize: FontSize.FS16,
+    color: Colors.black,
   },
   footer: {
     flexDirection: 'row',

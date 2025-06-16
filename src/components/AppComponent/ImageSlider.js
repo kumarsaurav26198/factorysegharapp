@@ -1,29 +1,28 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text } from 'react-native';
+import { StyleSheet, Image, View, Text, Dimensions } from 'react-native';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
-import { ProductDeatailsIcon } from '../../assets/icons';
 import Colors from '../../themes/Colors';
 
-const data = [1,1];
+const ImageSlider = ({ image }) => {
+  const { width } = Dimensions.get('window');
+  const cardWidth = width ;
 
-const ImageSlider = () => {
   return (
-    <View style={styles.container}>
-      {data && data.length > 0 ? (
+    <View style={[styles.container, { width: cardWidth }]}>
+      {image ? (
         <SwiperFlatList
-          showPagination
           paginationActiveColor={Colors.primary}
-          paginationDefaultColor="#ccc"
-          paginationStyleItem={styles.paginationStyleItem}
-          autoplay ={true}
+          autoplay
           autoplayDelay={500}
-          autoplayLoop= {true}
+          autoplayLoop
         >
-          {data.map((item, index) => (
-            <View style={styles.child} key={index.toString()}>
-              <ProductDeatailsIcon  style={styles.card}/>
-            </View>
-          ))}
+          <View style={styles.child}>
+            <Image 
+              source={{ uri: image }} 
+              style={[styles.card]} // Adjust height dynamically
+              resizeMode="contain" 
+            />
+          </View>
         </SwiperFlatList>
       ) : (
         <View style={styles.placeholderContainer}>
@@ -36,30 +35,42 @@ const ImageSlider = () => {
 
 export default ImageSlider;
 
+const { width } = Dimensions.get('window');
+const cardWidth = width;
+
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomEndRadius: 15,
-    borderBottomLeftRadius: 15,
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  child: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    width: '100%',
-    height: 250,
+
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+    // height:cardWidth,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    paddingBottom:10,
     borderRadius: 10,
   },
+  child: {
+    // width: cardWidth,
+    borderRadius: 10,
+    borderColor:Colors.bgGreen,
+  },
+  card: {
+    width: cardWidth-100, 
+    height: cardWidth-100,
+    alignItems:"center",
+    alignSelf:"center"
+  },
   placeholderContainer: {
-    width: '100%',
-    height: 250,
+    width: cardWidth,
+    // height: 250,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#d3d3d3',
@@ -72,7 +83,7 @@ const styles = StyleSheet.create({
   paginationStyleItem: {
     width: 12,
     height: 12,
-    marginHorizontal: 3,
-    top:12
+    // marginHorizontal: 3,
+    // top: 12,
   },
 });

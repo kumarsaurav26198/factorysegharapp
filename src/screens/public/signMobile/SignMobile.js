@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View ,Linking} from 'react-native';
 import { MobileIcon } from '../../../assets/icons';
-import { C_Button, C_Text, MobileWithCountryCode, } from '../../../components';
+import {  C_Button, C_Text, MobileWithCountryCode, } from '../../../components';
 import { validatePhoneNumber, } from '../../../utils/validators';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { useActions } from '../../../hooks/useActions';
@@ -15,6 +15,8 @@ const SignMobile = ({ loginRes }) => {
   const [ refreshing, setRefreshing ] = useState(false);
   const [ selectedCountryCode, setSelectedCountryCode ] = useState('91');
   const [ errorMessage, setErrorMessage ] = useState('');
+
+  // console.log(loginRes.error)
 
   useEffect(() => {
     logingReset();
@@ -70,6 +72,7 @@ const SignMobile = ({ loginRes }) => {
 
               </View>
               {errorMessage ? <Text style={CommonStyles.errorText}>{errorMessage}</Text> : null}
+              {loginRes?.error ? <Text style={CommonStyles.errorText}>{loginRes?.error?.message}</Text> : null}
               <View style={styles.phoneInputWrapper}>
 
                 <MobileWithCountryCode
@@ -84,7 +87,7 @@ const SignMobile = ({ loginRes }) => {
                 <Text style={styles.termCond}>
                   By continuing, you agree to Factory Se Home
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => Linking.openURL('https://factoryseghar.com/footerinfo?page=term&condition')}>
                   <Text style={[ styles.termCond, styles.termCond2 ]}>
                     Terms & Conditions
                   </Text>

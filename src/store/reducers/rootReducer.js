@@ -11,6 +11,7 @@ import { placeOderReducers } from './placeOderReducers';
 import { orderHistoryReducers } from './orderReducers';
 import { addressReducers } from './addressReducers';
 import { getProductCategoryReducer } from './getProductCategoryReducer';
+import { getPriceReducers } from './getPriceReducers';
 
 export default combineReducers({
     loginReducers:loginReducers,
@@ -20,9 +21,9 @@ export default combineReducers({
     getProductCategoryReducer:getProductCategoryReducer,
     pagebyNameReducers:pagebyNameReducers,
     contactUsReducer:contactUsReducer,
-
     cartReducers:cartReducers,
     placeOderReducers:placeOderReducers,
     orderHistoryReducers:orderHistoryReducers,
-    addressReducers:addressReducers
+    addressReducers:addressReducers,
+    getPriceReducers:getPriceReducers
 })

@@ -4,8 +4,9 @@ import { CommonStyles } from '../../../themes/CommonStyles';
 import { BackButton, DriverInfo2 } from '../../../components';
 import Colors from '../../../themes/Colors';
 import {
-  AboutIcon, AddressIcon, BackVerctor, ComplainIcon, DriverIcon, EditProfileIcon, Help,
-  HistoryIcon, LogoutIcon, ReferralIcon, SettingsIcon
+  AboutIcon, AddressIcon, BackVerctor, CartIcon, ComplainIcon, ContactUsIcon, DriverIcon, EditProfileIcon, Help,
+  HistoryIcon, LogoutIcon, Privacy, ReferralIcon, SettingsIcon,
+  TermCondition
 } from '../../../assets/icons';
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
 import { reset } from '../../../services/navigationService';
@@ -16,14 +17,18 @@ const Profile = ({ navigation,userRes }) => {
   const { logOut } = useActions();
 
   const menuItems = [
-    { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
+    // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
     { title: 'Address', navigate: 'Address', icon: AddressIcon },
+    { title: "Cart", navigate: 'CartScreen', icon: CartIcon },
     { title: 'History', navigate: 'History', icon: HistoryIcon },
-    // { title: 'Complain', navigate: 'Complain', icon: ComplainIcon },
     { title: 'Referral', navigate: 'Referral', icon: ReferralIcon },
-    { title: 'About Us', navigate: 'AboutUs', icon: AboutIcon },
-    { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
-    { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
+    // { title: 'Complain', navigate: 'Complain', icon: ComplainIcon },
+    { title: 'About Us', navigate: 'AboutUs', icon: AboutIcon ,pagename:"about"},
+    { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition ,pagename:"term&condition"},
+    { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy ,pagename:"policy"},
+    // { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
+    { title: 'Contact US', navigate: 'ContactUs', icon: ContactUsIcon },
+    // { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
     { title: 'Log Out', navigate: null, icon: LogoutIcon }, 
   ];
 
@@ -39,14 +44,17 @@ const Profile = ({ navigation,userRes }) => {
   const handleMenuPress = (item) => {
     if (item.title === 'Log Out') {
       handleLogout();
+    } else if (item?.pagename) {
+      navigation.navigate(item.navigate, { pagename: item.pagename,title:item.title });
     } else {
       handleNavigation(item.navigate);
     }
   };
+  
 
   return (
     <View style={CommonStyles.container}>
-      <BackButton text="Profile" left />
+      <BackButton text="Profile" />
       <FlatList
         showsVerticalScrollIndicator={false}
         data={menuItems}
@@ -68,7 +76,7 @@ const Profile = ({ navigation,userRes }) => {
             style={[styles.menuItem, index !== 0 && styles.menuItemBorder]}
             activeOpacity={0.7}
           >
-            <item.icon width={24} height={24} />
+            <item.icon width={24} height={24}/>
             <Text style={styles.menuText}>{item.title}</Text>
             <BackVerctor style={styles.rotatedIcon} size={16} color={Colors.black} />
           </TouchableOpacity>

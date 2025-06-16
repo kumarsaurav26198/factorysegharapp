@@ -2,19 +2,24 @@ import {takeEvery, put} from 'redux-saga/effects';
 import {ActionTypes} from '../constants/actiontypes';
 import axios from 'axios';
 import {apiUri, baseURL} from '../../services/apiEndPoints';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function* fetchOrderHistoryApiCall(action) {
+function* fetchOrderHistoryApiCall() {
   try {
-    const {payload} = action;
+    const mobile = yield AsyncStorage.getItem('mobile');
+
     // console.log('Payload received:', payload);
 
     const fullUrl = `${baseURL}${apiUri.factoyHome.orderHistory}`;
-    // console.log('Full URL for orderHistory request: ', fullUrl);
+    console.log('Full URL for orderHistory request: ', fullUrl);
 
-    const response = yield axios.post(fullUrl, payload, {
+    const response = yield axios({
+      method: 'post',
+      url: fullUrl,
       headers: {
         'Content-Type': 'application/json',
       },
+      data: {mobile},
     });
 
     const data = response?.data?.data;

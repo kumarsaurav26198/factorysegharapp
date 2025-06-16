@@ -14,14 +14,16 @@ import {
   WelcomeBack,
 } from '../screens/public';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DrawerNavigation from './DrawerNavigation';
+
 import {
   AboutUs,
   AddAmount,
   Address,
+  AllProduct,
   BookRide,
   CancelRide,
   cardDetail,
+  CartScreen,
   Complain,
   ContactUs,
   DriverDetail,
@@ -36,6 +38,7 @@ import {
   PickDestination,
   PickUp,
   PrivacyPolicy,
+  ProductDetails,
   Profile,
   Referral,
   RequiredAuthentication,
@@ -47,6 +50,7 @@ import {
   Wallet,
 } from '../screens/private';
 import {useEffect, useState} from 'react';
+import BottomNavigator from './Bottomnavigator';
 
 const Stack = createStackNavigator();
 
@@ -58,7 +62,7 @@ const Navigator = () => {
       try {
         const mobile = await AsyncStorage.getItem('mobile');
         // console.log("mobile",mobile)
-        setInitialRoute(mobile ? 'DrawerNavigation' : 'SignMobile');
+        setInitialRoute(mobile ? 'BottomNavigator' : 'SignMobile');
       } catch (error) {
         console.error('Error reading _id from AsyncStorage:', error);
         setInitialRoute('SignMobile'); // Navigate to SignMobile in case of error
@@ -69,7 +73,6 @@ const Navigator = () => {
   }, []);
 
   if (initialRoute === null) {
-    // Render a placeholder screen or loading spinner until the initial route is determined
     return null;
   }
 
@@ -107,7 +110,10 @@ const Navigator = () => {
       <Stack.Screen name="Profilepicture" component={Profilepicture} />
       <Stack.Screen name="RegistrationRC" component={RegistrationRC} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} />
-      <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
+      <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
+      <Stack.Screen name="AllProduct" component={AllProduct} />
+      <Stack.Screen name="CartScreen" component={CartScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetails} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Address" component={Address} />
       <Stack.Screen name="History" component={History} />
@@ -163,7 +169,7 @@ const Navigator = () => {
         options={{...commonOptions}}
       />
       <Stack.Screen name="Summary" component={Summary} />
-      <Stack.Screen name="Profile" component={Profile} />
+      {/* <Stack.Screen name="Profile" component={Profile} /> */}
     </Stack.Navigator>
   );
 };

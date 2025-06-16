@@ -1,113 +1,280 @@
 import {
   FlatList,
-  View,
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  View,
 } from 'react-native';
-import React, {useState, useEffect, useCallback} from 'react';
-import {CommonStyles} from '../../../themes/CommonStyles';
-import {useActions} from '../../../hooks/useActions';
-import {connect} from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useActions } from '../../../hooks/useActions';
 import Colors from '../../../themes/Colors';
-import {BackButton} from '../../../components';
-import {CartListCon} from '../../../container';
-import {AddSuccess, BookingCancelled, ModalWrapper, OrderConfirmation} from '../../../components/Modal';
+import {
+  Address_DropDown,
+  BackButton,
+  C_Button,
+  C_SmallButton,
+} from '../../../components';
+import { CommonStyles } from '../../../themes/CommonStyles';
+import { CartListCon } from '../../../container';
+import { ModalWrapper, OrderConfirmation } from '../../../components/Modal';
 import { navigate } from '../../../services/navigationService';
 
-const CartScreen = ({cartRes}) => {
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-  const {fetchLoginUser} = useActions();
-  const [refreshing, setRefreshing] = useState(false);
-  // console.log("cartRes",JSON.stringify(cartRes?.data,null,2))
-  const itemTotal = cartRes?.data?.reduce((total, item) => {
-    return total + (item.quantity * item.price);
-  }, 0);
-  const deliveryFee = 0; 
-  const deliveryFeeDiscount = deliveryFee; // Assume full discount on delivery fee
-  const totalPayable = itemTotal - deliveryFeeDiscount;
+const CartScreen = ({ cartRes, userRes, addressRes, placeOderReducers, getPriceRes }) => {
 
-  const renderItem = useCallback((item) => {
-    // console.log("item",JSON.stringify(item,null,2))
-    return (
-      <>
-        <CartListCon item={item?.item} />
-      </> 
-    );
-  }, []);
+  const { getCartRequest, placeOderReq, getPriceDiscount,addToCartRequest } = useActions();
+  const cartData = cartRes?.data?.cartItems || [];
+  const cashback = userRes[ 0 ]?.cashback || 0;
+  const [ selectedIndex, setSelectedIndex ] = useState(0);
 
-  const renderFooter = () => {
+  const [ refreshing, setRefreshing ] = useState(false);
+  const [ isModalVisible, setIsModalVisible ] = useState(false);
+  const [ isAddVisible, setIsAddVisible ] = useState(false);
+  const [ cartItems, setCartItems ] = useState(cartData);
+  const [ errorMessage, setErrorMessage ] = useState('');
 
-
-    return (
-      <View style={styles.footerContainer}>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Item Total</Text>
-          <Text style={styles.summaryValue}>₹{itemTotal}</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, styles.discountText]}>
-            Delivery Fee (₹{deliveryFeeDiscount} Saved)
-          </Text>
-          <Text style={[styles.summaryValue, styles.discountText]}>₹0</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, styles.totalText]}>
-            Total Payable
-          </Text>
-          <Text style={[styles.summaryValue, styles.totalText]}>
-            ₹{totalPayable}
-          </Text>
-        </View>
-
-        <TouchableOpacity style={styles.payButton} onPress={toggleModal}>
-          <Text style={styles.payButtonText}>
-            Continue to pay ₹{totalPayable}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  const openModal = getPriceRes.openModal;
+  const deliveryPriceData = getPriceRes?.data;
 
   useEffect(() => {
-    fetchLoginUser();
-  }, [fetchLoginUser]);
+    if (openModal) setIsModalVisible(true);
+  }, [ openModal ]);
 
-  const onRefresh = useCallback(() => {
+  const toggleModal = () => setIsModalVisible(!isModalVisible);
+  const addtoggleModal = () => setIsAddVisible(!isAddVisible);
+
+  useEffect(() => {
+    if (cartData.length)
+    {
+      setCartItems(cartData);
+    }
+  }, [ cartData ]);
+
+  useEffect(() => {
+    if (addressRes)
+    {
+      setSelectedIndex(addressRes[ 0 ]);
+      setErrorMessage('');
+    }
+  }, [ addressRes ]);
+
+  useEffect(() => {
+    getCartRequest();
+  }, []);
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    fetchLoginUser();
+    getCartRequest();
     setRefreshing(false);
-  }, [fetchLoginUser]);
+  }, [ getCartRequest ]);
+
+  const incrementQuantity = useCallback(index => {
+    setCartItems(prevItems =>
+      prevItems.map((item, i) =>
+        i === index ? { ...item, quantity: item.quantity + 1 } : item,
+      ),
+    );
+    const clickedItem = cartItems[ index ];
+    const payload = {
+      customerName: userRes[ 0 ]?.fullName,
+      mobile: userRes[ 0 ]?.mobile,
+      cartItems: {
+        productName: clickedItem?.productName,
+        image: clickedItem?.image,
+        productDetail: clickedItem.productDetail,
+        quantity: clickedItem?.quantity + 1,
+        price: clickedItem?.price,
+      },
+    };
+    addToCartRequest(payload);
+    // console.log("payload", JSON.stringify(payload,null,2));
+  }, [ cartItems ]);
+
+  const decrementQuantity = useCallback(index => {
+    setCartItems(prevItems =>
+      prevItems.reduce((acc, item, i) => {
+        if (i === index)
+        {
+          if (item.quantity > 1)
+          {
+            acc.push({ ...item, quantity: item.quantity - 1 });
+          }
+        } else
+        {
+          acc.push(item);
+        }
+        return acc;
+      }, []),
+    );
+
+    const clickedItem = cartItems[ index ];
+    const payload = {
+      customerName: userRes[ 0 ]?.fullName,
+      mobile: userRes[ 0 ]?.mobile,
+      cartItems: {
+        productName: clickedItem?.productName, // Use clicked item details
+        image: clickedItem?.image,
+        productDetail: clickedItem.productDetail,
+        quantity: clickedItem?.quantity - 1, // Use the quantity from the clicked item
+        price: clickedItem?.price, // Use price from the clicked item
+      },
+    };
+    addToCartRequest(payload);
+  }, [cartItems]);
+
+  const handlePressOrderConfirmation = () => {
+    if (selectedIndex)
+    {
+      const payload = {
+        customerName: userRes[ 0 ]?.fullName,
+        mobile: userRes[ 0 ]?.mobile,
+        items: cartItems.map(item => ({
+          productName: item.productName,
+          image: item.image,
+          productDetail: {
+            variants: item?.productDetail?.variants || '',
+            sku: item?.productDetail?.sku || '',
+            caseSize: item?.productDetail?.caseSize || '',
+          },
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        totalAmount: deliveryPriceData?.totalAmount,
+        cashbackUsed: deliveryPriceData?.cashback,
+        address: {
+          name: selectedIndex.name,
+          email: selectedIndex.email,
+          phone: selectedIndex.phone,
+          addressLine1: selectedIndex?.addressLine1 || '',
+          addressLine2: selectedIndex?.addressLine2 || '',
+          landMark: selectedIndex?.addressLine2 || '',
+          city: selectedIndex?.city || '',
+          state: selectedIndex?.state || '',
+          pinCode: selectedIndex?.zipCode || '',
+          country: selectedIndex?.country || '',
+        },
+      };
+      // console.log("placeOderReq payload===>>",JSON.stringify(payload,null,2))
+      placeOderReq(payload);
+    } else
+    {
+      setErrorMessage('Address is missing!');
+    }
+  };
+
+  const itemTotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
+
+
+
+
+  // console.log("deliveryFee",discount)
+  // const totalPayable = Math.max(
+  //   itemTotal - deliveryFeeDiscount - cashback,
+  //   0,
+  // );
+
+  const renderItem = useCallback(
+    ({ item, index }) => (
+      <CartListCon
+        item={item}
+        index={index}
+        incrementQuantity={incrementQuantity}
+        decrementQuantity={decrementQuantity}
+      />
+    ),
+    [ incrementQuantity, decrementQuantity ],
+  );
 
   return (
-    <View style={[CommonStyles.container]}>
-      <BackButton left text={`Cart (${cartRes?.data?.length})`} />
+    <View style={[ CommonStyles.container ]}>
+      <BackButton left text={`Cart (${ cartItems.length })`} cashback={cashback} />
       <FlatList
-        data={cartRes?.data}
+        data={cartItems}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-        ListFooterComponent={renderFooter}
         keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>---- No Data Found In Cart ---</Text>
+            <C_SmallButton
+              title="Shop Now"
+              onPress={() => {
+                navigate('BottomNavigator');
+              }}
+            />
+          </View>
+        }
+        ListFooterComponent={<View style={{ height: 100 }} />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
+      {cartItems?.length > 0 ? (
+        <View style={[ CommonStyles.bottomView ]}>
+
+          <C_Button
+            // title={`Continue to pay ₹ ${itemTotal.toFixed(2)}`}
+            title={`Continue To Pay`}
+            loading={getPriceRes?.loading}
+            onPress={() => {
+              const payload = {
+                price: itemTotal,
+                cashback: cashback,
+              };
+              getPriceDiscount(payload);
+            }}
+          />
+        </View>
+      ) : (
+        ''
+      )}
       <ModalWrapper
         visible={isModalVisible}
         onRequestClose={toggleModal}
         center={false}>
         <OrderConfirmation
-        itemTotal={itemTotal}
-        deliveryFee={deliveryFee}
-        totalPayable={totalPayable}
-          handlePressClose={()=>{toggleModal()}}
-          handlePressOrderConfirmation={()=>{toggleModal()
-            navigate("OrderConfirmation",{totalPayable})
+          errorMessage={errorMessage}
+          itemTotal={itemTotal.toFixed(2)}
+          deliveryPriceData={deliveryPriceData}
+
+          // deliveryFee={deliveryPriceData?.deliveryFee}
+          // // deliveryFee={deliveryFee}
+          // // discount={discount}
+          // discount={deliveryPriceData?.discount}
+          // price={deliveryPriceData?.price}
+          // // price={price}
+          // // totalAmount={totalAmount}
+          // totalAmount={deliveryPriceData?.totalAmount}
+          // totalPayable={totalPayable}
+          handlePressClose={toggleModal}
+          selectedIndex={selectedIndex}
+          handleAddressModal={addtoggleModal}
+          address={selectedIndex}
+          handlePressOrderConfirmation={() => {
+            handlePressOrderConfirmation();
+            // toggleModal();
+          }}
+        />
+      </ModalWrapper>
+      <ModalWrapper
+        visible={isAddVisible}
+        zIndex={2}
+        onRequestClose={addtoggleModal}
+        center={false}>
+        <Address_DropDown
+          addressRes={addressRes}
+          handlePressClose={addtoggleModal}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
+          handlePressDone={selectedIndex => {
+            setSelectedIndex(selectedIndex);
+            setErrorMessage('');
+            addtoggleModal();
+            setIsModalVisible(true);
           }}
         />
       </ModalWrapper>
@@ -116,56 +283,103 @@ const CartScreen = ({cartRes}) => {
 };
 
 const mapStateToProps = state => ({
-  verifyRes: state?.verifyReducers?.data,
   cartRes: state?.cartReducers,
-
+  userRes: state?.userReducers?.data,
+  addressRes: state?.addressReducers?.data,
+  placeOderReducers: state?.placeOderReducers,
+  getPriceRes: state?.getPriceReducers,
 });
 
 export default connect(mapStateToProps)(CartScreen);
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 15,
-    backgroundColor: Colors.white,
+  section: {
+    // marginBottom: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    // paddingBottom: 20,
+  },
+  addressLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  deliveryAddress: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  avatarCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarText: {
+    fontSize: 20,
+  },
+  addressDetails: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  addressText: {
+    fontSize: 14,
+    color: '#333',
+    marginTop: 2,
   },
   footerContainer: {
-    backgroundColor: Colors.white,
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    backgroundColor: Colors.bgColor,
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    elevation: 5,
+    width: '100%',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 50,
+  },
+  errorText: {
+    color: Colors.black,
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 10,
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   summaryLabel: {
     fontSize: 16,
-    color: '#000',
+    color: Colors.darkGray,
   },
   summaryValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000',
+    color: Colors.black,
   },
   discountText: {
-    color: Colors.primary, // Customize to your discount text color
+    color: Colors.primary,
+  },
+  cashbackText: {
+    color: Colors.green,
+    fontWeight: 'bold',
+  },
+  totalRow: {
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 10,
   },
   totalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
-  },
-  payButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 14,
-    borderRadius: 8,
-    marginTop: 16,
-    alignItems: 'center',
-  },
-  payButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.white,
+    color: Colors.black,
   },
 });

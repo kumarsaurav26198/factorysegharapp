@@ -9,6 +9,8 @@ import getProductByCategorySaga from './getProductByCategorySaga';
 import placeOrderSaga from './placeOrderSaga';
 import getOrderHistorySaga from './getOrderHistorySaga';
 import addressSaga from './addressSaga';
+import cartSaga from './cartSaga';
+import getPriceSaga from './getPriceSaga';
 
 function* rootSaga() {
     yield all([
@@ -16,12 +18,14 @@ function* rootSaga() {
         registerSaga(),
         verifySaga(),
         getLoginUserSaga(),
-        pagebyNameSaga(),
         contactUsSaga(),
         getProductByCategorySaga(),
         placeOrderSaga(),
         getOrderHistorySaga(),
-        addressSaga()
+        addressSaga(),
+        cartSaga(),
+        pagebyNameSaga(),
+        getPriceSaga()
     ]);
 }
 export default rootSaga;

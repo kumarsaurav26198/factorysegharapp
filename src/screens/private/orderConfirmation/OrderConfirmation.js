@@ -206,11 +206,11 @@ const OrderConfirmation = ({ route, cartRes, verifyRes, placeOderRes }) => {
           amount={totalPayable}
           handlePressClose={() => {
             toggleModal();
-            reset([ { name: 'DrawerNavigation' } ]);
+            reset([ { name: 'BottomNavigator' } ]);
           }}
           handlePressDone={() => {
             toggleModal();
-            reset([ { name: 'DrawerNavigation' } ]);
+            reset([ { name: 'BottomNavigator' } ]);
           }}
         />
       </ModalWrapper>

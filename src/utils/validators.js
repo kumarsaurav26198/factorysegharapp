@@ -1,17 +1,72 @@
 export const validatePhoneNumber = (selectedCountryCode, numbers) => {
+  if (!selectedCountryCode) {
+    return { isValid: false, errorMessage: 'Please select a country.' };
+  }
+
+  const countryRules = {
+    '91': { min: 10, max: 10, message: 'Enter a valid 10-digit phone number for India.' },
+    '1': { min: 10, max: 10, message: 'Enter a valid 10-digit phone number for the USA.' },
+    '44': { min: 10, max: 11, message: 'Enter a valid UK phone number (10-11 digits).' },
+    '61': { min: 9, max: 9, message: 'Enter a valid 9-digit phone number for Australia.' },
+    '81': { min: 10, max: 11, message: 'Enter a valid Japanese phone number (10-11 digits).' },
+  };
+
+  if (!countryRules[selectedCountryCode]) {
+    return { isValid: false, errorMessage: 'Unsupported country code.' };
+  }
+
+  const { min, max, message } = countryRules[selectedCountryCode];
+  const numberLength = numbers ? numbers.length : 0;
+
+  if (numberLength < min || numberLength > max) {
+    return { isValid: false, errorMessage: message };
+  }
+
+  return { isValid: true, errorMessage: '' };
+};
+
+
+export const addressValidiadtion=(formData)=>{
   let isValid = true;
   let errorMessage = '';
 
-  if (selectedCountryCode !== '91') {
+  if (!formData.name || formData.name.trim().length < 3) {
     isValid = false;
-    errorMessage = 'Select Indian Number only';
-  } else if (!numbers || numbers.length !== 10) {
+    errorMessage = 'Name is required.';
+  } else if (!formData.addressLine1 || formData.addressLine1.trim().length === 0) {
     isValid = false;
-    errorMessage = 'Enter a valid 10-digit phone number.';
+    errorMessage = 'Address  is required.';
+  } else if (!formData.addressLine2 || formData.addressLine1.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'Land mark  is required.';
+  } else if (!formData.city || formData.city.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'City is required.';
+  } else if (!formData.state || formData.state.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'State is required.';
+  } else if (!formData.zipCode || !/^\d{5,6}$/.test(formData.zipCode)) {
+    isValid = false;
+    errorMessage = 'Enter a valid 5-6 digit ZIP code.';
+  } else if (!formData.country || formData.country.trim().length === 0) {
+    isValid = false;
+    errorMessage = 'Country is required.';
+  }
+
+  // Phone number validation
+  const phoneValidation = validatePhoneNumber(
+    formData.selectedCountryCode,
+    formData.numbers
+  );
+  if (!phoneValidation.isValid) {
+    isValid = false;
+    errorMessage = phoneValidation.errorMessage;
   }
 
   return { isValid, errorMessage };
-};
+
+
+}
 
 export const validateLogin = (email, password) => {
   let isValid = true;
@@ -138,4 +193,32 @@ export const validateEmail = (email) => {
   }
 
   return { isValid, errorMessage };
+};
+
+export const capitalizeFirstLetter = (name) => {
+  if (!name) return ''; // Return empty string if name is not provided
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+};
+
+export const formatDateTime = (isoString) => {
+  if (!isoString) return '';
+
+  const date = new Date(isoString);
+
+  // Extract date components
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+  const year = date.getFullYear();
+
+  // Extract time components
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  return `${day}-${month}-${year}, ${hours}:${minutes} ${ampm}`;
+};
+
+export const formatAmount = (amount) => {
+  if (typeof amount !== 'number') return '0.00';
+  return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); // Adds commas for thousands
 };

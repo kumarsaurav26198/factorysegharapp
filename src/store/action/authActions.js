@@ -37,9 +37,12 @@ export const fetchUserAddress = (payload) => ({
     type: ActionTypes.FETCH_USER_ADDRESS_REQUEST,
     payload
 });
-export const fetchUserHistoryOrder = (payload) => ({
-    type: ActionTypes.FETCH_ORDERHISTORY_REQUEST,
+export const addAddressRequest = (payload) => ({
+    type: ActionTypes.ADD_ADDRESS_REQUEST,
     payload
+});
+export const fetchUserHistoryOrder = () => ({
+    type: ActionTypes.FETCH_ORDERHISTORY_REQUEST,
 });
 export const updateLoginUser = (payload) => ({
     type: ActionTypes.UPDATE_LOGIN_USER_REQUEST,
@@ -51,8 +54,9 @@ export const fetchPagebyNameDetails = (payload) => ({
     payload
 });
 
-export const fetchConstchUsDetails = () => ({
+export const fetchConstchUsDetails = (payload) => ({
     type: ActionTypes.GET_CONTACT_US_REQUEST,
+    payload
 });
 
 export const ContactUsRequest = (payload) => ({
@@ -66,10 +70,18 @@ export const getProductByCategory = (payload) => ({
   });
 
   export const addToCartRequest = (payload) => ({
-    type: ActionTypes.ADD_TO_CART_SUCCESS,
+    type: ActionTypes.ADD_TO_CART_REQUEST,
+    payload,
+  });
+  export const getCartRequest = (payload) => ({
+    type: ActionTypes.GET_CART_REQUEST,
     payload,
   });
 
+  export const getPriceDiscount = (payload) => ({
+    type: ActionTypes.FETCH_PRICE_DISCOUNT_REQUEST,
+    payload,
+  });
   export const incrementQuantity = (payload) => ({
     type: ActionTypes.INCREMENT_QUANTITY,
     payload, 

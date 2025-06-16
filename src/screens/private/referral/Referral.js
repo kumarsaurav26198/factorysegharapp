@@ -6,10 +6,8 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Colors from '../../../themes/Colors';
 import {connect} from 'react-redux';
 
-const Referral = ({loginRes}) => {
-  console.log('loginRes', JSON.stringify(loginRes[0]?.cashback, null, 2));
-  const [refcode, setRefcode] = useState(loginRes[0]?.referralCode);
-  const referrals = loginRes[0]?.successfulReferrals || [];
+const Referral = ({usersRes}) => {
+  const refcode = usersRes[0]?.referralCode;
 
   const writeToClipboard = async () => {
     Clipboard.setString(refcode);
@@ -31,21 +29,9 @@ const Referral = ({loginRes}) => {
     }
   };
 
-  const renderReferralItem = ({item}) => (
-    <View style={styles.referralItem}>
-      <View>
-        <Text style={styles.userName}>{item.referredUserName}</Text>
-        <Text style={styles.userEmail}>{item.referredUserEmail}</Text>
-      </View>
-      <View>
-        <Text style={styles.cashbackText}>Cashback: ₹{item.cashback}</Text>
-      </View>
-    </View>
-  );
-
   return (
     <View style={CommonStyles.container}>
-      <BackButton left={true} text="Referral"  cashback ={loginRes[0]?.cashback}/>
+      <BackButton left={true} text="Referral" cashback={usersRes[0]?.cashback} />
       <View style={styles.referralCodeContainer}>
         <Text style={styles.referralCodeText}>Your Referral Code:</Text>
         <View style={styles.codeRow}>
@@ -58,15 +44,7 @@ const Referral = ({loginRes}) => {
           />
         </View>
       </View>
-      <FlatList
-        data={referrals}
-        keyExtractor={item => item._id}
-        renderItem={renderReferralItem}
-        ListEmptyComponent={
-          <Text style={styles.noReferralsText}>No referrals yet!</Text>
-        }
-        contentContainerStyle={styles.referralList}
-      />
+
       <View style={[CommonStyles.bottomView, {padding: 15}]}>
         <C_Button title="Invite" onPress={onShare} />
       </View>
@@ -75,7 +53,7 @@ const Referral = ({loginRes}) => {
 };
 
 const mapStateToProps = state => ({
-  loginRes: state?.userReducers?.data,
+  usersRes: state?.userReducers?.data,
 });
 
 export default connect(mapStateToProps)(Referral);
@@ -115,50 +93,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 5,
-  },
-  referralList: {
-    flexGrow: 1,
-    padding: 15,
-  },
-  referralItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-    backgroundColor: Colors.white,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  userName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.black,
-  },
-  userEmail: {
-    fontSize: 14,
-    color: Colors.gray,
-    marginTop: 5,
-  },
-  cashbackText: {
-    fontSize: 14,
-    color: Colors.green,
-    fontWeight: 'bold',
-  },
-  noReferralsText: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: Colors.gray,
-    marginTop: 20,
-  },
-  bottomButton: {
-    padding: 15,
-    margin: 10,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
   },
 });

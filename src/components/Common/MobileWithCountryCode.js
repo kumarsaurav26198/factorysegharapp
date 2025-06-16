@@ -39,6 +39,7 @@ const MobileWithCountryCode = props => {
         style={styles.textInput}
         value={value}
         onChangeText={onChangeText}
+        placeholderTextColor={Colors.darkgrey}
         placeholder={placeholder ? placeholder : `+${callingCode}`}
         keyboardType="phone-pad"
       />

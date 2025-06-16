@@ -9,7 +9,7 @@ function* registerUser(action) {
   try
   {
     const fullUrl = `${ baseURL }${ apiUri.auth.register }`;
-    console.log("Full URL for login request: ", fullUrl);
+    // console.log("Full URL for login request: ", fullUrl);
     console.log("Full payload for login request: ", payload);
 
     const response = yield axios.post(fullUrl, payload, {
@@ -20,7 +20,7 @@ function* registerUser(action) {
 
 
     const currentUser = response?.data;
-    reset([ { name: 'DrawerNavigation' } ]);
+    reset([ { name: 'BottomNavigator' } ]);
     // console.log("registerUser===>", JSON.stringify(currentUser, null, 2));
 
     // const extractedOtp = currentUser?.data?.otp;

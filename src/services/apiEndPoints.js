@@ -1,10 +1,12 @@
 import {API_URL} from '@env';
 
-const baseURL = API_URL;
+// const baseURL=  "https://mlmtesting.loca.lt/";
+const baseURL=  "https://factoryseghar-backend.onrender.com/";
+// const baseURL = API_URL;
 const apiUri = {
     auth: {
         emaillogin:'auth/login',
-        userProfile:'auth/userProfile',
+        userProfile:'api/getProfile',
         register:'auth/sign-in',
         otplogin: 'auth/send-otp',
         verifyotp: 'auth/verify-otp',
@@ -15,10 +17,16 @@ const apiUri = {
     factoyHome: {
         getAllItems:'api/getItems',
         placeOrder:'api/placeOrder',
+        paymentVerification:'api/payment-verification',
         orderHistory:'api/orderHistory',
         getAddress:'api/getAddress',
-        pagename:'/pages?pagename=',
-        contact:'/contact',
+        addAddress:'api/addAddress',
+        addCart:'api/addCart',
+        getCart:'api/getCart',
+        getPrice:'api/getPrice',
+        pagename:'api/pages?pagename=',
+        getcontact:'api/contact-us',
+
     },
 };
 export { apiUri, baseURL };

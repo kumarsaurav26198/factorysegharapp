@@ -1,113 +1,73 @@
 import { ActionTypes } from '../constants/actiontypes';
 
 const initialState = {
-    data: [],
-    loading: false,
-    error: null,
+  data: [],
+  loading: false,
+  error: null,
 };
 
 export const cartReducers = (state = initialState, action) => {
-    switch (action.type) {
-        case ActionTypes.ADD_TO_CART_REQUEST:
-            // console.log("ADD_TO_CART_REQUEST Reducers action===>", action.payload);
-            return {
-                ...state,
-                loading: true,
-                error: null,
-            };
+  switch (action.type) {
+    case ActionTypes.ADD_TO_CART_REQUEST:
+      // console.log("ADD_TO_CART_REQUEST Reducers action===>", action.payload);
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
-        case ActionTypes.ADD_TO_CART_SUCCESS:
-            // console.log("ADD_TO_CART_SUCCESS Reducers action===>", action.payload);
-            
-            const data = Array.isArray(state.data) ? state.data : []; // Ensure `data` is an array
-            const existingCartItemIndex = data.findIndex(
-                item => item.itemId === action.payload.itemId
-            );
+      case ActionTypes.ADD_TO_CART_SUCCESS: {
+      console.log("ADD_TO_CART_SUCCESS Reducers action===>", JSON.stringify(action?.data,null,2));
 
-            let updatedCartData;
-            if (existingCartItemIndex !== -1) {
-                // Update quantity if item exists
-                updatedCartData = data.map((item, index) =>
-                    index === existingCartItemIndex
-                        ? { ...item, quantity: item.quantity + action.payload.quantity }
-                        : item
-                );
-            } else {
-                // Add new item to the cart
-                updatedCartData = [...data, action.payload];
-            }
-
-            return {
-                ...state,
-                data: updatedCartData,
-                loading: false,
-            };
-
-        case ActionTypes.ADD_TO_CART_FAILURE:
-            // console.log("ADD_TO_CART_FAILURE Reducers action===>", action.error);
-            return {
-                ...state,
-                loading: false,
-                error: action.error,
-            };
-
-        case ActionTypes.INCREMENT_QUANTITY:
-            console.log("INCREMENT_QUANTITY Reducers action===>", action.payload);
-            return {
-                ...state,
-                data: state.data.map(item =>
-                    item.itemId === action.payload.itemId
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
-                ),
-            };
-
-        case ActionTypes.DECREMENT_QUANTITY:
-            console.log("DECREMENT_QUANTITY Reducers action===>", action.payload);
-            return {
-                ...state,
-                data: state.data
-                    .map(item =>
-                        item.itemId === action.payload.itemId
-                            ? { ...item, quantity: item.quantity - 1 } // Decrement quantity
-                            : item
-                    )
-                    .filter(item => item.quantity > 0), // Remove items with quantity <= 0
-            };
+        const newItem = action.data.cartItems[0]; // Extract the first cart item
         
+        // Ensure `state.data` is always an array
+        const existingCart = Array.isArray(state.data) ? state.data : [];
+  
+        // Find if item already exists
+        const existingCartItemIndex = existingCart.findIndex(
+          (item) => item._id === newItem._id
+        );
+  
+        let updatedCart;
+        
+        if (existingCartItemIndex !== -1) {
+          // Update quantity if item already exists
+          updatedCart = existingCart.map((item, index) =>
+            index === existingCartItemIndex
+              ? { ...item, quantity: item.quantity + newItem.quantity }
+              : item
+          );
+        } else {
+          // Add new item to cart
+          updatedCart = [...existingCart, newItem];
+        }}
 
-        case ActionTypes.RESTART_LOGIN_REQUEST:
-            return {
-                ...state,
-                loading: false,
-                error: null,
-            };
+    case ActionTypes.GET_CART_REQUEST:
+      // console.log("GET_CART_REQUEST Reducers action===>", action.error);
+      return {
+        ...state,
+        loading: true, // Corrected to true for loading state during request
+        error: null, // Reset error during request
+      };
 
-        case ActionTypes.UPDATE_TOKEN:
-            return {
-                ...state,
-                data: action.payload,
-                loading: false,
-            };
+    case ActionTypes.GET_CART_SUCCESS:
+    //   console.log("GET_CART_SUCCESS Reducers action===>", action.data);
+      return {
+        ...state,
+        data: action.data, // Corrected spelling of payload
+        loading: false,
+      };
 
-        case ActionTypes.LOG_OUT_REQUEST:
-            // console.warn("LOG_OUT_REQUEST Reducers", ActionTypes.LOG_OUT_REQUEST);
-            return {
-                ...state,
-                data: null,
-                loading: false,
-                error: action.payload,
-            };
-        case ActionTypes.CLEAR_CART_REQUEST:
-            console.warn("CLEAR_CART_REQUEST Reducers", ActionTypes.CLEAR_CART_REQUEST);
-            return {
-                ...state,
-                data: null,
-                loading: false,
-                error: action.payload,
-            };
+    case ActionTypes.GET_CART_FAILURE:
+      // console.log("GET_CART_FAILURE Reducers action===>", action.error);
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      };
 
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 };
