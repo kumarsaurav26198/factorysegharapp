@@ -217,3 +217,8 @@ export const formatDateTime = (isoString) => {
 
   return `${day}-${month}-${year}, ${hours}:${minutes} ${ampm}`;
 };
+
+export const formatAmount = (amount) => {
+  if (typeof amount !== 'number') return '0.00';
+  return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); // Adds commas for thousands
+};

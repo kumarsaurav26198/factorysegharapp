@@ -6,7 +6,7 @@ import { capitalizeFirstLetter, formatDateTime } from '../../utils/validators';
 
 const Timeline = ({ item }) => {
     const address = item?.address;
-    console.log("address",JSON.stringify(item,null,2))
+    // console.log("address",JSON.stringify(item,null,2))
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Delivery Address</Text>

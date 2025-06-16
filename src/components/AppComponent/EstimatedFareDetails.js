@@ -2,21 +2,24 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Colors from '../../themes/Colors'; 
 import { FontSize, FontsWeights } from '../../themes/Fonts'; 
+import { formatAmount } from '../../utils/validators';
 
-const EstimatedFareDetails = () => {
+const EstimatedFareDetails = ({ item }) => {
+  console.log("address", JSON.stringify(item, null, 2));
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Estimated Fare Details</Text>
+      <Text style={styles.header}>Total </Text>
       
       <View style={styles.detailItem}>
         <Text style={styles.label}>Estimated Total Fare</Text>
-        <Text style={styles.value}>₹150</Text>
+        <Text style={styles.value}>₹ {formatAmount(item?.totalAmount ?? 0)}</Text>
       </View>
 
       <View style={styles.divider} />
 
-      <Text style={styles.earnedText}>Earned money from trip:</Text>
-      <Text style={styles.earnedAmount}>₹150</Text>
+      <Text style={styles.earnedText}>Total amount:-</Text>
+      <Text style={styles.earnedAmount}>₹ {formatAmount(item?.totalAmount ?? 0)}</Text>
     </View>
   );
 };

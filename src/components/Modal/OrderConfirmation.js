@@ -100,7 +100,7 @@ export default function OrderConfirmation({
               Special Discount ({deliveryPriceData?.discount} )
             </Text>
             <Text style={[ styles.summaryValue, styles.discountText ]}>
-              -₹{deliveryPriceData?.price - deliveryPriceData?.priceAfterDiscount}
+              -- ₹{deliveryPriceData?.price - deliveryPriceData?.priceAfterDiscount}
             </Text>
           </View>
         )}
