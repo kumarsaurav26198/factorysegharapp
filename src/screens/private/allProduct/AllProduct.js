@@ -76,7 +76,7 @@ const AllProduct = ({allProductRes, cartRes}) => {
 
       {allProductRes?.loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color={Colors.primary} />
         </View>
       ) : allProductRes?.error ? (
         <View style={styles.errorContainer}>

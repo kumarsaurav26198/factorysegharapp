@@ -12,6 +12,7 @@ import SearchBar from '../../../components/AppComponent/SearchBox';
 import { useActions } from '../../../hooks/useActions';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { BackButton, CommonProduct } from '../../../components';
+import Colors from '../../../themes/Colors';
 
 const Search = ({ allProductRes }) => {
   const allProduct = allProductRes?.data?.items || [];
@@ -57,7 +58,7 @@ const Search = ({ allProductRes }) => {
       />
       {allProductRes?.loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color={Colors.primary} />
         </View>
       ) : (
         <FlatList

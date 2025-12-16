@@ -24,10 +24,12 @@ const Profile = ({ navigation,userRes }) => {
     { title: 'Referral', navigate: 'Referral', icon: ReferralIcon },
     // { title: 'Complain', navigate: 'Complain', icon: ComplainIcon },
     { title: 'About Us', navigate: 'AboutUs', icon: AboutIcon ,pagename:"about"},
-    { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition ,pagename:"term&condition"},
-    { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy ,pagename:"policy"},
+    { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition ,pagename:"terms"},
+    { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy ,pagename:"privacy"},
     // { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
-    { title: 'Contact US', navigate: 'ContactUs', icon: ContactUsIcon },
+    { title: 'Contact US', navigate: 'AboutUs', icon: ContactUsIcon ,pagename:"contact"},
+
+    // { title: 'Contact US', navigate: 'ContactUs', icon: ContactUsIcon,pagename:"contact" },
     // { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
     { title: 'Log Out', navigate: null, icon: LogoutIcon }, 
   ];

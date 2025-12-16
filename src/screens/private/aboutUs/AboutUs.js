@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  ScrollView,
 } from 'react-native';
 import { CommonStyles } from '../../../themes/CommonStyles';
 import { BackButton } from '../../../components';
@@ -16,7 +16,7 @@ import { useActions } from '../../../hooks/useActions';
 import { connect } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 
-const AboutUs = ({ navigation, pageRes }) => {
+const AboutUs = ({ pageRes }) => {
   const route = useRoute();
   const { pagename, title } = route.params || {};
   const { fetchPagebyNameDetails } = useActions();
@@ -36,46 +36,47 @@ const AboutUs = ({ navigation, pageRes }) => {
     setRefreshing(false);
   }, [pagename]);
 
-  const policyText = pageRes?.data[0]; // Assuming pageRes.data is an array and you're accessing the first item
+  const pageData = pageRes?.data;
 
   return (
     <View style={CommonStyles.container}>
-      <BackButton left text={title} />
-      <View style={{ paddingHorizontal: 20 }}>
-        {pageRes?.loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        ) : pageRes?.error ? (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>
-              {pageRes.error?.response?.data?.message ||
-                'An error occurred. Please try again later.'}
-            </Text>
-            <TouchableOpacity style={styles.refreshButton} onPress={onRefresh}>
-              <Text style={styles.refreshButtonText}>Try Again</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <FlatList
-            data={[policyText]} // Wrap policyText in an array if it's not an array
-            keyExtractor={(item, index) => index.toString()} // Ensure a unique key is used
-            showsVerticalScrollIndicator={false}
-            ListHeaderComponent={
-              <Text style={[styles.policyText, styles.headingText]}>
-                {policyText?.Title}
-              </Text>
-            }
-            renderItem={({ item }) => (
-              <Text style={styles.policyText}>{item?.content}</Text>
-            )}
-            ListFooterComponent={<View style={{ height: 150 }} />}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          />
-        )}
-      </View>
+      <BackButton left text={title || 'About Us'} />
+
+      {pageRes?.loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
+      ) : pageRes?.error ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            {pageRes.error?.response?.data?.message ||
+              'An error occurred. Please try again later.'}
+          </Text>
+          <TouchableOpacity style={styles.refreshButton} onPress={onRefresh}>
+            <Text style={styles.refreshButtonText}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {/* Page Title */}
+          <Text style={styles.headingText}>
+            {pageData?.title}
+          </Text>
+
+          {/* Page Content */}
+          <Text style={styles.policyText}>
+            {pageData?.content}
+          </Text>
+
+          <View style={{ height: 80 }} />
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -87,41 +88,44 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps)(AboutUs);
 
 const styles = StyleSheet.create({
+  contentContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
   policyText: {
     fontSize: FontSize.FS15,
     color: Colors.black,
-    lineHeight: 22,
-    // marginBottom: 20,
+    lineHeight: 24,
+    textAlign: 'left',
   },
   headingText: {
     fontSize: FontSize.FS18,
-    fontWeight: FontsWeights.FW500,
+    fontWeight: FontsWeights.FW600,
     color: Colors.black,
-    lineHeight: 22,
-    marginTop: 20,
-    marginBottom:20
+    marginBottom: 20,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:100
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   errorText: {
     fontSize: FontSize.FS14,
     color: Colors.red,
     marginBottom: 20,
+    textAlign: 'center',
   },
   refreshButton: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: Colors.blue,
-    borderRadius: 5,
+    backgroundColor: Colors.primary,
+    borderRadius: 6,
   },
   refreshButtonText: {
     fontSize: FontSize.FS14,

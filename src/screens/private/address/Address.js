@@ -86,7 +86,7 @@ const Address = ({ userRes, addressRes }) => {
         <BackButton left text="Address" />
         {addressRes?.fetchLoading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color={Colors.primary} />
           </View>
         ) : addressRes.error ? (
           <View style={styles.errorContainer}>

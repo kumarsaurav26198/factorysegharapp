@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
     paddingHorizontal: 10,
-    height: 380,
+    height: 480,
     width: '100%',
   },
   closeButton: {

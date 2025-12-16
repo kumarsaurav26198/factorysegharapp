@@ -8,6 +8,7 @@ import { useActions } from '../../../hooks/useActions';
 import { connect } from 'react-redux';
 import Colors from '../../../themes/Colors';
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
+import { GlobalConfig } from '../../../config/GlobalConfig';
 
 const SignMobile = ({ loginRes }) => {
   const { loginRequest, logingReset } = useActions();
@@ -85,9 +86,9 @@ const SignMobile = ({ loginRes }) => {
 
               <View style={[ styles.textHeaderContainer, { paddingTop: 0 } ]}>
                 <Text style={styles.termCond}>
-                  By continuing, you agree to Factory Se Home
+                  By continuing, you agree to {GlobalConfig.appName}
                 </Text>
-                <TouchableOpacity onPress={() => Linking.openURL('https://factoryseghar.com/footerinfo?page=term&condition')}>
+                <TouchableOpacity onPress={() => Linking.openURL(GlobalConfig.termAndConditionUrl)}>
                   <Text style={[ styles.termCond, styles.termCond2 ]}>
                     Terms & Conditions
                   </Text>

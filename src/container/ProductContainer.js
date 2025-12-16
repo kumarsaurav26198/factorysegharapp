@@ -18,7 +18,7 @@ const ProductContainer = ({allProductRes}) => {
     <View style={styles.container}>
       {allProductRes?.loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color="#0000ff" />
+          <ActivityIndicator size="large" color={Colors.primary} />
         </View>
       ) : (
         <FlatList
