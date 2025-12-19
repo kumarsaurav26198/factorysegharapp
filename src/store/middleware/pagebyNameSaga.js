@@ -1,14 +1,13 @@
 import { takeEvery, put, call } from 'redux-saga/effects';
 import { ActionTypes } from '../constants/actiontypes';
 import axios from 'axios';
-import { apiUri,  } from '../../services/apiEndPoints';
+import { apiUri, baseURL,  } from '../../services/apiEndPoints';
 
-const baseURL="https://aryatkart.com/api/pages/"
 function* pagebyNameSagaApiCall(action) {
 
     const { pagename } = action?.payload || {};
 
-    const fullUrl = `${baseURL}${pagename}`;
+    const fullUrl = `${baseURL}${apiUri.aryatkart.pagename}${pagename}`;
     console.log('Full API URL:', fullUrl);
 
     try {

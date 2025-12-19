@@ -51,26 +51,22 @@ import {
 } from '../screens/private';
 import {useEffect, useState} from 'react';
 import BottomNavigator from './Bottomnavigator';
+import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
 
 const Navigator = () => {
+    const userRes = useSelector((state) => state?.verifyReducers?.data);
   const [initialRoute, setInitialRoute] = useState(null);
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const mobile = await AsyncStorage.getItem('mobile');
-        // console.log("mobile",mobile)
-        setInitialRoute(mobile ? 'BottomNavigator' : 'SignMobile');
-      } catch (error) {
-        console.error('Error reading _id from AsyncStorage:', error);
-        setInitialRoute('SignMobile'); // Navigate to SignMobile in case of error
-      }
-    };
 
-    checkLoginStatus();
-  }, []);
+    if (userRes?.id) {
+      setInitialRoute('BottomNavigator');
+    } else {
+      setInitialRoute('SignMobile');
+    }
+  }, [userRes]);
 
   if (initialRoute === null) {
     return null;

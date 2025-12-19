@@ -14,7 +14,7 @@ const apiUri = {
         logout:'logout',
         update_user_details:'update_user_details',
     },
-    factoyHome: {
+    aryatkart: {
         getAllItems:'api/getItems',
         placeOrder:'api/placeOrder',
         paymentVerification:'api/payment-verification',
@@ -24,7 +24,7 @@ const apiUri = {
         addCart:'api/addCart',
         getCart:'api/getCart',
         getPrice:'api/getPrice',
-        pagename:'api/pages?pagename=',
+        pagename:'pages/',
         getcontact:'api/contact-us',
 
     },

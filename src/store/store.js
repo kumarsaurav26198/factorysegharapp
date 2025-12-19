@@ -8,7 +8,7 @@ import rootSaga from './middleware/rootSaga';
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['userReducers' ],
+    whitelist: ['verifyReducers' ],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const sagaMiddleware = createSagaMiddleware();

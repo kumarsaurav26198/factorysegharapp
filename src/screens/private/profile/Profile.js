@@ -11,10 +11,12 @@ import {
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
 import { reset } from '../../../services/navigationService';
 import { useActions } from '../../../hooks/useActions';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 const Profile = ({ navigation,userRes }) => {
   const { logOut } = useActions();
+      const loginUserData = useSelector((state) => state?.verifyReducers?.data);
+    console.log("userRes",JSON.stringify(loginUserData,null,2))
 
   const menuItems = [
     // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
@@ -66,8 +68,8 @@ const Profile = ({ navigation,userRes }) => {
             <View style={styles.infoContainer}>
               <DriverIcon height={45} width={45} />
               <View style={styles.userInfo}>
-                <Text style={styles.userName}>{userRes[0]?.fullName}</Text>
-                <Text style={styles.userPhone}>{userRes[0]?.email}</Text>
+                <Text style={styles.userName}>{loginUserData?.name ??"New User"}</Text>
+                <Text style={styles.userPhone}>{loginUserData?.phone}</Text>
               </View>
             </View>
           </>

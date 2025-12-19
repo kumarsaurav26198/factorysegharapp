@@ -24,10 +24,8 @@ function* verifyUser(action) {
     if (error) throw error
 
     const { user, session } = data
-
     const accessToken = session.access_token
-    console.log("accessToken",JSON.stringify(accessToken,null,2))
-
+    const refresh_token = session.refresh_token
         if (!session) {
           throw error
     }
@@ -46,27 +44,28 @@ const response = yield call(
     },
   }
 );
+const loginUserData=response?.data
+    yield put({
+      type: ActionTypes.VERIFY_REQUEST_SUCCESS,
+      data: {
+        loginUserData,
+        accessToken,
+        refresh_token
+      },
+    })
 
 
-
-    console.log("response",JSON.stringify(response,null,2))
+    // console.log("response",JSON.stringify(response,null,2))
 
     // console.log("response",JSON.stringify(response,null,2))
     // const body = response.JSON()
     // console.log('bodybody', JSON.stringify(body, null, 2))
 
     // 3️⃣ (Optional) save to redux if needed
-    // yield put({
-    //   type: ActionTypes.VERIFY_REQUEST_SUCCESS,
-    //   data: {
-    //     user,
-    //     session,
-    //     backendUser: body,
-    //   },
-    // })
+
 
     // 4️⃣ Navigate
-    // reset([{ name: 'BottomNavigator' }])
+    reset([{ name: 'BottomNavigator' }])
 
   } catch (error) {
          const errorPayload = {
