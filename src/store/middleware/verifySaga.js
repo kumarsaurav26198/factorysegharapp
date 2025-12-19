@@ -24,7 +24,9 @@ function* verifyUser(action) {
     if (error) throw error
 
     const { user, session } = data
+
     const accessToken = session.access_token
+    console.log("accessToken",JSON.stringify(accessToken,null,2))
 
         if (!session) {
           throw error
@@ -36,14 +38,15 @@ console.log("fullUrl==========>>",fullUrl)
 const response = yield call(
   axios.post,
   fullUrl,
-  // {}, // ✅ empty body
+  {}, // ✅ empty body (or your payload)
   {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
   }
-)
+);
+
 
 
     console.log("response",JSON.stringify(response,null,2))

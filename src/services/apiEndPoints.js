@@ -10,7 +10,7 @@ const apiUri = {
         register:'auth/sign-in',
         otplogin: 'auth/send-otp',
         verifyotp: 'auth/verify-otp',
-        sessioninfo: 'auth/admin/session',
+        sessioninfo: 'auth/customer/session',
         logout:'logout',
         update_user_details:'update_user_details',
     },
