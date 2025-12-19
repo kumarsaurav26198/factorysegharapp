@@ -19,7 +19,7 @@ const App = () => {
 
   LogBox.ignoreLogs([ 'Warning: ...' ]);
   LogBox.ignoreAllLogs();
-  // console.log("API_URL===>",API_URL)
+  console.log("API_URL===>",API_URL)
   const queryClient = new QueryClient();
   const [ loading, setLoading ] = useState(true);
   useEffect(() => {

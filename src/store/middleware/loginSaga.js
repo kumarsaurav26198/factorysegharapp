@@ -7,34 +7,34 @@ import { supabase } from '../../lib/supabase';
 
 function* loginUser(action) {
   const { mobile } = action?.payload
-  console.log("payloadpayload",mobile)
-  
-  try {
-        const phone = mobile.startsWith('+') ? mobile : `+${mobile}`
 
-        const { data, error } = yield call(
+  try {
+    const phone = mobile.startsWith('+') ? mobile : `+${mobile}`
+  console.log("phone", phone)
+
+
+    const { data, error } = yield call(
       [supabase.auth, supabase.auth.signInWithOtp],
       {
         phone,
       }
     )
-    navigate("OtpScreen", { mobile :mobile});
-
-    console.log("datadatadatadata",JSON.stringify(data,null,2))
-        if (error) {
-          console.log("error",JSON.stringify(error,null,2))
+    if (error) {
+      console.log("error", JSON.stringify(error, null, 2))
       throw error
     }
+    navigate("OtpScreen", { mobile: mobile });
+
     // const fullUrl = `${baseURL}${apiUri.auth.otplogin}`;
     // console.log("Full URL for login request: ", fullUrl);
     // console.log("Full payload for login request: ", payload);
-    
+
     // const response = yield axios.post(fullUrl, payload, {
     //   headers: {
     //     'Content-Type': 'application/json', // Explicitly set the content type
     //   },
     // });
-    
+
     // const currentUser = response?.data;
     // const extractedOtp = currentUser?.data?.otp;
     // console.log("currentUser====>>", JSON.stringify(currentUser,null,2));
@@ -42,7 +42,7 @@ function* loginUser(action) {
     // // Alert.alert(extractedOtp);
 
     // navigate("OtpScreen", { mobile :payload?.mobile});
-    
+
     // Dispatch success actions
     // yield put({ type: ActionTypes.RESTART_LOGIN_REQUEST });
     // yield put({ type: ActionTypes.LOGIN_REQUEST_SUCCESS, currentUser });
@@ -53,16 +53,16 @@ function* loginUser(action) {
       status: error?.response?.status || null,
       response: error?.response
         ? {
-            status: error.response.status,
-            data: error.response.data,
-            config: {
-              method: error.response.config?.method,
-              url: error.response.config?.url,
-            },
-          }
+          status: error.response.status,
+          data: error.response.data,
+          config: {
+            method: error.response.config?.method,
+            url: error.response.config?.url,
+          },
+        }
         : null,
     };
-    console.log("errorPayload====>>", JSON.stringify(errorPayload,null,2));
+    console.log("errorPayload====>>", JSON.stringify(errorPayload, null, 2));
 
     yield put({ type: ActionTypes.LOGIN_REQUEST_FAILURE, error: errorPayload });
   }
