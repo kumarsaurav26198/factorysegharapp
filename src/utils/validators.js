@@ -101,9 +101,9 @@ export const validateOtp = (inputOtp) => {
   let isValid = true;
   let errorMessage = '';
 
-  if (!inputOtp || inputOtp.length !== 4) {
+  if (!inputOtp || inputOtp.length !== 6) {
     isValid = false;
-    errorMessage = 'Enter a valid 4-digit OTP.';
+    errorMessage = 'Enter a valid 6-digit OTP.';
   }
 
   return { isValid, errorMessage };

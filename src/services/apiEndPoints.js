@@ -1,7 +1,7 @@
 import {API_URL} from '@env';
 
 // const baseURL=  "https://mlmtesting.loca.lt/";
-const baseURL=  "https://factoryseghar-backend.onrender.com/";
+const baseURL=  "https://aryatkart.com/api/";
 // const baseURL = API_URL;
 const apiUri = {
     auth: {
@@ -10,7 +10,7 @@ const apiUri = {
         register:'auth/sign-in',
         otplogin: 'auth/send-otp',
         verifyotp: 'auth/verify-otp',
-        sessioninfo: 'session_info',
+        sessioninfo: 'auth/admin/session',
         logout:'logout',
         update_user_details:'update_user_details',
     },

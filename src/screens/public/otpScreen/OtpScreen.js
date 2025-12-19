@@ -15,7 +15,7 @@ const OtpScreen = ({ route, verifyRes, loginRes }) => {
   const { mobile } = route?.params;
   const { verifyReq, loginRequest } = useActions();
   const otpInputRef = useRef(null);
-  const [ otp, setOtp ] = useState('2222');
+  const [ otp, setOtp ] = useState('123456');
   const [ errorMessage, setErrorMessage ] = useState('');
   const [ timer, setTimer ] = useState(10);
 
@@ -23,7 +23,7 @@ const OtpScreen = ({ route, verifyRes, loginRes }) => {
     testingotp();
   }, []);
   const testingotp = () => {
-    Alert.alert("For Testing  OTP is 2222");
+    Alert.alert("For Testing  OTP is 12346");
   };
   useEffect(() => {
     if (timer > 0)
@@ -81,7 +81,7 @@ const OtpScreen = ({ route, verifyRes, loginRes }) => {
               <View style={styles.otpWrapper}>
                 {
                   <OTPTextView
-                    inputCount={4}
+                    inputCount={6}
                     handleTextChange={handleOtpChange}
                     ref={otpInputRef}
                     offTintColor={'#4A00E0'}
@@ -165,13 +165,13 @@ const styles = StyleSheet.create({
   },
   otpWrapper: {
     justifyContent: 'center',
-    maxWidth: 450,
+    // maxWidth: 450,
     alignSelf: 'center',
     marginBottom: 20,
   },
   otpContainer: {
     width: '100%',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   otpBox: {
     borderWidth: 2,

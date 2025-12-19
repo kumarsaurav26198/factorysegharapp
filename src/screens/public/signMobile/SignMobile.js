@@ -12,7 +12,7 @@ import { GlobalConfig } from '../../../config/GlobalConfig';
 
 const SignMobile = ({ loginRes }) => {
   const { loginRequest, logingReset } = useActions();
-  const [ numbers, setNumber ] = useState('');
+  const [ numbers, setNumber ] = useState('8017052720');
   const [ refreshing, setRefreshing ] = useState(false);
   const [ selectedCountryCode, setSelectedCountryCode ] = useState('91');
   const [ errorMessage, setErrorMessage ] = useState('');
