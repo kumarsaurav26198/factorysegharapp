@@ -4,6 +4,10 @@ export const loginRequest = (payload) => ({
     type: ActionTypes.LOGIN_REQUEST,
     payload,
 });
+export const sellerRequest = (payload) => ({
+    type: ActionTypes.SELLER_REQUEST,
+    payload,
+});
 
 export const verifyReq = (payload) => ({
     type: ActionTypes.VERIFY_REQUEST,

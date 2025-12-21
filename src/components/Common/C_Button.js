@@ -31,7 +31,7 @@ function C_Button(props) {
       ]}
     >
       {loading ? (
-        <ActivityIndicator size="small" color={Colors.primary} />
+        <ActivityIndicator size="small" color={Colors.white} />
       ) : (
         <Text style={[
           styles.text,

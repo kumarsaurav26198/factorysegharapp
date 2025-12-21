@@ -11,11 +11,13 @@ import getOrderHistorySaga from './getOrderHistorySaga';
 import addressSaga from './addressSaga';
 import cartSaga from './cartSaga';
 import getPriceSaga from './getPriceSaga';
+import registerSellerSaga from './registerSelleSaga';
 
 function* rootSaga() {
     yield all([
         loginSaga(),
         registerSaga(),
+        registerSellerSaga(),
         verifySaga(),
         getLoginUserSaga(),
         contactUsSaga(),

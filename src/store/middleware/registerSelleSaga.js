@@ -5,7 +5,7 @@ import { navigate, reset } from '../../services/navigationService';
 import { apiUri, baseURL } from '../../services/apiEndPoints';
 import { supabase } from '../../lib/supabase';
 
-function* loginUser(action) {
+function* registerSellerApi(action) {
   const { mobile } = action?.payload
 
   try {
@@ -23,9 +23,9 @@ function* loginUser(action) {
       console.log("error", JSON.stringify(error, null, 2))
       throw error
     }
-    
-    yield put({ type: ActionTypes.LOGIN_REQUEST_SUCCESS });
-    navigate("OtpScreen", { mobile: mobile });
+     yield put({ type: ActionTypes.SELLER_REQUEST_SUCCESS, });
+     console.log("registerSellerApi completed")
+    // navigate("OtpScreen", { mobile: mobile });
 
     // const fullUrl = `${baseURL}${apiUri.auth.otplogin}`;
     // console.log("Full URL for login request: ", fullUrl);
@@ -66,12 +66,12 @@ function* loginUser(action) {
     };
     console.log("errorPayload====>>", JSON.stringify(errorPayload, null, 2));
 
-    yield put({ type: ActionTypes.LOGIN_REQUEST_FAILURE, error: errorPayload });
+    yield put({ type: ActionTypes.SELLER_REQUEST_FAILURE, error: errorPayload });
   }
 }
 
-function* loginSaga() {
-  yield takeEvery(ActionTypes.LOGIN_REQUEST, loginUser);
+function* registerSellerSaga() {
+  yield takeEvery(ActionTypes.SELLER_REQUEST, registerSellerApi);
 }
 
-export default loginSaga;
+export default registerSellerSaga;

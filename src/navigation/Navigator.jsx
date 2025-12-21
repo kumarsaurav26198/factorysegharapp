@@ -44,6 +44,7 @@ import {
   Referral,
   RequiredAuthentication,
   RidesBooked,
+  SellerRequest,
   Settings,
   ShowAllBooking,
   Summary,
@@ -166,6 +167,7 @@ const Navigator = () => {
         options={{...commonOptions}}
       />
       <Stack.Screen name="Summary" component={Summary} />
+      <Stack.Screen name="SellerRequest" component={SellerRequest} />
       <Stack.Screen name="BecomeSeller" component={BecomeSeller} />
       {/* <Stack.Screen name="Profile" component={Profile} /> */}
     </Stack.Navigator>

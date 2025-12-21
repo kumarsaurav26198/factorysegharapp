@@ -90,7 +90,7 @@ const Profile = ({ navigation, userRes }) => {
             <View style={[ { paddingHorizontal: 20, }]}>
               <C_Button
                 title="Become Seller"
-                onPress={() => navigation.navigate("BecomeSeller")}
+                onPress={() => navigation.navigate("SellerRequest")}
               // loading={loginRes?.loading}
               />
             </View>

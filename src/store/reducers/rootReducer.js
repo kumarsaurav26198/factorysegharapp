@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux'
 import { loginReducers } from './loginReducers';
+import { registerSellerReducers } from './registerSellerReducers';
 import { verifyReducers } from './verifyReducers';
 import { userReducers } from './userReducers';
 import { pagebyNameReducers } from './pagebyNameReducers';
@@ -15,6 +16,7 @@ import { getPriceReducers } from './getPriceReducers';
 
 export default combineReducers({
     loginReducers:loginReducers,
+    registerSellerReducers:registerSellerReducers,
     registerReducers:registerReducers,
     verifyReducers:verifyReducers,
     userReducers:userReducers,
