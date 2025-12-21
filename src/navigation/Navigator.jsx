@@ -44,6 +44,7 @@ import {
   Referral,
   RequiredAuthentication,
   RidesBooked,
+  SellerOtpScreen,
   SellerRequest,
   Settings,
   ShowAllBooking,
@@ -169,6 +170,7 @@ const Navigator = () => {
       <Stack.Screen name="Summary" component={Summary} />
       <Stack.Screen name="SellerRequest" component={SellerRequest} />
       <Stack.Screen name="BecomeSeller" component={BecomeSeller} />
+      <Stack.Screen name="SellerOtpScreen" component={SellerOtpScreen} />
       {/* <Stack.Screen name="Profile" component={Profile} /> */}
     </Stack.Navigator>
   );

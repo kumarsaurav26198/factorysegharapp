@@ -4,28 +4,21 @@ import { ActionTypes } from '../constants/actiontypes';
 import { navigate, reset } from '../../services/navigationService';
 import { apiUri, baseURL } from '../../services/apiEndPoints';
 import { supabase } from '../../lib/supabase';
+import axiosInstance from './axiosInstance';
 
-function* registerSellerApi(action) {
-  const { mobile } = action?.payload
 
+function* registerSellerApi() {
+
+  console.log("SELLER_REQUEST")
   try {
-    const phone = mobile.startsWith('+') ? mobile : `+${mobile}`
-  console.log("phone", phone)
 
-
-    const { data, error } = yield call(
-      [supabase.auth, supabase.auth.signInWithOtp],
-      {
-        phone,
-      }
+    const response = yield call(
+      axiosInstance.post,
+      'auth/seller/session'
     )
-    if (error) {
-      console.log("error", JSON.stringify(error, null, 2))
-      throw error
-    }
-     yield put({ type: ActionTypes.SELLER_REQUEST_SUCCESS, });
-     console.log("registerSellerApi completed")
-    // navigate("OtpScreen", { mobile: mobile });
+     console.log('✅ Seller session:', response.data)
+    //  yield put({ type: ActionTypes.SELLER_REQUEST_SUCCESS, });
+    // navigate("SellerOtpScreen", { mobile: mobile });
 
     // const fullUrl = `${baseURL}${apiUri.auth.otplogin}`;
     // console.log("Full URL for login request: ", fullUrl);

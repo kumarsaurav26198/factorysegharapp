@@ -1,9 +1,10 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { supabase } from '../../lib/supabase'
-import { ActionTypes } from '../constants/actiontypes'
-import store from '../store'
 import { baseURL } from '../../services/apiEndPoints'
+
+const ACCESS_TOKEN_KEY = 'accessToken'
+const REFRESH_TOKEN_KEY = 'refresh_token'
 
 const axiosInstance = axios.create({
   baseURL,
@@ -19,15 +20,22 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async config => {
     try {
-      const accessToken = await AsyncStorage.getItem("accessToken")
-
+    const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY)
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`
       }
 
+      // ✅ FULL URL
+      const fullUrl = `${config.baseURL}${config.url}`
+      console.log('➡️ Method:', config.method?.toUpperCase())
+      console.log('➡️ URL:', fullUrl)
+      console.log("token",accessToken)
+      // console.log('➡️ Headers:', JSON.stringify(config.headers, null, 2))
+      // console.log('➡️ Body:', config.data || '—')
+
       return config
-    } catch (e) {
-      console.log('❌ Error reading access token', e)
+    } catch (error) {
+      console.log('❌ Error reading access token', error)
       return config
     }
   },
@@ -38,9 +46,26 @@ axiosInstance.interceptors.request.use(
    RESPONSE INTERCEPTOR
 ============================ */
 axiosInstance.interceptors.response.use(
-  response => response,
+  response => {
+    console.log('⬅️ Status:', response.status)
+    console.log('⬅️ URL:',`${response.config.baseURL}${response.config.url}`)
+    console.log('⬅️ Data:', JSON.stringify(response.data, null, 2))
+
+    return response
+  },
   async error => {
     const originalRequest = error.config
+
+    console.log('❌ API ERROR')
+    console.log(
+      '❌ URL:',
+      `${originalRequest?.baseURL}${originalRequest?.url}`
+    )
+    console.log('❌ Status:', error.response?.status)
+    console.log(
+      '❌ Response:',
+      JSON.stringify(error.response?.data, null, 2)
+    )
 
     if (
       error.response?.status === 401 &&
@@ -49,7 +74,6 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true
 
       try {
-        // 🔁 Refresh session (Supabase uses refresh_token internally)
         const {
           data: { session },
           error: refreshError,
@@ -59,38 +83,23 @@ axiosInstance.interceptors.response.use(
           throw refreshError
         }
 
-        // 💾 Save new tokens
         await AsyncStorage.multiSet([
-          [
-            STORAGE_KEYS.ACCESS_TOKEN,
-            session.access_token,
-          ],
-          [
-            STORAGE_KEYS.REFRESH_TOKEN,
-            session.refresh_token,
-          ],
+          [ACCESS_TOKEN_KEY, session.access_token],
+          [REFRESH_TOKEN_KEY, session.refresh_token],
         ])
 
-        // // (optional) Update redux state
-        // store.dispatch({
-        //   type: ActionTypes.TOKEN_REFRESH_SUCCESS,
-        //   payload: {
-        //     accessToken: session.access_token,
-        //     refreshToken: session.refresh_token,
-        //   },
-        // })
+        originalRequest.headers.Authorization =
+          `Bearer ${session.access_token}`
 
-        // 🔁 Retry original request
-        originalRequest.headers.Authorization = `Bearer ${session.access_token}`
+        console.log('🔁 Retrying request with refreshed token')
+
         return axiosInstance(originalRequest)
       } catch (refreshErr) {
-        // 🚪 Logout + clear storage
         await AsyncStorage.multiRemove([
-          STORAGE_KEYS.ACCESS_TOKEN,
-          STORAGE_KEYS.REFRESH_TOKEN,
+          ACCESS_TOKEN_KEY,
+          REFRESH_TOKEN_KEY,
         ])
 
-        // store.dispatch({ type: ActionTypes.LOGOUT })
         return Promise.reject(refreshErr)
       }
     }

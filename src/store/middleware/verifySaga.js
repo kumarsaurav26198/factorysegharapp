@@ -99,6 +99,7 @@ const loginUserData=response?.data
 
 function* verifySaga() {
   yield takeEvery(ActionTypes.VERIFY_REQUEST, verifyUser);
+  // yield takeEvery(ActionTypes.VERIFY_REQUEST, verifyUser);
 }
 
 export default verifySaga;

@@ -23,7 +23,7 @@ export const verifyReducers = (state = initialState, action) => {
       const accessToken = action?.data?.accessToken; 
       const refresh_token = action?.data?.refresh_token; 
       if (accessToken) {
-        AsyncStorage.setItem('accessToken', accessToken)
+        AsyncStorage.setItem('accessToken', String(accessToken))
           .then(() => {
             console.log('Stored accessToken in AsyncStorage:', accessToken);
           })
@@ -32,7 +32,7 @@ export const verifyReducers = (state = initialState, action) => {
           });
       }
       if (refresh_token) {
-        AsyncStorage.setItem('refresh_token', refresh_token)
+        AsyncStorage.setItem('refresh_token', String(refresh_token))
           .then(() => {
             console.log('Stored refresh_token in AsyncStorage:', refresh_token);
           })

@@ -52,5 +52,6 @@ import AllProduct from './allProduct/AllProduct'
 
 import SellerRequest from './seller/SellerRequest'
 import BecomeSeller from './seller/BecomeSeller'
+import SellerOtpScreen from './seller/SellerOtpScreen'
 
-export{Address,History,Categories,Complain,Referral,AboutUs,HelpSupport,EditProfile,Booking,Home,Offer,Profile,PickDestination,Settings,PickUp,BookRide,FindingCars,RidesBooked,DriverDetail,PayOption,cardDetail,Wallet,AddAmount,CancelRide,HistoryDetails,ShowAllBooking,TakeBooking,On_the_way,RequiredAuthentication,OnRoute,Summary,PrivacyPolicy,ContactUs,Search,ProductDetails,CartScreen,OrderConfirmation,AllProduct,SellerRequest,BecomeSeller}
+export{Address,History,Categories,Complain,Referral,AboutUs,HelpSupport,EditProfile,Booking,Home,Offer,Profile,PickDestination,Settings,PickUp,BookRide,FindingCars,RidesBooked,DriverDetail,PayOption,cardDetail,Wallet,AddAmount,CancelRide,HistoryDetails,ShowAllBooking,TakeBooking,On_the_way,RequiredAuthentication,OnRoute,Summary,PrivacyPolicy,ContactUs,Search,ProductDetails,CartScreen,OrderConfirmation,AllProduct,SellerRequest,BecomeSeller,SellerOtpScreen}

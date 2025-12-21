@@ -14,7 +14,8 @@ import { useActions } from '../../../hooks/useActions';
 import { connect, useSelector } from 'react-redux';
 
 const Profile = ({ navigation, userRes }) => {
-  const { logOut } = useActions();
+  const { logOut,sellerRequest } = useActions();
+  
   const loginUserData = useSelector((state) => state?.verifyReducers?.data);
   console.log("userRes", JSON.stringify(loginUserData, null, 2))
 
@@ -90,7 +91,10 @@ const Profile = ({ navigation, userRes }) => {
             <View style={[ { paddingHorizontal: 20, }]}>
               <C_Button
                 title="Become Seller"
-                onPress={() => navigation.navigate("SellerRequest")}
+                onPress={() => {
+                       sellerRequest();
+                  // navigation.navigate("SellerRequest")
+                }}
               // loading={loginRes?.loading}
               />
             </View>
