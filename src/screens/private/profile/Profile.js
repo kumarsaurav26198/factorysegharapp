@@ -18,6 +18,8 @@ const Profile = ({ navigation, userRes,kycData }) => {
   const { logOut,sellerRequest } = useActions();
   
   const loginUserData = useSelector((state) => state?.verifyReducers?.data);
+    const sellerData = kycData?.data?.seller;
+    const kycStatus = sellerData?.kycStatus; 
   console.log("kycData", JSON.stringify(kycData, null, 2))
 
   const menuItems = [
@@ -56,7 +58,60 @@ const Profile = ({ navigation, userRes,kycData }) => {
       handleNavigation(item.navigate);
     }
   };
+const renderFooterButton = () => {
+    // ❌ No seller data → Become Seller
+    if (!sellerData) {
+      return (
+        <View style={styles.footerContainer}>
+          <C_Button
+            title="Become Seller"
+            onPress={() => sellerRequest()}
+            loading={kycData?.loading}
+          />
+        </View>
+      );
+    }
 
+    // ⏳ KYC Pending
+    if (kycStatus === 'PENDING') {
+      return (
+        <View style={styles.footerContainer}>
+          <C_Button title="KYC Pending Approval" 
+           onPress={() =>
+              navigation.navigate('BecomeSeller')
+            } />
+        </View>
+      );
+    }
+
+    // ❌ KYC Rejected
+    if (kycStatus === 'REJECTED') {
+      return (
+        <View style={styles.footerContainer}>
+          <C_Button
+            title="Re-submit KYC"
+            onPress={() => navigation.navigate('BecomeSeller')}
+          />
+        </View>
+      );
+    }
+
+    // ✅ KYC Approved
+    if (kycStatus === 'APPROVED') {
+      return (
+        <View style={styles.footerContainer}>
+          <C_Button
+            title="Go to Seller Dashboard"
+            onPress={() =>
+              navigation.navigate('BecomeSeller')
+            }
+          />
+        </View>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <View style={CommonStyles.container}>
@@ -87,20 +142,8 @@ const Profile = ({ navigation, userRes,kycData }) => {
             <BackVerctor style={styles.rotatedIcon} size={16} color={Colors.black} />
           </TouchableOpacity>
         )}
-        ListFooterComponent={() => {
-          return (
-            <View style={[ { paddingHorizontal: 20, }]}>
-              <C_Button
-                title="Become Seller"
-                onPress={() => {
-                       sellerRequest();
-                  // navigation.navigate("SellerRequest")
-                }}
-              loading={kycData?.loading}
-              />
-            </View>
-          )
-        }}
+        ListFooterComponent={renderFooterButton}
+  
       />
 
     </View>
@@ -151,5 +194,9 @@ const styles = StyleSheet.create({
   rotatedIcon: {
     transform: [{ rotate: '180deg' }],
     alignSelf: 'flex-end',
+  },
+    footerContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
   },
 });
