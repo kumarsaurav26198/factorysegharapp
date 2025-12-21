@@ -12,14 +12,15 @@ import { FontSize, FontsWeights } from '../../../themes/Fonts';
 import { reset } from '../../../services/navigationService';
 import { useActions } from '../../../hooks/useActions';
 import { connect, useSelector } from 'react-redux';
+import { CustomAlertService } from '../../../context/AlertContext';
 
-const Profile = ({ navigation, userRes,kycData }) => {
+const Profile = ({ navigation, userRes, kycData }) => {
 
-  const { logOut,sellerRequest } = useActions();
-  
+  const { logOut, sellerRequest } = useActions();
+
   const loginUserData = useSelector((state) => state?.verifyReducers?.data);
-    const sellerData = kycData?.data?.seller;
-    const kycStatus = sellerData?.kycStatus; 
+  const sellerData = kycData?.data?.seller;
+  const kycStatus = sellerData?.kycStatus;
 
   const menuItems = [
     // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
@@ -44,8 +45,16 @@ const Profile = ({ navigation, userRes,kycData }) => {
   };
 
   const handleLogout = () => {
-    logOut();
-    reset([{ name: 'SignMobile' }]);
+    CustomAlertService.show(
+      'Confirm Logout',
+      "Are you sure you want to logout?",
+      'Logout',
+      () => {
+        logOut();
+        reset([{ name: 'SignMobile' }]);
+      }
+    );
+
   };
 
   const handleMenuPress = (item) => {
@@ -57,7 +66,7 @@ const Profile = ({ navigation, userRes,kycData }) => {
       handleNavigation(item.navigate);
     }
   };
-const renderFooterButton = () => {
+  const renderFooterButton = () => {
     // ❌ No seller data → Become Seller
     if (!sellerData) {
       return (
@@ -75,8 +84,8 @@ const renderFooterButton = () => {
     if (kycStatus === 'PENDING') {
       return (
         <View style={styles.footerContainer}>
-          <C_Button title="KYC Pending Approval" 
-           onPress={() =>
+          <C_Button title="KYC Pending Approval"
+            onPress={() =>
               navigation.navigate('BecomeSeller')
             } />
         </View>
@@ -124,7 +133,7 @@ const renderFooterButton = () => {
             <View style={styles.infoContainer}>
               <DriverIcon height={45} width={45} />
               <View style={styles.userInfo}>
-                <Text style={styles.userName}>{loginUserData?.name ??"New User"}</Text>
+                <Text style={styles.userName}>{loginUserData?.name ?? "New User"}</Text>
                 <Text style={styles.userPhone}>{loginUserData?.phone}</Text>
               </View>
             </View>
@@ -136,13 +145,13 @@ const renderFooterButton = () => {
             style={[styles.menuItem, index !== 0 && styles.menuItemBorder]}
             activeOpacity={0.7}
           >
-            <item.icon width={24} height={24}/>
+            <item.icon width={24} height={24} />
             <Text style={styles.menuText}>{item.title}</Text>
             <BackVerctor style={styles.rotatedIcon} size={16} color={Colors.black} />
           </TouchableOpacity>
         )}
         ListFooterComponent={renderFooterButton}
-  
+
       />
 
     </View>
@@ -194,7 +203,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '180deg' }],
     alignSelf: 'flex-end',
   },
-    footerContainer: {
+  footerContainer: {
     paddingHorizontal: 20,
     paddingVertical: 15,
   },

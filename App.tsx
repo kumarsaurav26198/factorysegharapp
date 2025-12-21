@@ -13,15 +13,16 @@ import { setNavigator } from './src/services/navigationService';
 import { BottomSheetProvider } from './src/components/Modal/BottomSheetWrapper';
 import { API_URL } from '@env';
 import Colors from './src/themes/Colors';
+import { AlertProvider } from './src/context/AlertContext';
 
 const App = () => {
   const navigationRef = useRef();
 
-  LogBox.ignoreLogs([ 'Warning: ...' ]);
+  LogBox.ignoreLogs(['Warning: ...']);
   LogBox.ignoreAllLogs();
-  console.log("API_URL===>",API_URL)
+  console.log("API_URL===>", API_URL)
   const queryClient = new QueryClient();
-  const [ loading, setLoading ] = useState(true);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -39,15 +40,17 @@ const App = () => {
         />
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetProvider>
-            <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-                <QueryClientProvider client={queryClient}>
-                  <NavigationContainer ref={navigationRef} onReady={() => setNavigator(navigationRef.current)}>
-                    <Navigator />
-                  </NavigationContainer>
-                </QueryClientProvider>
-              </PersistGate>
-            </Provider>
+            <AlertProvider>
+              <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                  <QueryClientProvider client={queryClient}>
+                    <NavigationContainer ref={navigationRef} onReady={() => setNavigator(navigationRef.current)}>
+                      <Navigator />
+                    </NavigationContainer>
+                  </QueryClientProvider>
+                </PersistGate>
+              </Provider>
+            </AlertProvider>
           </BottomSheetProvider>
         </GestureHandlerRootView>
       </SafeAreaView>
