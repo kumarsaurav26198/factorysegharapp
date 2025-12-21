@@ -44,7 +44,8 @@ return (
   <View style={styles.container}>
     <Text style={styles.title}>Categories</Text>
     <FlatList
-      data={categories}
+      // data={categories}
+      data={[]}
       renderItem={renderItem}
       keyExtractor={(item) => item.category}
       contentContainerStyle={styles.listContainer}

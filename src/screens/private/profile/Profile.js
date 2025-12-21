@@ -4,8 +4,8 @@ import { CommonStyles } from '../../../themes/CommonStyles';
 import { BackButton, C_Button } from '../../../components';
 import Colors from '../../../themes/Colors';
 import {
-  AboutIcon, AddressIcon, BackVerctor, CartIcon, ComplainIcon, ContactUsIcon, DriverIcon, EditProfileIcon, Help,
-  HistoryIcon, LogoutIcon, Privacy, ReferralIcon, SettingsIcon,
+  AboutIcon, AddressIcon, BackVerctor, CartIcon, ContactUsIcon, DriverIcon, EditProfileIcon, Help,
+  HistoryIcon, LogoutIcon, Privacy, ReferralIcon,
   TermCondition
 } from '../../../assets/icons';
 import { FontSize, FontsWeights } from '../../../themes/Fonts';
@@ -20,7 +20,6 @@ const Profile = ({ navigation, userRes,kycData }) => {
   const loginUserData = useSelector((state) => state?.verifyReducers?.data);
     const sellerData = kycData?.data?.seller;
     const kycStatus = sellerData?.kycStatus; 
-  console.log("kycData", JSON.stringify(kycData, null, 2))
 
   const menuItems = [
     // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
@@ -90,7 +89,7 @@ const renderFooterButton = () => {
         <View style={styles.footerContainer}>
           <C_Button
             title="Re-submit KYC"
-            onPress={() => navigation.navigate('BecomeSeller')}
+            onPress={() => sellerRequest()}
           />
         </View>
       );

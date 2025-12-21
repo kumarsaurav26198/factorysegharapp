@@ -1,223 +1,195 @@
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import { FontSize, FontsWeights } from '../../../themes/Fonts'
-import Colors from '../../../themes/Colors'
-import { CommonStyles } from '../../../themes/CommonStyles'
-import { BackButton, CameraWithImage } from '../../../components'
-import { Camera } from '../../../assets/icons'
-import { connect } from 'react-redux'
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Alert,
+} from 'react-native';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
-const BecomeSeller = ({kycData}) => {
-    console.log("kycData",JSON.stringify(kycData,null,2))
-    const [capturedImages, setCapturedImages] = useState([]); // ⭐ Array of captured image paths|
-    const [showCamera, setShowCamera] = useState(false);
-    const handleCameraClose = () => {
-        console.log('📸 [Camera] User closed camera without capture');
-        setShowCamera(false);
-    };
-      const handleImageCapture = async (imagePath) => {
-    console.log('📸 [Camera] handleImageCapture called with:', imagePath);
-    console.log('📸 [Camera] Type:', typeof imagePath, '| Is Array:', Array.isArray(imagePath));
-    
-    // ✅ Handle both single string and array of strings
-    let imagePathsArray = [];
-    
-    if (Array.isArray(imagePath)) {
-      console.log('📦 [Camera] Received array with', imagePath.length, 'images');
-      imagePathsArray = imagePath.filter(path => path && path !== '');
-    } else if (typeof imagePath === 'string' && imagePath !== '') {
-      console.log('📦 [Camera] Received single image path');
-      imagePathsArray = [imagePath];
-    } else {
-      console.error('❌ [Camera] Invalid image path received:', imagePath);
-      Alert.alert('Error', 'Failed to capture image. Please try again.');
-      setShowCamera(false);
-      return;
-    }
+import { CommonStyles } from '../../../themes/CommonStyles';
+import Colors from '../../../themes/Colors';
+import { BackButton, CameraWithImage, C_Button } from '../../../components';
+import { Camera } from '../../../assets/icons';
 
-    // Filter out invalid paths
-    const validPaths = imagePathsArray.filter(path => 
-      path && 
-      typeof path === 'string' && 
-      path.trim() !== '' && 
-      path !== 'undefined' && 
-      path !== 'null'
-    );
+const MAX_IMAGES = 5;
 
-    if (validPaths.length === 0) {
-      console.error('❌ [Camera] No valid image paths found');
-      Alert.alert('Error', 'Failed to capture image. Please try again.');
-      setShowCamera(false);
-      return;
-    }
+const DOC_TYPES = {
+  AADHAAR: 'AADHAAR',
+  KITCHEN: 'KITCHEN',
+  OTHER: 'OTHER',
+};
 
-    console.log('✅ [Camera] Valid paths to add:', validPaths.length);
+const BecomeSeller = ({ kycData, authToken }) => {
+  const [activeDoc, setActiveDoc] = useState(null);
+  const [showCamera, setShowCamera] = useState(false);
 
-    // Check if adding these would exceed max
-    const totalAfterAdd = capturedImages.length + validPaths.length;
-    if (totalAfterAdd > MAX_IMAGES) {
-      const canAdd = MAX_IMAGES - capturedImages.length;
-      console.warn(`⚠️ [Camera] Can only add ${canAdd} more images`);
-      
-      if (canAdd > 0) {
-        // Add only what we can
-        const pathsToAdd = validPaths.slice(0, canAdd);
-        setCapturedImages(prev => {
-          const updated = [...prev, ...pathsToAdd];
-          console.log('📷 [Images] Total images now:', updated.length);
-          return updated;
-        });
-        
-    
-      } 
-    } else {
-      // Add all valid paths
-      setCapturedImages(prev => {
-        const updated = [...prev, ...validPaths];
-        console.log('📷 [Images] Total images now:', updated.length);
-        return updated;
-      });
-   
-    }
-    
-    setShowCamera(false);
+  const [documents, setDocuments] = useState({
+    AADHAAR: [],
+    KITCHEN: [],
+    OTHER: [],
+  });
+
+
+  const openCamera = (docType) => {
+    setActiveDoc(docType);
+    setShowCamera(true);
   };
 
-    const MAX_IMAGES = 5;
+  const closeCamera = () => {
+    setShowCamera(false);
+    setActiveDoc(null);
+  };
 
-    const handleOpenCamera = () => {
+  /* -------------------------
+   * Upload helpers
+   * ------------------------- */
+  const getUploadUrl = async (fileName, contentType) => {
+    const res = await axios.post(
+      'https://dev.aryatkart.com/api/seller/kyc/upload-url',
+      { fileName, contentType },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return res.data; // { uploadUrl, fileUrl }
+  };
+
+  const uploadToS3 = async (uploadUrl, filePath, contentType) => {
+    const fileBlob = await fetch(filePath).then(r => r.blob());
+
+    await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': contentType,
+      },
+      body: fileBlob,
+    });
+  };
 
 
-        setShowCamera(true);
-    };
+  const handleImageCapture = async (path) => {
+    try {
+      const paths = Array.isArray(path) ? path : [path];
+
+      for (const filePath of paths) {
+        const fileName = filePath.split('/').pop();
+        const contentType = 'image/jpeg';
+
+        // 1️⃣ Get presigned URL
+        const { uploadUrl, fileUrl } =
+          await getUploadUrl(fileName, contentType);
+
+        // 2️⃣ Upload to S3
+        await uploadToS3(uploadUrl, filePath, contentType);
+
+        // 3️⃣ Save uploaded file
+        setDocuments(prev => ({
+          ...prev,
+          [activeDoc]: [...prev[activeDoc], fileUrl],
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Upload Failed', 'Please try again');
+    } finally {
+      closeCamera();
+    }
+  };
+
+  const renderUploadBox = (label, docType) => {
+    const count = documents[docType].length;
 
     return (
-        <View style={[CommonStyles.container,]}>
-            <BackButton left text={' Complete KYC'} />
-            <View style={styles.contentContainer}>
-                <Text style={styles.label}>
-                    Attach Images ({capturedImages.length}/{MAX_IMAGES})
-                </Text>
-                <TouchableOpacity
-                    style={[
-                        styles.imageBox,
-                        capturedImages.length >= MAX_IMAGES && styles.imageBoxDisabled
-                    ]}
-                    onPress={handleOpenCamera}
-                    disabled={capturedImages.length >= MAX_IMAGES}
-                    activeOpacity={0.7}
-                >
-                    <Camera size={400} />
-                    {/* <Icon 
-                  name="camera-alt" 
-                  size={40} 
-                  color={capturedImages.length >= MAX_IMAGES ? Colors.GRAY : Colors.BTN_DFCCIL} 
-                /> */}
-                    <Text style={[
-                        styles.uploadText,
-                        capturedImages.length >= MAX_IMAGES && styles.disabledText
-                    ]}>
-                        {capturedImages.length >= MAX_IMAGES
-                            ? "Maximum images reached"
-                            : "+ Capture Image"}
-                    </Text>
-                    <Text style={styles.subText}>
-                        {capturedImages.length === 0
-                            ? "(Optional - You can capture up to 5 images)"
-                            : `(Captured: ${capturedImages.length}/${MAX_IMAGES})`}
-                    </Text>
-                </TouchableOpacity>
-            </View>
+      <View style={styles.section}>
+        <Text style={styles.label}>
+          {label} ({count}/{MAX_IMAGES})
+        </Text>
 
-            <Modal
-                visible={showCamera}
-                animationType="slide"
-                onRequestClose={handleCameraClose}
-                presentationStyle="fullScreen"
-            >
-                <CameraWithImage
-          onCapture={handleImageCapture}
-          onClose={handleCameraClose}
+        <TouchableOpacity
+          style={styles.uploadBox}
+          onPress={() => openCamera(docType)}
+          disabled={count >= MAX_IMAGES}
+        >
+          <Camera />
+          <Text style={styles.uploadText}>
+            {count >= MAX_IMAGES
+              ? 'Maximum images reached'
+              : '+ Capture Image'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  return (
+    <View style={CommonStyles.container}>
+      <BackButton text="Complete KYC"  left/>
+
+      {renderUploadBox('Aadhaar Document', DOC_TYPES.AADHAAR)}
+      {renderUploadBox('Kitchen Image', DOC_TYPES.KITCHEN)}
+      {renderUploadBox('Other Document', DOC_TYPES.OTHER)}
+
+      <View style={{ padding: 20 }}>
+        <C_Button
+          title="Submit KYC"
+          onPress={() => Alert.alert('KYC Submitted')}
         />
-            </Modal>
-        </View>
-    )
-}
+      </View>
 
+      <Modal visible={showCamera} animationType="slide">
+        <CameraWithImage
+          onCapture={handleImageCapture}
+          onClose={closeCamera}
+        />
+      </Modal>
+    </View>
+  );
+};
+
+/* -------------------------
+ * Redux
+ * ------------------------- */
 const mapStateToProps = (state) => ({
   kycData: state?.registerSellerReducers,
+  authToken: state?.auth?.accessToken, // 🔑 IMPORTANT
 });
+
 export default connect(mapStateToProps)(BecomeSeller);
 
-
+/* -------------------------
+ * Styles
+ * ------------------------- */
 const styles = StyleSheet.create({
-    contentContainer: {
-        paddingHorizontal: 20,
-        paddingTop: 10,
-    },
-    label: {
-        fontSize: 16,
-        color: Colors.HEADING_COLOR_1,
-        fontWeight: "600",
-        marginTop: 14,
-        marginBottom: 6,
-    },
-    imageBox: {
-        width: "100%",
-        height: 120,
-        borderWidth: 2,
-        borderColor: Colors.primary,
-        borderStyle: "dashed",
-        borderRadius: 12,
-        backgroundColor: Colors.white,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 10,
-        marginBottom: 18,
-        paddingHorizontal: 10,
-    },
-
-    imageBoxDisabled: {
-        borderColor: Colors.gray,
-        backgroundColor: Colors.lightgrey,
-    },
-    policyText: {
-        fontSize: FontSize.FS15,
-        color: Colors.black,
-        lineHeight: 24,
-        textAlign: 'left',
-    },
-    headingText: {
-        fontSize: FontSize.FS18,
-        fontWeight: FontsWeights.FW600,
-        color: Colors.black,
-        marginBottom: 20,
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    errorContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-    },
-    errorText: {
-        fontSize: FontSize.FS14,
-        color: Colors.red,
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    refreshButton: {
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        backgroundColor: Colors.primary,
-        borderRadius: 6,
-    },
-    refreshButtonText: {
-        fontSize: FontSize.FS14,
-        color: Colors.white,
-    },
+  section: {
+    paddingHorizontal: 20,
+    marginTop: 15,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.black,
+    marginBottom: 6,
+  },
+  uploadBox: {
+    height: 120,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: Colors.primary,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.white,
+  },
+  uploadText: {
+    marginTop: 8,
+    color: Colors.primary,
+    fontWeight: '500',
+  },
 });
