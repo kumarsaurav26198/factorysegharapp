@@ -16,9 +16,9 @@ function* registerSellerApi() {
       axiosInstance.post,
       'auth/seller/session'
     )
-     console.log('✅ Seller session:', response.data)
-    //  yield put({ type: ActionTypes.SELLER_REQUEST_SUCCESS, });
-    // navigate("SellerOtpScreen", { mobile: mobile });
+    const responseData=response.data
+     yield put({ type: ActionTypes.SELLER_REQUEST_SUCCESS,kycData:responseData });
+    navigate("BecomeSeller",);
 
     // const fullUrl = `${baseURL}${apiUri.auth.otplogin}`;
     // console.log("Full URL for login request: ", fullUrl);

@@ -5,8 +5,10 @@ import Colors from '../../../themes/Colors'
 import { CommonStyles } from '../../../themes/CommonStyles'
 import { BackButton, CameraWithImage } from '../../../components'
 import { Camera } from '../../../assets/icons'
+import { connect } from 'react-redux'
 
-const BecomeSeller = () => {
+const BecomeSeller = ({kycData}) => {
+    console.log("kycData",JSON.stringify(kycData,null,2))
     const [capturedImages, setCapturedImages] = useState([]); // ⭐ Array of captured image paths|
     const [showCamera, setShowCamera] = useState(false);
     const handleCameraClose = () => {
@@ -91,7 +93,7 @@ const BecomeSeller = () => {
 
     return (
         <View style={[CommonStyles.container,]}>
-            <BackButton left text={' Become Seller'} />
+            <BackButton left text={' Complete KYC'} />
             <View style={styles.contentContainer}>
                 <Text style={styles.label}>
                     Attach Images ({capturedImages.length}/{MAX_IMAGES})
@@ -142,7 +144,11 @@ const BecomeSeller = () => {
     )
 }
 
-export default BecomeSeller
+const mapStateToProps = (state) => ({
+  kycData: state?.registerSellerReducers,
+});
+export default connect(mapStateToProps)(BecomeSeller);
+
 
 const styles = StyleSheet.create({
     contentContainer: {

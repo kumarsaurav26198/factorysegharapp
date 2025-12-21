@@ -30,7 +30,7 @@ export const registerSellerReducers = (state = initialState, action) => {
             // console.warn("SELLER_REQUEST_SUCCESS Reducers", ActionTypes.SELLER_REQUEST_SUCCESS);
             // console.warn("SELLER_REQUEST_SUCCESS Reducers action===>");
 
-            // console.warn("SELLER_REQUEST_SUCCESS Reducers action===>", JSON.stringify(action.currentUser, null, 2));
+            console.warn("SELLER_REQUEST_SUCCESS Reducers action===>", JSON.stringify(action.kycData, null, 2));
             // if (action.currentUser && action.currentUser._id) {
             //     AsyncStorage.setItem('_id', action.currentUser._id)
             //         .then(() => {
@@ -42,7 +42,7 @@ export const registerSellerReducers = (state = initialState, action) => {
             // }
             return {
                 ...state,
-                data: action.currentUser,
+                data: action?.kycData,
                 loading: false,
             };
         case ActionTypes.SELLER_REQUEST_FAILURE:

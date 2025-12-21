@@ -13,11 +13,12 @@ import { reset } from '../../../services/navigationService';
 import { useActions } from '../../../hooks/useActions';
 import { connect, useSelector } from 'react-redux';
 
-const Profile = ({ navigation, userRes }) => {
+const Profile = ({ navigation, userRes,kycData }) => {
+
   const { logOut,sellerRequest } = useActions();
   
   const loginUserData = useSelector((state) => state?.verifyReducers?.data);
-  console.log("userRes", JSON.stringify(loginUserData, null, 2))
+  console.log("kycData", JSON.stringify(kycData, null, 2))
 
   const menuItems = [
     // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
@@ -95,7 +96,7 @@ const Profile = ({ navigation, userRes }) => {
                        sellerRequest();
                   // navigation.navigate("SellerRequest")
                 }}
-              // loading={loginRes?.loading}
+              loading={kycData?.loading}
               />
             </View>
           )
@@ -109,6 +110,7 @@ const Profile = ({ navigation, userRes }) => {
 
 const mapStateToProps = (state) => ({
   userRes: state?.userReducers?.data,
+  kycData: state?.registerSellerReducers,
 });
 export default connect(mapStateToProps)(Profile);
 

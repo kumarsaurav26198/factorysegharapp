@@ -29,7 +29,7 @@ axiosInstance.interceptors.request.use(
       const fullUrl = `${config.baseURL}${config.url}`
       console.log('➡️ Method:', config.method?.toUpperCase())
       console.log('➡️ URL:', fullUrl)
-      console.log("token",accessToken)
+      // console.log("token",accessToken)
       // console.log('➡️ Headers:', JSON.stringify(config.headers, null, 2))
       // console.log('➡️ Body:', config.data || '—')
 
