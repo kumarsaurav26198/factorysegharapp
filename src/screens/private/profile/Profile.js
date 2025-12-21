@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { CommonStyles } from '../../../themes/CommonStyles';
-import { BackButton, DriverInfo2 } from '../../../components';
+import { BackButton, C_Button } from '../../../components';
 import Colors from '../../../themes/Colors';
 import {
   AboutIcon, AddressIcon, BackVerctor, CartIcon, ComplainIcon, ContactUsIcon, DriverIcon, EditProfileIcon, Help,
@@ -13,10 +13,10 @@ import { reset } from '../../../services/navigationService';
 import { useActions } from '../../../hooks/useActions';
 import { connect, useSelector } from 'react-redux';
 
-const Profile = ({ navigation,userRes }) => {
+const Profile = ({ navigation, userRes }) => {
   const { logOut } = useActions();
-      const loginUserData = useSelector((state) => state?.verifyReducers?.data);
-    console.log("userRes",JSON.stringify(loginUserData,null,2))
+  const loginUserData = useSelector((state) => state?.verifyReducers?.data);
+  console.log("userRes", JSON.stringify(loginUserData, null, 2))
 
   const menuItems = [
     // { title: 'Personal info', navigate: 'EditProfile', icon: EditProfileIcon },
@@ -25,15 +25,15 @@ const Profile = ({ navigation,userRes }) => {
     { title: 'History', navigate: 'History', icon: HistoryIcon },
     { title: 'Referral', navigate: 'Referral', icon: ReferralIcon },
     // { title: 'Complain', navigate: 'Complain', icon: ComplainIcon },
-    { title: 'About Us', navigate: 'AboutUs', icon: AboutIcon ,pagename:"about"},
-    { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition ,pagename:"terms"},
-    { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy ,pagename:"privacy"},
+    { title: 'About Us', navigate: 'AboutUs', icon: AboutIcon, pagename: "about" },
+    { title: 'Term & Condition', navigate: 'AboutUs', icon: TermCondition, pagename: "terms" },
+    { title: 'Privacy Policy', navigate: 'AboutUs', icon: Privacy, pagename: "privacy" },
     // { title: 'Settings', navigate: 'Settings', icon: SettingsIcon },
-    { title: 'Contact US', navigate: 'AboutUs', icon: ContactUsIcon ,pagename:"contact"},
+    { title: 'Contact US', navigate: 'AboutUs', icon: ContactUsIcon, pagename: "contact" },
 
     // { title: 'Contact US', navigate: 'ContactUs', icon: ContactUsIcon,pagename:"contact" },
     // { title: 'Help and Support', navigate: 'HelpSupport', icon: Help },
-    { title: 'Log Out', navigate: null, icon: LogoutIcon }, 
+    { title: 'Log Out', navigate: null, icon: LogoutIcon },
   ];
 
   const handleNavigation = (screen) => {
@@ -49,12 +49,12 @@ const Profile = ({ navigation,userRes }) => {
     if (item.title === 'Log Out') {
       handleLogout();
     } else if (item?.pagename) {
-      navigation.navigate(item.navigate, { pagename: item.pagename,title:item.title });
+      navigation.navigate(item.navigate, { pagename: item.pagename, title: item.title });
     } else {
       handleNavigation(item.navigate);
     }
   };
-  
+
 
   return (
     <View style={CommonStyles.container}>
@@ -85,8 +85,19 @@ const Profile = ({ navigation,userRes }) => {
             <BackVerctor style={styles.rotatedIcon} size={16} color={Colors.black} />
           </TouchableOpacity>
         )}
-        ListFooterComponent={<View style={{ height: 100 }} />}
+        ListFooterComponent={() => {
+          return (
+            <View style={[ { paddingHorizontal: 20, }]}>
+              <C_Button
+                title="Become Seller"
+                onPress={() => navigation.navigate("BecomeSeller")}
+              // loading={loginRes?.loading}
+              />
+            </View>
+          )
+        }}
       />
+
     </View>
   );
 };
@@ -128,11 +139,11 @@ const styles = StyleSheet.create({
   menuText: {
     marginLeft: 15,
     fontSize: FontSize.FS16,
-    flex: 1, 
+    flex: 1,
     color: Colors.black,
   },
   rotatedIcon: {
     transform: [{ rotate: '180deg' }],
-    alignSelf: 'flex-end', 
+    alignSelf: 'flex-end',
   },
 });

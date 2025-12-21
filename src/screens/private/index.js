@@ -50,4 +50,6 @@ import OrderConfirmation from './orderConfirmation/OrderConfirmation'
 
 import AllProduct from './allProduct/AllProduct'
 
-export{Address,History,Categories,Complain,Referral,AboutUs,HelpSupport,EditProfile,Booking,Home,Offer,Profile,PickDestination,Settings,PickUp,BookRide,FindingCars,RidesBooked,DriverDetail,PayOption,cardDetail,Wallet,AddAmount,CancelRide,HistoryDetails,ShowAllBooking,TakeBooking,On_the_way,RequiredAuthentication,OnRoute,Summary,PrivacyPolicy,ContactUs,Search,ProductDetails,CartScreen,OrderConfirmation,AllProduct}
+import BecomeSeller from './seller/BecomeSeller'
+
+export{Address,History,Categories,Complain,Referral,AboutUs,HelpSupport,EditProfile,Booking,Home,Offer,Profile,PickDestination,Settings,PickUp,BookRide,FindingCars,RidesBooked,DriverDetail,PayOption,cardDetail,Wallet,AddAmount,CancelRide,HistoryDetails,ShowAllBooking,TakeBooking,On_the_way,RequiredAuthentication,OnRoute,Summary,PrivacyPolicy,ContactUs,Search,ProductDetails,CartScreen,OrderConfirmation,AllProduct,BecomeSeller}

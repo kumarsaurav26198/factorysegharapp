@@ -20,6 +20,7 @@ import {
   AddAmount,
   Address,
   AllProduct,
+  BecomeSeller,
   BookRide,
   CancelRide,
   cardDetail,
@@ -165,6 +166,7 @@ const Navigator = () => {
         options={{...commonOptions}}
       />
       <Stack.Screen name="Summary" component={Summary} />
+      <Stack.Screen name="BecomeSeller" component={BecomeSeller} />
       {/* <Stack.Screen name="Profile" component={Profile} /> */}
     </Stack.Navigator>
   );

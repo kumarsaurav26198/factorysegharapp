@@ -12,6 +12,7 @@ import Humburg from './Humburg.svg'
 import CategoriesIcon from './CategoriesIcon.svg'
 import CreditCardIcon from './CreditCardIcon.svg'
 import DoneIcon from './DoneIcon.svg'
+import DeleteIcon from './DeleteIcon.svg'
 import DriverIcon from './DriverIcon.svg'
 import EditIcon from './EditIcon.svg'
 import Calling from './Calling.svg'
@@ -91,5 +92,7 @@ import CopyIcon from './CopyIcon.svg'
 import TermCondition from './TermCondition.svg'
 import Privacy from './Privacy.svg'
 import EmailIcon from './EmailIcon.svg'
+import FlashOnIcon from './FlashOnIcon.svg'
+import FlashOffIcon from './FlashOffIcon.svg'
 
-export{Splash,CategoriesIcon,SplashBottom,MobileIcon,ProfileIcon,WelocmeImage,EditProfileIcon,AddressIcon,HistoryIcon,ComplainIcon,ReferralIcon,AboutIcon,SettingsIcon,Help,LogoutIcon,Camera,BackVerctor,Homeicon,BookingIcon,OfferIcon,ProfileTabIcon,InterCityCab,Magnifying,WalletIcon,ClockIcon,Humburg,WalletIcon2,WalletIcon3,Close,CreditCardIcon,DoneIcon,DriverIcon,EditIcon,Calling,WhiteBike,DurationIcon,CashIcon,UpiIcon,Phonepay,Googlepay,CardIcon,VisaCard,MasterCard,RupayCard,AddMoneyIcon,ArrowUpIcon,CheckIcon,ClockWallIcon,OtpIcon,CalenderIcon,OneWay,RoundTripIcon,StartingPoints,EndPoints,MaterialIconsProcess,RupessInon,ContactUsIcon,GetDirection,IDCardIcon,QrCodeIcon,ModalClose,RegisterIcon,Docs,WhiteCar,TwoWheeler,AutoRickshaw,InfoIcon,UploadDoc,UploadProfile,AddProfileUpload,SearchIcon,ProductIcon,ProductDeatailsIcon,CartIcon,SmallProductIcon,RightArrow,CopyIcon,TermCondition,Privacy,EmailIcon}
+export{Splash,CategoriesIcon,SplashBottom,MobileIcon,ProfileIcon,WelocmeImage,EditProfileIcon,AddressIcon,HistoryIcon,ComplainIcon,ReferralIcon,AboutIcon,SettingsIcon,Help,LogoutIcon,Camera,BackVerctor,Homeicon,BookingIcon,OfferIcon,ProfileTabIcon,InterCityCab,Magnifying,WalletIcon,ClockIcon,Humburg,WalletIcon2,WalletIcon3,Close,CreditCardIcon,DoneIcon,DriverIcon,EditIcon,Calling,WhiteBike,DurationIcon,CashIcon,UpiIcon,Phonepay,Googlepay,CardIcon,VisaCard,MasterCard,RupayCard,AddMoneyIcon,ArrowUpIcon,CheckIcon,ClockWallIcon,OtpIcon,CalenderIcon,OneWay,RoundTripIcon,StartingPoints,EndPoints,MaterialIconsProcess,RupessInon,ContactUsIcon,GetDirection,IDCardIcon,QrCodeIcon,ModalClose,RegisterIcon,Docs,WhiteCar,TwoWheeler,AutoRickshaw,InfoIcon,UploadDoc,UploadProfile,AddProfileUpload,SearchIcon,ProductIcon,ProductDeatailsIcon,CartIcon,SmallProductIcon,RightArrow,CopyIcon,TermCondition,Privacy,EmailIcon,FlashOnIcon,FlashOffIcon,DeleteIcon}
